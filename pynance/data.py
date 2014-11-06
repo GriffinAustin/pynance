@@ -18,10 +18,10 @@ def get(equity, start, end):
     """ Get DataFrame for an individual equity from Yahoo!  """
     return web.DataReader(equity, 'yahoo', start, end)
 
-def featurize(equity_data, n_sessions, col_label='Adj Close', verbose=True):
+def featurize(equity_data, n_sessions, column='Adj Close', verbose=True):
     """
     Generate a raw (unnormalized) feature set from the input data.
-    The value at col_label on the given date is taken
+    The value at `column` on the given date is taken
     as a feature, and each row contains values for n_sessions
     """
     features = pd.DataFrame(index=equity_data.index[(n_sessions - 1):],
@@ -30,7 +30,7 @@ def featurize(equity_data, n_sessions, col_label='Adj Close', verbose=True):
     # TODO vectorize or multi-thread
     # This is too slow for large data sets
     for i in range(len(features.index)):
-        features.iloc[i, :] = equity_data[i:(n_sessions + i)][col_label].values
+        features.iloc[i, :] = equity_data[i:(n_sessions + i)][column].values
         if verbose and i % msg_freq == msg_freq - 1:
             print "Inserting values for row {0}".format(i + 1)
     return features
