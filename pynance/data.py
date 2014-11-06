@@ -25,7 +25,7 @@ def featurize(equity_data, n_sessions, column='Adj Close', verbose=True):
     as a feature, and each row contains values for n_sessions
     """
     features = pd.DataFrame(index=equity_data.index[(n_sessions - 1):],
-            columns=range((-n_sessions + 1), 1))
+            columns=range((-n_sessions + 1), 1), dtype='float64')
     msg_freq = int(128 * 128 / n_sessions)
     # TODO vectorize or multi-thread
     # This is too slow for large data sets
@@ -77,8 +77,7 @@ def normalize(features, **kwargs):
         else:
             raise ValueError("no normalization method '{0}'".format(kwargs['method']))
     else:
-        # http://stackoverflow.com/questions/18833639/attributeerror-in-python-numpy-when-constructing-function-for-certain-values
-        row_norms = np.linalg.norm(np.float64(features.values), axis=1)
+        row_norms = np.linalg.norm(features.values, axis=1)
     if 'labels' in kwargs:
         return features.apply(lambda col: col * norm / row_norms, axis=0), \
                 kwargs['labels'].apply(lambda col: col * norm / row_norms, axis=0)
