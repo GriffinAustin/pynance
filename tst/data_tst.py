@@ -76,16 +76,26 @@ class TestData(unittest.TestCase):
     def test_normalize_last(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
-        normalized = data.normalize(features, method="last")
-        for i in range(len(normalized.index)):
-            self.assertAlmostEqual(normalized.iloc[i, -1], 1.0)
+        labels = pd.DataFrame(features.iloc[:, -1] * 0.5, index=features.index, columns=['Labels'])
+        normalized_features, normalized_labels = data.normalize(features, method="last", labels=labels)
+        for i in range(len(normalized_features.index)):
+            self.assertAlmostEqual(normalized_features.iloc[i, -1], 1.0)
+        for i in range(len(normalized_labels.index)):
+            self.assertAlmostEqual(normalized_labels.iloc[i, 0], 0.5)
 
     def test_normalize_first(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
-        normalized = data.normalize(features, method="first")
-        for i in range(len(normalized.index)):
-            self.assertAlmostEqual(normalized.iloc[i, 0], 1.0)
+        # 2 columns of labels
+        labels = pd.DataFrame(index=features.index, columns=['Label1', 'Label2'])
+        labels['Label1'] = features.iloc[:, 0] * 0.5
+        labels['Label2'] = features.iloc[:, 0] * 2.0
+        normalized_features, normalized_labels = data.normalize(features, method="first", labels=labels)
+        for i in range(len(normalized_features.index)):
+            self.assertAlmostEqual(normalized_features.iloc[i, 0], 1.0)
+        for i in range(len(normalized_labels.index)):
+            self.assertAlmostEqual(normalized_labels.iloc[i, 0], 0.5)
+            self.assertAlmostEqual(normalized_labels.iloc[i, 1], 2.0)
 
 if __name__ == '__main__':
     unittest.main()
