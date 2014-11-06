@@ -64,7 +64,21 @@ def normalize(features, **kwargs):
     """
     norm = 1.0 if 'norm' not in kwargs else kwargs['norm']
     # http://stackoverflow.com/questions/18833639/attributeerror-in-python-numpy-when-constructing-function-for-certain-values
-    row_norms = np.linalg.norm(np.float64(features.values), axis=1)
-    print row_norms
-    #features.values /= row_norms
-    return features[:] / row_norms
+    if 'method' in kwargs and kwargs['method'] != "vector":
+        # TODO test all of these
+        if kwargs['method'] == "last":
+            row_norms = features.loc[:, 0].values
+        elif kwargs['method'] == "first":
+            row_norms = features.iloc[:, 0].values
+        elif kwargs['method'] == "mean":
+            row_norms = np.mean(features.values, axis=1)
+        else:
+            raise ValueError("'{0}' not a valid normalization method".format(kwargs['method'])
+    else:
+        row_norms = np.linalg.norm(np.float64(features.values), axis=1)
+    if 'labels' in kwargs:
+        return features.apply(lambda col: col * norm / row_norms, axis=0), \
+                kwargs['labels'].apply(lambda col: col * norm / row_norms, axis=0)
+    else:
+        return features.apply(lambda col: col * norm / row_norms, axis=0)
+
