@@ -18,21 +18,22 @@ def get(equity, start, end):
     """ Get DataFrame for an individual equity from Yahoo!  """
     return web.DataReader(equity, 'yahoo', start, end)
 
-def featurize(equity_data, n_sessions, column='Adj Close', verbose=True):
+def featurize(equity_data, n_sessions, column='Adj Close'):
     """
     Generate a raw (unnormalized) feature set from the input data.
     The value at `column` on the given date is taken
     as a feature, and each row contains values for n_sessions
+
+    >>> timeit.timeit('data.featurize(data.get("ge", dt.date(1960, 1, 1), 
+            dt.date(2014, 12, 31)), 256)', setup=s, number=1)
+    1.6771750450134277
     """
     features = pd.DataFrame(index=equity_data.index[(n_sessions - 1):],
-            columns=range((-n_sessions + 1), 1), dtype='float64')
-    msg_freq = int(128 * 128 / n_sessions)
-    # TODO vectorize or multi-thread
-    # This is too slow for large data sets
-    for i in range(len(features.index)):
-        features.iloc[i, :] = equity_data[i:(n_sessions + i)][column].values
-        if verbose and i % msg_freq == msg_freq - 1:
-            print "Inserting values for row {0}".format(i + 1)
+            columns=map(str, range((-n_sessions + 1), 1)), dtype='float64')
+    values = equity_data[column].values
+    for i in range(n_sessions - 1):
+        features.iloc[:, i] = values[i:(-n_sessions + i + 1)]
+    features.iloc[:, n_sessions - 1] = values[(n_sessions - 1):]
     return features
 
 def normalize(features, **kwargs):
@@ -65,11 +66,13 @@ def normalize(features, **kwargs):
     Having row_norms as a numpy array should be benchmarked against 
     using a DataFrame:
     http://stackoverflow.com/questions/12525722/normalize-data-in-pandas
+    Note: This isn't a bottleneck. Using a feature set with 13k rows and 256
+    features ('ge' from 1962 until now), the normalization was immediate.
     """
     norm = 1.0 if 'norm' not in kwargs else kwargs['norm']
     if 'method' in kwargs and kwargs['method'] != "vector":
         if kwargs['method'] == "last":
-            row_norms = features.loc[:, 0].values
+            row_norms = features.loc[:, '0'].values
         elif kwargs['method'] == "first":
             row_norms = features.iloc[:, 0].values
         elif kwargs['method'] == "mean":

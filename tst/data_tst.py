@@ -76,7 +76,7 @@ class TestData(unittest.TestCase):
     def test_normalize_last(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
-        labels = pd.DataFrame(features.iloc[:, -1] * 0.5, index=features.index, columns=['Labels'])
+        labels = pd.DataFrame(features.iloc[:, -1] * 0.5, index=features.index) 
         normalized_features, normalized_labels = data.normalize(features, method="last", labels=labels)
         for i in range(len(normalized_features.index)):
             self.assertAlmostEqual(normalized_features.iloc[i, -1], 1.0)
