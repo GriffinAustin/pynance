@@ -32,7 +32,7 @@ def featurize(equity_data, n_sessions, col_label='Adj Close', verbose=True):
     for i in range(len(features.index)):
         features.iloc[i, :] = equity_data[i:(n_sessions + i)][col_label].values
         if verbose and i % msg_freq == msg_freq - 1:
-            print "Processing row {0}".format(i + 1)
+            print "Inserting values for row {0}".format(i + 1)
     return features
 
 def normalize(features, **kwargs):
@@ -61,11 +61,13 @@ def normalize(features, **kwargs):
     Notes
     ---
     If labels are real-valued, they should also be normalized.
+
+    Having row_norms as a numpy array should be benchmarked against 
+    using a DataFrame:
+    http://stackoverflow.com/questions/12525722/normalize-data-in-pandas
     """
     norm = 1.0 if 'norm' not in kwargs else kwargs['norm']
-    # http://stackoverflow.com/questions/18833639/attributeerror-in-python-numpy-when-constructing-function-for-certain-values
     if 'method' in kwargs and kwargs['method'] != "vector":
-        # TODO test all of these
         if kwargs['method'] == "last":
             row_norms = features.loc[:, 0].values
         elif kwargs['method'] == "first":
@@ -73,12 +75,12 @@ def normalize(features, **kwargs):
         elif kwargs['method'] == "mean":
             row_norms = np.mean(features.values, axis=1)
         else:
-            raise ValueError("'{0}' not a valid normalization method".format(kwargs['method'])
+            raise ValueError("no normalization method '{0}'".format(kwargs['method']))
     else:
+        # http://stackoverflow.com/questions/18833639/attributeerror-in-python-numpy-when-constructing-function-for-certain-values
         row_norms = np.linalg.norm(np.float64(features.values), axis=1)
     if 'labels' in kwargs:
         return features.apply(lambda col: col * norm / row_norms, axis=0), \
                 kwargs['labels'].apply(lambda col: col * norm / row_norms, axis=0)
     else:
         return features.apply(lambda col: col * norm / row_norms, axis=0)
-
