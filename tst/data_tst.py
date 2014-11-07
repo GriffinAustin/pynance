@@ -64,7 +64,7 @@ class TestData(unittest.TestCase):
         for i in range(len(norms)):
             self.assertAlmostEqual(norms[i], 1.0)
 
-    def test_normalize_vector(self):
+    def test_normalize_rows_vector(self):
         n_sessions = 3
         norm = 3.14159
         features = data.featurize(self.equity_data, n_sessions)
@@ -73,16 +73,16 @@ class TestData(unittest.TestCase):
         for i in range(len(norms)):
             self.assertAlmostEqual(norms[i], norm)
 
-    def test_normalize_mean(self):
+    def test_normalize_rows_mean(self):
         n_sessions = 3
         norm = 10.0
         features = data.featurize(self.equity_data, n_sessions)
-        normalized = data.normalize(features, method="mean", norm=norm)
+        normalized = data.normalize(features, method="mean", norm=norm, axis=0)
         means = normalized.mean(axis=1)
         for i in range(len(means)):
             self.assertAlmostEqual(means.iloc[i], norm)
 
-    def test_normalize_last(self):
+    def test_normalize_rows_last(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
         labels = pd.DataFrame(features.iloc[:, -1] * 0.5, index=features.index) 
@@ -92,7 +92,7 @@ class TestData(unittest.TestCase):
         for i in range(len(normalized_labels.index)):
             self.assertAlmostEqual(normalized_labels.iloc[i, 0], 0.5)
 
-    def test_normalize_first(self):
+    def test_normalize_rows_first(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
         # 2 columns of labels
@@ -106,5 +106,29 @@ class TestData(unittest.TestCase):
             self.assertAlmostEqual(normalized_labels.iloc[i, 0], 0.5)
             self.assertAlmostEqual(normalized_labels.iloc[i, 1], 2.0)
 
+    def test_normalize_cols_vector(self):
+        norm = 3.14159
+        normalized = data.normalize(self.equity_data, method="vector", norm=norm, axis=1)
+        norms = np.linalg.norm(np.float64(normalized.values), axis=0)
+        for i in range(len(norms)):
+            self.assertAlmostEqual(norms[i], norm)
+    
+    def test_normalize_cols_mean(self):
+        norm = 10.0
+        normalized = data.normalize(self.equity_data, method="mean", norm=norm, axis=1)
+        means = normalized.mean(axis=0)
+        for i in range(len(means)):
+            self.assertAlmostEqual(means.iloc[i], norm)
+    
+    def test_normalize_cols_last(self):
+        normalized = data.normalize(self.equity_data, method="last", axis=1)
+        for i in range(len(normalized.columns)):
+            self.assertAlmostEqual(normalized.iloc[-1, i], 1.0)
+    
+    def test_normalize_cols_first(self):
+        normalized = data.normalize(self.equity_data, method="first", axis=1)
+        for i in range(len(normalized.columns)):
+            self.assertAlmostEqual(normalized.iloc[0, i], 1.0)
+    
 if __name__ == '__main__':
     unittest.main()
