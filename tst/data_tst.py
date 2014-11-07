@@ -35,17 +35,26 @@ class TestData(unittest.TestCase):
                 columns=['Volume', 'Adj Close'])
         self.equity_data.index.name = 'Date'
 
-    def test_featurize_default_col(self):
+    def test_featurize_defaults(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
         self.assertEqual(len(features.index), len(self.equity_data.index) - n_sessions + 1)
         self.assertEqual(len(features.columns), n_sessions)
 
-    def test_featurize_col_arg(self):
+    def test_featurize_selection(self):
         n_sessions = 4
-        features = data.featurize(self.equity_data, n_sessions, column='Volume')
+        features = data.featurize(self.equity_data, n_sessions, selection='Volume')
         self.assertEqual(len(features.index), len(self.equity_data.index) - n_sessions + 1)
         self.assertEqual(len(features.columns), n_sessions)
+
+    def test_featurize_columns(self):
+        cols = ['one', 'two', 'three']
+        n_sessions = len(cols)
+        features = data.featurize(self.equity_data, n_sessions, columns=cols)
+        self.assertEqual(len(features.index), len(self.equity_data.index) - n_sessions + 1)
+        self.assertEqual(len(features.columns), n_sessions)
+        for i in range(len(cols)):
+            self.assertEqual(cols[i], features.columns.values[i])
 
     def test_normalize_default(self):
         n_sessions = 3
