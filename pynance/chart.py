@@ -17,6 +17,7 @@ for ease of use in serving these 2 purposes.
 Resources:
 http://matplotlib.org/api/finance_api.html
 http://stackoverflow.com/questions/22027415/
+http://sentdex.com/sentiment-analysisbig-data-and-python-tutorials-algorithmic-trading/how-to-chart-stocks-and-forex-doing-your-own-financial-charting/
 http://stackoverflow.com/questions/19580116/plotting-candlestick-data-from-a-dataframe-in-python
 http://sentdex.com/sentiment-analysisbig-data-and-python-tutorials-algorithmic-trading/how-to-chart-stocks-and-forex-doing-your-own-financial-charting/
 http://pandas.pydata.org/pandas-docs/version/0.15.0/visualization.html
@@ -27,9 +28,9 @@ import datetime as dt
 import matplotlib.dates as mdates
 import matplotlib.finance as fplt
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
 
 def candlestick(df, **kwargs):
-    #TODO include volume in chart
     """
     candlestick(df, title='GE', fname='foo.png', events=evdf, eventcolors=['r', 'g'], 
             bollinger=bolldf, sma=smadf)
@@ -59,16 +60,26 @@ def candlestick(df, **kwargs):
         if present, first data column will be overlaid as simple moving average
         must have same index as df
     """
-    fig, ax = plt.subplots()
-    # works, but leaves gaps for days when market is closed
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    ax.xaxis.set_minor_locator(mdates.DayLocator())
-    fig.subplots_adjust(bottom=0.2)
-    plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
-    plt.grid()
+    fig = plt.figure()
+    ax1 = plt.subplot2grid((5, 4), (0, 0), rowspan=4, colspan=4)
+    ax1.grid(True)
+    plt.ylabel('Price')
+    plt.setp(plt.gca().get_xticklabels(), visible=False)
     quotes = df.reset_index()
     quotes.loc[:, 'Date'] = mdates.date2num(quotes.loc[:, 'Date'].astype(dt.date))
-    fplt.candlestick_ohlc(ax, quotes.values)
+    fplt.candlestick_ohlc(ax1, quotes.values)
+
+    ax2 = plt.subplot2grid((5, 4), (4, 0), sharex=ax1, rowspan=1, colspan=4)
+    ax2.bar(quotes.loc[:, 'Date'], quotes.loc[:, 'Volume'])
+    ax2.xaxis.set_major_locator(mticker.MaxNLocator(12))
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    ax2.xaxis.set_minor_locator(mdates.DayLocator())
+    ax2.yaxis.set_ticklabels([])
+    ax2.grid(True)
+    plt.ylabel('Volume')
+    plt.xlabel('Date')
+    plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
+    plt.subplots_adjust(left=.09, bottom=.18, right=.94, top=0.94, wspace=.20, hspace=0)
     """
     # Alternatively: (but hard to get dates set up properly)
     plt.xticks(range(len(df.index)), df.index, rotation=45)
@@ -76,7 +87,7 @@ def candlestick(df, **kwargs):
             df.loc[:, 'Low'].values, df.loc[:, 'Close'].values, width=0.2)
     """
     if 'title' in kwargs:
-        ax.set_title(kwargs['title'])
+        plt.suptitle(kwargs['title'])
     if 'fname' in kwargs:
         plt.savefig(kwargs['fname'], bbox_inches='tight')
     plt.show()
