@@ -15,6 +15,7 @@ The functions in this submodule wrap pandas and matplotlib
 for ease of use in serving these 2 purposes.
 
 Resources:
+http://matplotlib.org/api/pyplot_api.html
 http://matplotlib.org/api/finance_api.html
 http://stackoverflow.com/questions/22027415/
 http://sentdex.com/sentiment-analysisbig-data-and-python-tutorials-algorithmic-trading/how-to-chart-stocks-and-forex-doing-your-own-financial-charting/
