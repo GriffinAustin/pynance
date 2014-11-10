@@ -103,6 +103,42 @@ def adj_close(df, **kwargs):
     """
     _make_chart(df, 'adj_close', **kwargs)
 
+def close(df, **kwargs):
+    """
+    close(df, title='GE', fname='foo.png', events=evdf, eventcolors=['r', 'g'], 
+            bollinger=bolldf, sma=smadf)
+
+    Show and optionally save close chart of a DataFrame as retrieved using data.get().
+
+    Parameters
+    ---
+    df : DataFrame containing columns 'Open', 'High', 'Low', 'Close' and 'Volume'
+        source data
+    title : str, optional
+        title to be used for the chart
+    fname : str, optional
+        If provided, the chart will be saved to a file named `fname`. `fname`
+        should also include the extension '.png' or '.pdf'
+    events : DataFrame, optional
+        must have the same index as df.
+        Up to 4 columns of events will be mapped. The order of the columns will
+        determine the marker to be assigned to the event. The color order is:
+        ['g^', 'ro', 'bs', 'k^']
+        Non-events in this DataFrame should have a value like np.NAN,
+        which matplotlib will not plot.
+        The events DataFrame should use dtype='float'. If not, a bug in numpy (or matplotlib)
+        can lead to a TypeError:
+        http://matplotlib.1069221.n5.nabble.com/type-error-with-python-3-2-and-version-1-1-1-of-matplotlib-numpy-error-td38784.html
+    bollinger : DataFrame, optional
+        if present Bollinger bands will be overlaid
+        must have same index as df
+        must contain columns 'Upper' and 'Lower'
+    sma : DataFrame, optional
+        if present, first data column will be overlaid as simple moving average
+        must have same index as df
+    """
+    _make_chart(df, 'close', **kwargs)
+
 def _make_chart(df, chart_type, **kwargs):
     fig = plt.figure()
     ax1 = plt.subplot2grid((5, 4), (0, 0), rowspan=4, colspan=4)
@@ -113,6 +149,9 @@ def _make_chart(df, chart_type, **kwargs):
         _candlestick_ax(df, ax1)
     elif chart_type == 'adj_close':
         _adj_close_ax(df, ax1)
+    elif chart_type == 'close':
+        _close_ax(df, ax1)
+
     if 'sma' in kwargs:
         _plot_sma(kwargs['sma'])
     if 'bollinger' in kwargs:
@@ -151,6 +190,9 @@ def _candlestick_ax(df, ax):
 
 def _adj_close_ax(df, ax):
     ax.plot(df.index, df.loc[:, 'Adj Close'])
+
+def _close_ax(df, ax):
+    ax.plot(df.index, df.loc[:, 'Close'])
 
 def _plot_bollinger(bolldf):
     plt.fill_between(bolldf.index, bolldf.loc[:, 'Upper'].values, 
