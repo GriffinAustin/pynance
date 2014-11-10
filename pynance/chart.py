@@ -46,17 +46,21 @@ def candlestick(df, **kwargs):
     fname : str, optional
         If provided, the chart will be saved to a file named `fname`. `fname`
         should also include the extension '.png' or '.pdf'
-    events : DataFrame, optional (not implemented)
-        must have the same index as df. 
+    events : DataFrame, optional
+        must have the same index as df.
+        Up to 4 columns of events will be mapped. The order of the columns will
+        determine the marker to be assigned to the event. The color order is:
+        ['g^', 'ro', 'bs', 'k^']
         Non-events in this DataFrame should have a value like np.NAN,
-        which matplotlib will not plot
-    eventcolors : list of str, optional (not implemented)
-        http://matplotlib.org/api/colors_api.html
-    bollinger : DataFrame, optional (not implemented)
+        which matplotlib will not plot.
+        The events DataFrame should use dtype='float'. If not, a bug in numpy (or matplotlib)
+        can lead to a TypeError:
+        http://matplotlib.1069221.n5.nabble.com/type-error-with-python-3-2-and-version-1-1-1-of-matplotlib-numpy-error-td38784.html
+    bollinger : DataFrame, optional
         if present Bollinger bands will be overlaid
         must have same index as df
         must contain columns 'Upper' and 'Lower'
-    sma : DataFrame, optional (not implemented)
+    sma : DataFrame, optional
         if present, first data column will be overlaid as simple moving average
         must have same index as df
     """
@@ -78,17 +82,21 @@ def adj_close(df, **kwargs):
     fname : str, optional
         If provided, the chart will be saved to a file named `fname`. `fname`
         should also include the extension '.png' or '.pdf'
-    events : DataFrame, optional (not implemented)
-        must have the same index as df. 
+    events : DataFrame, optional
+        must have the same index as df.
+        Up to 4 columns of events will be mapped. The order of the columns will
+        determine the marker to be assigned to the event. The color order is:
+        ['g^', 'ro', 'bs', 'k^']
         Non-events in this DataFrame should have a value like np.NAN,
-        which matplotlib will not plot
-    eventcolors : list of str, optional (not implemented)
-        http://matplotlib.org/api/colors_api.html
-    bollinger : DataFrame, optional (not implemented)
+        which matplotlib will not plot.
+        The events DataFrame should use dtype='float'. If not, a bug in numpy (or matplotlib)
+        can lead to a TypeError:
+        http://matplotlib.1069221.n5.nabble.com/type-error-with-python-3-2-and-version-1-1-1-of-matplotlib-numpy-error-td38784.html
+    bollinger : DataFrame, optional
         if present Bollinger bands will be overlaid
         must have same index as df
         must contain columns 'Upper' and 'Lower'
-    sma : DataFrame, optional (not implemented)
+    sma : DataFrame, optional
         if present, first data column will be overlaid as simple moving average
         must have same index as df
     """
@@ -104,6 +112,12 @@ def _make_chart(df, chart_type, **kwargs):
         _candlestick_ax(df, ax1)
     elif chart_type == 'adj_close':
         _adj_close_ax(df, ax1)
+    if 'sma' in kwargs:
+        _plot_sma(kwargs['sma'])
+    if 'bollinger' in kwargs:
+        _plot_bollinger(kwargs['bollinger'])
+    if 'events' in kwargs:
+        _plot_events(kwargs['events'])
 
     ax2 = plt.subplot2grid((5, 4), (4, 0), sharex=ax1, rowspan=1, colspan=4)
     ax2.bar(df.index, df.loc[:, 'Volume'])
@@ -136,3 +150,17 @@ def _candlestick_ax(df, ax):
 
 def _adj_close_ax(df, ax):
     ax.plot(df.index, df.loc[:, 'Adj Close'])
+
+def _plot_bollinger(bolldf):
+    plt.fill_between(bolldf.index, bolldf.loc[:, 'Upper'].values, 
+            bolldf.loc[:, 'Lower'].values, facecolor='gray', alpha=0.5)
+
+def _plot_sma(smadf):
+    lines = plt.plot(smadf.index, smadf.iloc[:, 0].values)
+    lines[0].set_color('g')
+
+def _plot_events(events):
+    colors = ['gd', 'rv', 'b*', 'k^']
+    n_events = min({len(events.columns), len(colors)})
+    for i in range(n_events):
+        plt.plot(events.index, events.iloc[:, i].values, colors[i], alpha=0.5, ms=12.0)
