@@ -76,30 +76,7 @@ def adj_close(df, **kwargs):
 
     Parameters
     ---
-    df : DataFrame containing columns 'Open', 'High', 'Low', 'Close' and 'Volume'
-        source data
-    title : str, optional
-        title to be used for the chart
-    fname : str, optional
-        If provided, the chart will be saved to a file named `fname`. `fname`
-        should also include the extension '.png' or '.pdf'
-    events : DataFrame, optional
-        must have the same index as df.
-        Up to 4 columns of events will be mapped. The order of the columns will
-        determine the marker to be assigned to the event. The color order is:
-        ['g^', 'ro', 'bs', 'k^']
-        Non-events in this DataFrame should have a value like np.NAN,
-        which matplotlib will not plot.
-        The events DataFrame should use dtype='float'. If not, a bug in numpy (or matplotlib)
-        can lead to a TypeError:
-        http://matplotlib.1069221.n5.nabble.com/type-error-with-python-3-2-and-version-1-1-1-of-matplotlib-numpy-error-td38784.html
-    bollinger : DataFrame, optional
-        if present Bollinger bands will be overlaid
-        must have same index as df
-        must contain columns 'Upper' and 'Lower'
-    sma : DataFrame, optional
-        if present, first data column will be overlaid as simple moving average
-        must have same index as df
+    same as for candlestick
     """
     _make_chart(df, 'adj_close', **kwargs)
 
@@ -112,30 +89,7 @@ def close(df, **kwargs):
 
     Parameters
     ---
-    df : DataFrame containing columns 'Open', 'High', 'Low', 'Close' and 'Volume'
-        source data
-    title : str, optional
-        title to be used for the chart
-    fname : str, optional
-        If provided, the chart will be saved to a file named `fname`. `fname`
-        should also include the extension '.png' or '.pdf'
-    events : DataFrame, optional
-        must have the same index as df.
-        Up to 4 columns of events will be mapped. The order of the columns will
-        determine the marker to be assigned to the event. The color order is:
-        ['g^', 'ro', 'bs', 'k^']
-        Non-events in this DataFrame should have a value like np.NAN,
-        which matplotlib will not plot.
-        The events DataFrame should use dtype='float'. If not, a bug in numpy (or matplotlib)
-        can lead to a TypeError:
-        http://matplotlib.1069221.n5.nabble.com/type-error-with-python-3-2-and-version-1-1-1-of-matplotlib-numpy-error-td38784.html
-    bollinger : DataFrame, optional
-        if present Bollinger bands will be overlaid
-        must have same index as df
-        must contain columns 'Upper' and 'Lower'
-    sma : DataFrame, optional
-        if present, first data column will be overlaid as simple moving average
-        must have same index as df
+    same as for candlestick
     """
     _make_chart(df, 'close', **kwargs)
 
