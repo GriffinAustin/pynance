@@ -65,7 +65,7 @@ def candlestick(df, **kwargs):
         if present, first data column will be overlaid as simple moving average
         must have same index as df
     """
-    _make_chart(df, 'candlestick', **kwargs)
+    _make_chart(df, _candlestick_ax, **kwargs)
 
 def adj_close(df, **kwargs):
     """
@@ -78,7 +78,7 @@ def adj_close(df, **kwargs):
     ---
     same as for candlestick
     """
-    _make_chart(df, 'adj_close', **kwargs)
+    _make_chart(df, _adj_close_ax, **kwargs)
 
 def close(df, **kwargs):
     """
@@ -91,21 +91,15 @@ def close(df, **kwargs):
     ---
     same as for candlestick
     """
-    _make_chart(df, 'close', **kwargs)
+    _make_chart(df, _close_ax, **kwargs)
 
-def _make_chart(df, chart_type, **kwargs):
+def _make_chart(df, chartfn, **kwargs):
     fig = plt.figure()
     ax1 = plt.subplot2grid((5, 4), (0, 0), rowspan=4, colspan=4)
     ax1.grid(True)
     plt.ylabel('Price')
     plt.setp(plt.gca().get_xticklabels(), visible=False)
-    if chart_type == 'candlestick':
-        _candlestick_ax(df, ax1)
-    elif chart_type == 'adj_close':
-        _adj_close_ax(df, ax1)
-    elif chart_type == 'close':
-        _close_ax(df, ax1)
-
+    chartfn(df, ax1)
     if 'sma' in kwargs:
         _plot_sma(kwargs['sma'])
     if 'bollinger' in kwargs:
@@ -117,7 +111,9 @@ def _make_chart(df, chart_type, **kwargs):
     ax2.bar(df.index, df.loc[:, 'Volume'])
     ax2.xaxis.set_major_locator(mticker.MaxNLocator(12))
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-    ax2.xaxis.set_minor_locator(mdates.DayLocator())
+    if len(df.index) <= 128:
+        # undesirable for longer time periods and eventually raises exception
+        ax2.xaxis.set_minor_locator(mdates.DayLocator())
     ax2.yaxis.set_ticklabels([])
     ax2.grid(True)
     plt.ylabel('Volume')
