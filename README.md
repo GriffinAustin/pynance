@@ -7,7 +7,7 @@ ease of use in accomplishing routine tasks in working with financial data.
 Dependencies
 ---
 Tested on:
-* [Python](https://www.python.org/) 2.7.8
+* [Python](https://www.python.org/) 2.7.8, 3.4.2
 * [matplotlib](http://matplotlib.org/index.html) 1.4.2
 * [NumPy](http://www.numpy.org/) 1.9.0
 * [Pandas](http://pandas.pydata.org/) 0.14.1
