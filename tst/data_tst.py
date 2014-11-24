@@ -129,6 +129,17 @@ class TestData(unittest.TestCase):
         normalized = data.normalize(self.equity_data, method="first", axis=1)
         for i in range(len(normalized.columns)):
             self.assertAlmostEqual(normalized.iloc[0, i], 1.0)
+
+    def test_add_const(self):
+        n_sessions = 3
+        features = data.featurize(self.equity_data, n_sessions)
+        x = data.add_const(features)
+        self.assertEqual(len(x.index), len(features.index))
+        self.assertEqual(len(x.columns), len(features.columns) + 1)
+        for i in range(len(x.index)):
+            self.assertAlmostEqual(x.iloc[i, 0], 1.0)
+            for j in range(len(features.columns)):
+                self.assertAlmostEqual(x.iloc[i, j + 1], features.iloc[i, j])
     
 if __name__ == '__main__':
     unittest.main()

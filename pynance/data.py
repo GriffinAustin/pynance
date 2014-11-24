@@ -28,16 +28,17 @@ def featurize(equity_data, n_sessions, **kwargs):
 
     Parameters
     ---
-    equity_data : DataFrame from which to generate features
+    equity_data : DataFrame
+        data from which to generate features
 
-    n_sessions : number of sessions to use as features
+    n_sessions : int
+        number of sessions to use as features
 
-    **kwargs :
-        selection : column of `equity_data` from which to generate
-        features. Defaults to 'Adj Close'.
+    selection : str, default: 'Adj Close'
+        column of `equity_data` from which to generate features.
 
-        columns : list of column names in output DataFrame.
-        Defaults to map(str, range((-n_sessions + 1), 1)), e.g.
+    columns : list, default: map(str, range((-n_sessions + 1), 1))
+        column names for output DataFrame. Default will look like:
         ['-5', '-4', '-3', '-2', '-1', '0']
 
     Benchmarking
@@ -67,22 +68,26 @@ def normalize(data_frame, **kwargs):
 
     Parameters
     ---
-    data_frame : data_frame to be normalized
+    data_frame : DataFrame
+        data to be normalized
 
-    **kwargs :
-        axis : 0 (default) to normalize each row, 1 to normalize each column
-        method : valid methods are
-            "vector" : Default for normalization by row (axis=0).
+    axis : int in {0, 1}, default: 0
+        0 to normalize each row, 1 to normalize each column
+    method : str
+        valid methods are
+        - "vector" : Default for normalization by row (axis=0).
             Normalize along axis as a vector with norm `norm`
-            "last" : Linear normalization setting last value along the axis to `norm`
-            "first" : Default for normalization of columns (axis=1).
+        - "last" : Linear normalization setting last value along the axis to `norm`
+        - "first" : Default for normalization of columns (axis=1).
             Linear normalization setting first value along the given axis to `norm`
-            "mean" : Normalize so that the mean of each vector along the given axis is `norm`
+        - "mean" : Normalize so that the mean of each vector along the given axis is `norm`
 
-        norm : Defaults to 1.0. Target value of normalization.
+    norm : float, default 1.0
+        Target value of normalization.
 
-        labels : labels may be passed as keyword argument, in which
-            case the label values will be normalized and returned
+    labels : DataFrame
+        labels may be passed as keyword argument, in which
+        case the label values will also be normalized and returned
 
     Return
     ---
@@ -117,6 +122,16 @@ def normalize(data_frame, **kwargs):
             return data_frame.apply(lambda col: col * norm / norm_vector, axis=0)
         else:
             return data_frame.apply(lambda row: row * norm / norm_vector, axis=1)
+
+def add_const(features):
+    """
+    Prepend the constant feature 1 as first feature and return the modified
+    feature set
+    """
+    content = np.ones((features.shape[0], features.shape[1] + 1), dtype='float64')
+    content[:, 1:] = features.iloc[:, :].values
+    cols = ['Constant'] + features.columns.tolist()
+    return pd.DataFrame(data=content, index=features.index, columns=cols, dtype='float64')
 
 def _get_norms_of_rows(data_frame, method):
     """ return a column vector containing the norm of each row """
