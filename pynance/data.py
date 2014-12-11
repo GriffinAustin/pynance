@@ -126,9 +126,17 @@ def normalize(data_frame, **kwargs):
 def add_const(features):
     """
     Prepend the constant feature 1 as first feature and return the modified
-    feature set
+    feature set.
+
+    Parameters
+    --
+    features : ndarray or DataFrame
     """
-    content = np.ones((features.shape[0], features.shape[1] + 1), dtype='float64')
+    content = np.empty((features.shape[0], features.shape[1] + 1), dtype='float64')
+    content[:, 0] = 1.
+    if isinstance(features, np.ndarray):
+        content[:, 1:] = features
+        return content
     content[:, 1:] = features.iloc[:, :].values
     cols = ['Constant'] + features.columns.tolist()
     return pd.DataFrame(data=content, index=features.index, columns=cols, dtype='float64')

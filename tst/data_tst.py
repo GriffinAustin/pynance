@@ -130,10 +130,12 @@ class TestData(unittest.TestCase):
         for i in range(len(normalized.columns)):
             self.assertAlmostEqual(normalized.iloc[0, i], 1.0)
 
-    def test_add_const(self):
+    def test_add_const_df(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
         x = data.add_const(features)
+        self.assertTrue(isinstance(x, pd.DataFrame))
+        self.assertFalse(isinstance(x, np.ndarray))
         self.assertEqual(len(x.index), len(features.index))
         self.assertEqual(len(x.columns), len(features.columns) + 1)
         for i in range(len(x.index)):
@@ -141,5 +143,18 @@ class TestData(unittest.TestCase):
             for j in range(len(features.columns)):
                 self.assertAlmostEqual(x.iloc[i, j + 1], features.iloc[i, j])
     
+    def test_add_const_ndarray(self):
+        n_sessions = 3
+        features = data.featurize(self.equity_data, n_sessions).values
+        x = data.add_const(features)
+        self.assertTrue(isinstance(x, np.ndarray))
+        self.assertFalse(isinstance(x, pd.DataFrame))
+        self.assertEqual(x.shape[0], features.shape[0])
+        self.assertEqual(x.shape[1], features.shape[1] + 1)
+        for i in range(x.shape[0]):
+            self.assertAlmostEqual(x[i, 0], 1.0)
+            for j in range(features.shape[1]):
+                self.assertAlmostEqual(x[i, j + 1], features[i, j])
+
 if __name__ == '__main__':
     unittest.main()
