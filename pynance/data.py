@@ -141,6 +141,31 @@ def add_const(features):
     cols = ['Constant'] + features.columns.tolist()
     return pd.DataFrame(data=content, index=features.index, columns=cols, dtype='float64')
 
+def get_returns(eqdata, selection='Adj Close', n_sessions=1):
+    """
+    Generate a DataFrame where the sole column, 'Return',
+    is the return for the equity over the given number of sessions.
+    
+    For example, if 'XYZ' has 'Adj Close' of `100.0` on 2014-12-15 and 
+    `90.0` 4 *sessions* later on 2014-12-19, then the 'Return' value
+    for 2014-12-19 will be `-0.1`.
+
+    Notes
+    --
+    The interval is the number of *sessions* between the 2 values
+    whose ratio is being measured, *not* the number of days (which
+    includes days on which the market is closed).
+
+    The percentage gain or loss is measured relative to the earlier
+    date, but the index date is the later date. The index is chose because
+    that is the date on which the value is known. The percentage measure is because
+    that is the way for calculating percent profit and loss.
+    """
+    result = pd.DataFrame(index=eqdata.index[n_sessions:], columns=['Return'], dtype='float64')
+    selected_data = eqdata.loc[:, selection]
+    result.values[:, 0] = selected_data.values[n_sessions:] / selected_data.values[:-n_sessions] - 1.
+    return result
+
 def _get_norms_of_rows(data_frame, method):
     """ return a column vector containing the norm of each row """
     if method == 'vector':
