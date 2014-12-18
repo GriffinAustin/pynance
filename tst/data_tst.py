@@ -172,5 +172,27 @@ class TestData(unittest.TestCase):
             self.assertAlmostEqual(eqret.iloc[i, 0], 10. / (1. + 2. * i))
             self.assertEqual(eqret.index[i], self.equity_data.index[i + 5])
 
+    def test_center(self):
+        # DataFrame
+        cfeat, means = data.center(self.equity_data)
+        self.assertAlmostEqual(means[0, 0], 10.)
+        self.assertAlmostEqual(means[0, 1], 11.)
+        for i in range(len(self.equity_data.index)):
+            self.assertEqual(cfeat.index[i], self.equity_data.index[i])
+        for i in range(len(self.equity_data.columns)):
+            self.assertEqual(cfeat.columns[i], self.equity_data.columns[i])
+        cmeans = cfeat.mean(axis=0)
+        for i in range(len(cmeans)):
+            self.assertAlmostEqual(cmeans[i], 0.)
+        # ndarray
+        cfeat, means = data.center(self.equity_data.values)
+        self.assertAlmostEqual(means[0, 0], 10.)
+        self.assertAlmostEqual(means[0, 1], 11.)
+        self.assertEqual(cfeat.shape, self.equity_data.values.shape)
+        cmeans = cfeat.mean(axis=0)
+        for i in range(len(cmeans)):
+            self.assertAlmostEqual(cmeans[i], 0.)
+
+
 if __name__ == '__main__':
     unittest.main()

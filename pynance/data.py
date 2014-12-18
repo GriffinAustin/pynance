@@ -166,6 +166,26 @@ def get_returns(eqdata, selection='Adj Close', n_sessions=1):
     result.values[:, 0] = selected_data.values[n_sessions:] / selected_data.values[:-n_sessions] - 1.
     return result
 
+def center(features):
+    """
+    Center a DataFrame or ndarray.
+
+    Returns
+    --
+    1. Centered DataFrame or ndarray corresponding to the type of the input.
+    2. The mean for each column as ndarray row vector
+    """
+    isdataframe = isinstance(features, pd.DataFrame)
+    if isdataframe:
+        _feat = features.values
+    else:
+        _feat = features
+    means = _feat.mean(axis=0)[np.newaxis, :]
+    content = _feat - means
+    if not isdataframe:
+        return content, means
+    return pd.DataFrame(data=content, index=features.index, columns=features.columns), means
+
 def _get_norms_of_rows(data_frame, method):
     """ return a column vector containing the norm of each row """
     if method == 'vector':
