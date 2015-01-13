@@ -41,6 +41,13 @@ def featurize(equity_data, n_sessions, **kwargs):
         column names for output DataFrame. Default will look like:
         ['-5', '-4', '-3', '-2', '-1', '0']
 
+    Returns
+    --
+    out : DataFrame
+        Each row is a sequence of `n_sessions` session values where
+        the last column matches the value on the date specified by
+        the DataFrame index.
+
     Benchmarking
     ---
     >>> s = 'from __main__ import data\nimport datetime as dt\n'
@@ -59,11 +66,116 @@ def featurize(equity_data, n_sessions, **kwargs):
     features.iloc[:, n_sessions - 1] = values[(n_sessions - 1):]
     return features
 
-def normalize(data_frame, **kwargs):
+def center(dataset, out=None):
     """
-    normalize(data_frame, **kwargs)
+    Returns a centered data set.
+    
+    Each column of the returned data will have mean 0.
+    The row vector subtracted from each row to achieve this
+    transformation is also returned.
 
-    Normalize data_frame along the given axis. By default, each row
+    Parameters
+    --
+    dataset : DataFrame or ndarray
+
+    out : DataFrame or ndarray, optional
+        Alternate output array in which to place the result.
+        If provided, it must have the same shape and type
+        (DataFrame or ndarray) as the expected output.
+
+    Returns
+    --
+    out : tuple of DataFrame or ndarray
+        The output data is of the same type as the input.
+
+    Notes
+    --
+    To exclude a column (such as a constant feature, which is
+    usually the first or last column of data) simply don't
+    include it in the input. For example:
+
+    >>> centered_data, means = pn.center(mydata.iloc[:, 1:])
+
+    To perform this operation in place:
+
+    >>> _, means = pn.center(mydata.iloc[:, 1:], out=mydata.iloc:, 1:])
+    """
+    return _preprocess(_center_fn, dataset, out)
+
+def _preprocess(func, dataset, out):
+    # Generic preprocessing function used in center() and normalize()
+    is_df = isinstance(dataset, pd.DataFrame)
+    _data = (dataset.values if is_df else dataset)
+    processed_data, adjustment = func(_data)
+    if not is_df:
+        if out is not None:
+            out[:, :] = processed_data
+            return out, adjustment
+        return processed_data, adjustment
+    adj_df = pd.DataFrame(data=adjustment, index=['Mean'], columns=dataset.columns,
+            dtype='float64')
+    if out is not None:
+        out.values[:, :] = processed_data
+        return out, adj_df
+    processed_df = pd.DataFrame(data=processed_data, index=dataset.index, 
+            columns=dataset.columns, dtype='float64')
+    return processed_df, adj_df
+
+def _center_fn(_data):
+    adjustment = np.mean(_data, axis=0, dtype=np.float64).reshape((1, _data.shape[1]))
+    centered_data = _data - adjustment
+    return centered_data, adjustment
+
+def _normalize_fn(_data):
+    adjustment = np.std(_data, axis=0, dtype=np.float64).reshape((1, _data.shape[1]))
+    normalized_data = _data / adjustment
+    return normalized_data, adjustment
+
+def normalize(centered_data, out=None):
+    """
+    Returns a data set with standard deviation of 1.
+
+    The input data must be centered for the operation to
+    yield valid results: The mean of each column must be 0.
+    Each column of the returned data set will have standard
+    deviation 1.
+
+    The row vector by which each row of data is divided is
+    also returned.
+
+    Parameters
+    --
+    centered_data : DataFrame or ndarray
+
+    out : DataFrame or ndarray, optional
+        Alternate output array in which to place the result.
+        If provided, it must have the same shape and type
+        (DataFrame or ndarray) as the expected output.
+
+    Returns
+    --
+    out : tuple of DataFrame or ndarray
+        The output data is of the same type as the input.
+
+    Notes
+    --
+    To exclude a column (such as a constant feature, which is
+    usually the first or last column of data) simply don't
+    include it in the input. For example:
+
+    >>> normalized_data, sd_adj = pn.normalize(mydata.iloc[:, 1:])
+
+    To perform this operation in place:
+
+    >>> _, sd_adj = pn.normalize(mydata.iloc[:, 1:], out=mydata.iloc:, 1:])
+    """
+    return _preprocess(_normalize_fn, centered_data, out)
+
+def transform(data_frame, **kwargs):
+    """
+    Return a transformed DataFrame
+
+    Transform data_frame along the given axis. By default, each row
     will be normalized (axis=0)
 
     Parameters
@@ -89,8 +201,10 @@ def normalize(data_frame, **kwargs):
         labels may be passed as keyword argument, in which
         case the label values will also be normalized and returned
 
-    Return
+    Returns
     ---
+    out : DataFrame or tuple of 2 DataFrames
+    
     Normalized data_frame if no labels are provided. Otherwise, a tuple
     containing first normalized data_frame, then normalized labels.
 
@@ -165,26 +279,6 @@ def get_returns(eqdata, selection='Adj Close', n_sessions=1):
     selected_data = eqdata.loc[:, selection]
     result.values[:, 0] = selected_data.values[n_sessions:] / selected_data.values[:-n_sessions] - 1.
     return result
-
-def center(features):
-    """
-    Center a DataFrame or ndarray.
-
-    Returns
-    --
-    1. Centered DataFrame or ndarray corresponding to the type of the input.
-    2. The mean for each column as ndarray row vector
-    """
-    isdataframe = isinstance(features, pd.DataFrame)
-    if isdataframe:
-        _feat = features.values
-    else:
-        _feat = features
-    means = _feat.mean(axis=0)[np.newaxis, :]
-    content = _feat - means
-    if not isdataframe:
-        return content, means
-    return pd.DataFrame(data=content, index=features.index, columns=features.columns), means
 
 def _get_norms_of_rows(data_frame, method):
     """ return a column vector containing the norm of each row """

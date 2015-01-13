@@ -13,18 +13,18 @@ import interest
 
 class TestData(unittest.TestCase):
 
-    def test_get_multiple(self):
-        # multiple of 8 over 3 years means annual multiple of 2
-        self.assertAlmostEqual(interest.get_multiple(8, 3), 2.0)
+    def test_get_growth(self):
+        # growth of 8 over 3 years means annual growth of 2
+        self.assertAlmostEqual(interest.get_growth(8, 3), 2.0)
 
     def test_get_interest(self):
-        # interest of 2.0 over .5 yrs means multiple of 3.0
+        # interest of 2.0 over .5 yrs means growth of 3.0
         # so annual muliple of 9.0 and interest of 8.0
         self.assertAlmostEqual(interest.get_interest(2, 0.5), 8.0)
 
-    def test_get_compounded_multiple(self):
-        # compound an annual multiple of 16.0 over 0.5 yrs
-        self.assertAlmostEqual(interest.get_compounded_multiple(16.0, 0.5), 4.0)
+    def test_get_compounded_growth(self):
+        # compound an annual growth of 16.0 over 0.5 yrs
+        self.assertAlmostEqual(interest.get_compounded_growth(16.0, 0.5), 4.0)
 
     def test_get_compounded_interest(self):
         # compound annual interest of 0.1 over 25 years

@@ -56,79 +56,164 @@ class TestData(unittest.TestCase):
         for i in range(len(cols)):
             self.assertEqual(cols[i], features.columns.values[i])
 
-    def test_normalize_default(self):
+    def test_center_df(self):
+        features = pd.DataFrame(data=np.random.random((112, 3)), columns=['1', '2', '3'])
+        centered_features, feat_means = data.center(features)
+        means_of_centered = np.mean(centered_features.values, axis=0)
+        for i in range(len(means_of_centered)):
+            self.assertAlmostEqual(means_of_centered[i], 0.)
+        self.assertTrue(isinstance(centered_features, pd.DataFrame))
+        self.assertTrue(isinstance(feat_means, pd.DataFrame))
+
+    def test_center_partial_df(self):
+        features = pd.DataFrame(data=np.ones((23, 4)), columns=map(str, range(4)), dtype='float64')
+        features.iloc[:, 1:] = np.random.random((23, 3))
+        centered_features, feat_means = data.center(features.iloc[:, 1:], out=features.iloc[:, 1:])
+        means_of_centered = np.mean(features.values, axis=0)
+        self.assertAlmostEqual(means_of_centered[0], 1.)
+        for i in range(1, len(means_of_centered)):
+            self.assertAlmostEqual(means_of_centered[i], 0.)
+        self.assertTrue(isinstance(centered_features, pd.DataFrame))
+        self.assertTrue(isinstance(feat_means, pd.DataFrame))
+
+    def test_center_ndarray(self):
+        features = np.random.random((27, 9))
+        centered_features, feat_means = data.center(features)
+        means_of_centered = np.mean(centered_features, axis=0)
+        for i in range(len(means_of_centered)):
+            self.assertAlmostEqual(means_of_centered[i], 0.)
+        self.assertTrue(isinstance(centered_features, np.ndarray))
+        self.assertTrue(isinstance(feat_means, np.ndarray))
+
+    def test_center_ndarray_partial(self):
+        features = np.ones((16, 5))
+        features[:, :-1] = np.random.random((16, 4))
+        centered_features, feat_means = data.center(features[:, :-1], 
+                out=features[:, :-1])
+        means_of_centered = np.mean(features, axis=0)
+        for i in range(len(means_of_centered) - 1):
+            self.assertAlmostEqual(means_of_centered[i], 0.)
+        self.assertAlmostEqual(means_of_centered[-1], 1.)
+        self.assertTrue(isinstance(centered_features, np.ndarray))
+        self.assertTrue(isinstance(feat_means, np.ndarray))
+
+    def test_normalize_df(self):
+        features = pd.DataFrame(data=np.random.random((112, 3)), columns=['1', '2', '3'])
+        centered_features, _ = data.center(features)
+        normalized_features, stds = data.normalize(features)
+        stds_of_normalized = np.std(normalized_features.values, axis=0)
+        for i in range(len(stds_of_normalized)):
+            self.assertAlmostEqual(stds_of_normalized[i], 1.)
+        self.assertTrue(isinstance(normalized_features, pd.DataFrame))
+        self.assertTrue(isinstance(stds, pd.DataFrame))
+
+    def test_normalize_partial_df(self):
+        features = pd.DataFrame(data=np.ones((23, 4)), columns=map(str, range(4)), dtype='float64')
+        features.iloc[:, 1:] = np.random.random((23, 3))
+        _, _ = data.center(features.iloc[:, 1:], out=features.iloc[:, 1:])
+        normalized_features, stds = data.normalize(features.iloc[:, 1:], out=features.iloc[:, 1:])
+        stds_of_normalized = np.std(features.values, axis=0)
+        self.assertAlmostEqual(stds_of_normalized[0], 0.)
+        for i in range(1, len(stds_of_normalized)):
+            self.assertAlmostEqual(stds_of_normalized[i], 1.)
+        self.assertTrue(isinstance(normalized_features, pd.DataFrame))
+        self.assertTrue(isinstance(stds, pd.DataFrame))
+
+    def test_normalize_ndarray(self):
+        features = np.random.random((27, 9))
+        centered_features, _ = data.center(features)
+        normalized_features, stds = data.normalize(features)
+        stds_of_normalized = np.std(normalized_features, axis=0)
+        for i in range(len(stds_of_normalized)):
+            self.assertAlmostEqual(stds_of_normalized[i], 1.)
+        self.assertTrue(isinstance(normalized_features, np.ndarray))
+        self.assertTrue(isinstance(stds, np.ndarray))
+
+    def test_normalize_ndarray_partial(self):
+        features = np.ones((16, 5))
+        features[:, :-1] = np.random.random((16, 4))
+        _, _ = data.center(features[:, :-1], out=features[:, :-1])
+        normalized_features, stds = data.normalize(features[:, :-1], out=features[:, :-1])
+        stds_of_normalized = np.std(features, axis=0)
+        self.assertAlmostEqual(stds_of_normalized[-1], 0.)
+        for i in range(len(stds_of_normalized) - 1):
+            self.assertAlmostEqual(stds_of_normalized[i], 1.)
+        self.assertTrue(isinstance(normalized_features, np.ndarray))
+        self.assertTrue(isinstance(stds, np.ndarray))
+
+    def test_transform_default(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
-        normalized = data.normalize(features)
-        norms = np.linalg.norm(np.float64(normalized.values), axis=1)
+        transformed = data.transform(features)
+        norms = np.linalg.norm(np.float64(transformed.values), axis=1)
         for i in range(len(norms)):
             self.assertAlmostEqual(norms[i], 1.0)
 
-    def test_normalize_rows_vector(self):
+    def test_transform_rows_vector(self):
         n_sessions = 3
         norm = 3.14159
         features = data.featurize(self.equity_data, n_sessions)
-        normalized = data.normalize(features, method="vector", norm=norm)
-        norms = np.linalg.norm(np.float64(normalized.values), axis=1)
+        transformed = data.transform(features, method="vector", norm=norm)
+        norms = np.linalg.norm(np.float64(transformed.values), axis=1)
         for i in range(len(norms)):
             self.assertAlmostEqual(norms[i], norm)
 
-    def test_normalize_rows_mean(self):
+    def test_transform_rows_mean(self):
         n_sessions = 3
         norm = 10.0
         features = data.featurize(self.equity_data, n_sessions)
-        normalized = data.normalize(features, method="mean", norm=norm, axis=0)
-        means = normalized.mean(axis=1)
+        transformed = data.transform(features, method="mean", norm=norm, axis=0)
+        means = transformed.mean(axis=1)
         for i in range(len(means)):
             self.assertAlmostEqual(means.iloc[i], norm)
 
-    def test_normalize_rows_last(self):
+    def test_transform_rows_last(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
         labels = pd.DataFrame(features.iloc[:, -1] * 0.5, index=features.index) 
-        normalized_features, normalized_labels = data.normalize(features, method="last", labels=labels)
-        for i in range(len(normalized_features.index)):
-            self.assertAlmostEqual(normalized_features.iloc[i, -1], 1.0)
-        for i in range(len(normalized_labels.index)):
-            self.assertAlmostEqual(normalized_labels.iloc[i, 0], 0.5)
+        transformed_features, transformed_labels = data.transform(features, method="last", labels=labels)
+        for i in range(len(transformed_features.index)):
+            self.assertAlmostEqual(transformed_features.iloc[i, -1], 1.0)
+        for i in range(len(transformed_labels.index)):
+            self.assertAlmostEqual(transformed_labels.iloc[i, 0], 0.5)
 
-    def test_normalize_rows_first(self):
+    def test_transform_rows_first(self):
         n_sessions = 3
         features = data.featurize(self.equity_data, n_sessions)
         # 2 columns of labels
         labels = pd.DataFrame(index=features.index, columns=['Label1', 'Label2'])
         labels['Label1'] = features.iloc[:, 0] * 0.5
         labels['Label2'] = features.iloc[:, 0] * 2.0
-        normalized_features, normalized_labels = data.normalize(features, method="first", labels=labels)
-        for i in range(len(normalized_features.index)):
-            self.assertAlmostEqual(normalized_features.iloc[i, 0], 1.0)
-        for i in range(len(normalized_labels.index)):
-            self.assertAlmostEqual(normalized_labels.iloc[i, 0], 0.5)
-            self.assertAlmostEqual(normalized_labels.iloc[i, 1], 2.0)
+        transformed_features, transformed_labels = data.transform(features, method="first", labels=labels)
+        for i in range(len(transformed_features.index)):
+            self.assertAlmostEqual(transformed_features.iloc[i, 0], 1.0)
+        for i in range(len(transformed_labels.index)):
+            self.assertAlmostEqual(transformed_labels.iloc[i, 0], 0.5)
+            self.assertAlmostEqual(transformed_labels.iloc[i, 1], 2.0)
 
-    def test_normalize_cols_vector(self):
+    def test_transform_cols_vector(self):
         norm = 3.14159
-        normalized = data.normalize(self.equity_data, method="vector", norm=norm, axis=1)
-        norms = np.linalg.norm(np.float64(normalized.values), axis=0)
+        transformed = data.transform(self.equity_data, method="vector", norm=norm, axis=1)
+        norms = np.linalg.norm(np.float64(transformed.values), axis=0)
         for i in range(len(norms)):
             self.assertAlmostEqual(norms[i], norm)
     
-    def test_normalize_cols_mean(self):
+    def test_transform_cols_mean(self):
         norm = 10.0
-        normalized = data.normalize(self.equity_data, method="mean", norm=norm, axis=1)
-        means = normalized.mean(axis=0)
+        transformed = data.transform(self.equity_data, method="mean", norm=norm, axis=1)
+        means = transformed.mean(axis=0)
         for i in range(len(means)):
             self.assertAlmostEqual(means.iloc[i], norm)
     
-    def test_normalize_cols_last(self):
-        normalized = data.normalize(self.equity_data, method="last", axis=1)
-        for i in range(len(normalized.columns)):
-            self.assertAlmostEqual(normalized.iloc[-1, i], 1.0)
+    def test_transform_cols_last(self):
+        transformed = data.transform(self.equity_data, method="last", axis=1)
+        for i in range(len(transformed.columns)):
+            self.assertAlmostEqual(transformed.iloc[-1, i], 1.0)
     
-    def test_normalize_cols_first(self):
-        normalized = data.normalize(self.equity_data, method="first", axis=1)
-        for i in range(len(normalized.columns)):
-            self.assertAlmostEqual(normalized.iloc[0, i], 1.0)
+    def test_transform_cols_first(self):
+        transformed = data.transform(self.equity_data, method="first", axis=1)
+        for i in range(len(transformed.columns)):
+            self.assertAlmostEqual(transformed.iloc[0, i], 1.0)
 
     def test_add_const_df(self):
         n_sessions = 3
@@ -171,28 +256,6 @@ class TestData(unittest.TestCase):
         for i in range(5):
             self.assertAlmostEqual(eqret.iloc[i, 0], 10. / (1. + 2. * i))
             self.assertEqual(eqret.index[i], self.equity_data.index[i + 5])
-
-    def test_center(self):
-        # DataFrame
-        cfeat, means = data.center(self.equity_data)
-        self.assertAlmostEqual(means[0, 0], 10.)
-        self.assertAlmostEqual(means[0, 1], 11.)
-        for i in range(len(self.equity_data.index)):
-            self.assertEqual(cfeat.index[i], self.equity_data.index[i])
-        for i in range(len(self.equity_data.columns)):
-            self.assertEqual(cfeat.columns[i], self.equity_data.columns[i])
-        cmeans = cfeat.mean(axis=0)
-        for i in range(len(cmeans)):
-            self.assertAlmostEqual(cmeans[i], 0.)
-        # ndarray
-        cfeat, means = data.center(self.equity_data.values)
-        self.assertAlmostEqual(means[0, 0], 10.)
-        self.assertAlmostEqual(means[0, 1], 11.)
-        self.assertEqual(cfeat.shape, self.equity_data.values.shape)
-        cmeans = cfeat.mean(axis=0)
-        for i in range(len(cmeans)):
-            self.assertAlmostEqual(cmeans[i], 0.)
-
 
 if __name__ == '__main__':
     unittest.main()
