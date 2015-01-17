@@ -12,7 +12,7 @@ Tested on:
 * [NumPy](http://www.numpy.org/) 1.9.0
 * [Pandas](http://pandas.pydata.org/) 0.14.1
 
-PyNance will definitely work with other versions of Python
+PyNance will also work with other versions of Python
 and Python packages. To verify that it works with yours,
 simply run the unit tests for data retrieval, then try
 making some charts with sample data you retrieve.
