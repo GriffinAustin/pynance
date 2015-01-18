@@ -13,22 +13,30 @@ import interest
 
 class TestData(unittest.TestCase):
 
-    def test_get_growth(self):
+    def test_yrlygrowth(self):
         # growth of 8 over 3 years means annual growth of 2
-        self.assertAlmostEqual(interest.get_growth(8, 3), 2.0)
+        self.assertAlmostEqual(interest.yrlygrowth(8, 3), 2.0)
 
-    def test_get_interest(self):
+    def test_yrlyret(self):
         # interest of 2.0 over .5 yrs means growth of 3.0
         # so annual muliple of 9.0 and interest of 8.0
-        self.assertAlmostEqual(interest.get_interest(2, 0.5), 8.0)
+        self.assertAlmostEqual(interest.yrlyret(2, 0.5), 8.0)
 
-    def test_get_compounded_growth(self):
+    def test_compgrowth(self):
         # compound an annual growth of 16.0 over 0.5 yrs
-        self.assertAlmostEqual(interest.get_compounded_growth(16.0, 0.5), 4.0)
+        self.assertAlmostEqual(interest.compgrowth(16.0, 0.5), 4.0)
 
-    def test_get_compounded_interest(self):
+    def test_compret(self):
         # compound annual interest of 0.1 over 25 years
-        self.assertAlmostEqual(interest.get_compounded_interest(0.1, 25), 9.83, places=2)
+        self.assertAlmostEqual(interest.compret(0.1, 25), 9.83, places=2)
+
+    def test_pvannuity(self):
+        # 15% return for 5 years
+        self.assertAlmostEqual(interest.pvannuity(0.15, 5), 3.352, places=3)
+
+    def test_loanpayment(self):
+        # 15% interest with 5 yrly payments for a loan of 1000
+        self.assertAlmostEqual(interest.loanpayment(1000., 0.15, 5), 298.32, places=2)
 
 
 if __name__ == '__main__':
