@@ -255,7 +255,31 @@ def add_const(features):
     cols = ['Constant'] + features.columns.tolist()
     return pd.DataFrame(data=content, index=features.index, columns=cols, dtype='float64')
 
-def get_returns(eqdata, selection='Adj Close', n_sessions=1):
+def get_growth(eqdata, selection='Adj Close', n_sessions=1):
+    """
+    Generate a DataFrame where the sole column, 'Growth',
+    is the growth for the equity over the given number of sessions.
+    
+    For example, if 'XYZ' has 'Adj Close' of `100.0` on 2014-12-15 and 
+    `90.0` 4 *sessions* later on 2014-12-19, then the 'Growth' value
+    for 2014-12-19 will be `0.9`.
+
+    Notes
+    --
+    The interval is the number of *sessions* between the 2 values
+    whose ratio is being measured, *not* the number of days (which
+    includes days on which the market is closed).
+
+    Growth is measured relative to the earlier
+    date, but the index date is the later date. This index is chosen because
+    it is the date on which the value is known.
+    """
+    result = pd.DataFrame(index=eqdata.index[n_sessions:], columns=['Growth'], dtype='float64')
+    selected_data = eqdata.loc[:, selection]
+    result.values[:, 0] = selected_data.values[n_sessions:] / selected_data.values[:-n_sessions]
+    return result
+
+def get_return(eqdata, selection='Adj Close', n_sessions=1):
     """
     Generate a DataFrame where the sole column, 'Return',
     is the return for the equity over the given number of sessions.
@@ -279,6 +303,72 @@ def get_returns(eqdata, selection='Adj Close', n_sessions=1):
     selected_data = eqdata.loc[:, selection]
     result.values[:, 0] = selected_data.values[n_sessions:] / selected_data.values[:-n_sessions] - 1.
     return result
+
+def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
+    """
+    Return features and labels for the given equity data.
+
+    Each row of the features returned contains `2 * n_sessions + 1` columns
+    (or 1 less if the constant feature is excluded). After the constant feature,
+    if present, there will be `n_sessions` columns derived from daily growth
+    of the given price column, which defaults to 'Adj Close'. There will then
+    follow another `n_sessions` columns representing current volume as
+    a multiple of average volume over the previous 252 (or other value determined
+    by the user) sessions. 
+    
+    The returned features are not centered or normalized because these
+    adjustments need to be made after test or cross-validation data has
+    been removed.
+
+    The constant feature is prepended by default.
+
+    The labels are derived from `eqdata` using `labelfunc`.
+
+    Parameters
+    --
+    eqdata : DataFrame
+        Expected is a dataframe as return by the `get()` function. A column
+        labeled 'Volume' must be present.
+
+    n_sessions : int
+        number of sessions to use as features. This is the number
+        of growth and relative volume datapoints to be used in each
+        row of features
+
+    labelfunc : function
+        function for deriving labels from `eqdata`. `labelfunc` must
+        take 3 arguments: `eqdata`, `n_sessions` and `pricecol`. The first
+        2 arguments are those currently used. The 3rd argument is the label
+        used for the desired price column (Typically 'Adj Close' or 'Close').
+        `labelfunc` should return a dataframe of labels followed by an int
+        specifying the number of feature rows to skip at the end of the feature
+        dataframe. For example, if features are relative prices 64 days out,
+        these features will only be known up until 64 days before the data
+        runs out. In order to properly align features and labels, the features
+        should not include the last 64 rows that would otherwise be possible.
+
+        Usage:
+        `labels, skipatend = labelfunc(eqdata, n_sessions, pricecol)`
+
+    pricecol : str, optional
+        Column to use for price. Defaults to 'Adj Close'
+
+    averaging_interval : int, optional
+        Interval to use for generating the average volume, relative
+        to which current volume will be expressed. Defaults to 252
+        (1 year of sessions)
+
+    constfeat : bool
+        If true, returned dataframe will include as first column
+        the constant feature 1. Defaults to True.
+
+    Returns
+    --
+    out : tuple (DataFrame, DataFrame)
+        features and labels derived from the given parameters.
+    """
+    # TODO
+    return None
 
 def _get_norms_of_rows(data_frame, method):
     """ return a column vector containing the norm of each row """

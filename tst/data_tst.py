@@ -241,16 +241,32 @@ class TestData(unittest.TestCase):
             for j in range(features.shape[1]):
                 self.assertAlmostEqual(x[i, j + 1], features[i, j])
 
-    def test_get_returns(self):
+    def test_get_growth(self):
         # Defaults
-        eqret = data.get_returns(self.equity_data)
+        eqgrowth = data.get_growth(self.equity_data)
+        self.assertEqual(eqgrowth.shape[0], self.equity_data.shape[0] - 1)
+        self.assertEqual(eqgrowth.shape[1], 1)
+        for i in range(9):
+            self.assertAlmostEqual(eqgrowth.iloc[i, 0], (2. + i) / (1. + i))
+            self.assertEqual(eqgrowth.index[i], self.equity_data.index[i + 1])
+        # n_sessions=5, selection='Volume'
+        eqgrowth = data.get_growth(self.equity_data, selection='Volume', n_sessions=5)
+        self.assertEqual(eqgrowth.shape[0], self.equity_data.shape[0] - 5)
+        self.assertEqual(eqgrowth.shape[1], 1)
+        for i in range(5):
+            self.assertAlmostEqual(eqgrowth.iloc[i, 0], (11. + 2. * i) / (1. + 2. * i))
+            self.assertEqual(eqgrowth.index[i], self.equity_data.index[i + 5])
+
+    def test_get_return(self):
+        # Defaults
+        eqret = data.get_return(self.equity_data)
         self.assertEqual(eqret.shape[0], self.equity_data.shape[0] - 1)
         self.assertEqual(eqret.shape[1], 1)
         for i in range(9):
             self.assertAlmostEqual(eqret.iloc[i, 0], 1. / (1. + i))
             self.assertEqual(eqret.index[i], self.equity_data.index[i + 1])
         # n_sessions=5, selection='Volume'
-        eqret = data.get_returns(self.equity_data, selection='Volume', n_sessions=5)
+        eqret = data.get_return(self.equity_data, selection='Volume', n_sessions=5)
         self.assertEqual(eqret.shape[0], self.equity_data.shape[0] - 5)
         self.assertEqual(eqret.shape[1], 1)
         for i in range(5):
