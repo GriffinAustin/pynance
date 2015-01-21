@@ -273,5 +273,26 @@ class TestData(unittest.TestCase):
             self.assertAlmostEqual(eqret.iloc[i, 0], 10. / (1. + 2. * i))
             self.assertEqual(eqret.index[i], self.equity_data.index[i + 5])
 
+    def test_labeledfeatures(self):
+        def _labeler(df, pricecol):
+            prediction_interval = 1
+            col = df.loc[:, pricecol].values
+            content = col[1:] / col[:-1]
+            return pd.DataFrame(data=content, index=df.index[:-1], columns=['Label'],
+                    dtype='float64'), prediction_interval
+        features, labels = data.labeledfeatures(self.equity_data, 2, _labeler, 
+                averaging_interval=3)
+        self.assertEqual(features.values.shape[0], labels.values.shape[0])
+        self.assertEqual(features.values.shape[1], 5)
+        for i in range(1, len(features.index)):
+            self.assertAlmostEqual(features.loc[:, '-1G'].values[i], 
+                    features.loc[:, '0G'].values[i - 1])
+            self.assertAlmostEqual(features.loc[:, '-1V'].values[i], 
+                    features.loc[:, '0V'].values[i - 1])
+        for i in range(5):
+            self.assertAlmostEqual(features.loc[:, '0G'].values[i], (i + 5.) / (i + 4.))
+            self.assertAlmostEqual(features.loc[:, '0V'].values[i], (2. * i + 9.) / (2. * i + 5.))
+            self.assertAlmostEqual(labels.values[i], (i + 6.) / (i + 5.))
+
 if __name__ == '__main__':
     unittest.main()

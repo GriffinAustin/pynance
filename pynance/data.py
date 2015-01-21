@@ -10,6 +10,8 @@ Wraps Pandas Remote Data Access:
 http://pandas.pydata.org/pandas-docs/stable/remote_data.html
 """
 
+from functools import partial
+
 import numpy as np
 import pandas as pd
 import pandas.io.data as web
@@ -255,7 +257,7 @@ def add_const(features):
     cols = ['Constant'] + features.columns.tolist()
     return pd.DataFrame(data=content, index=features.index, columns=cols, dtype='float64')
 
-def get_growth(eqdata, selection='Adj Close', n_sessions=1):
+def get_growth(eqdata, **kwargs):
     """
     Generate a DataFrame where the sole column, 'Growth',
     is the growth for the equity over the given number of sessions.
@@ -263,6 +265,33 @@ def get_growth(eqdata, selection='Adj Close', n_sessions=1):
     For example, if 'XYZ' has 'Adj Close' of `100.0` on 2014-12-15 and 
     `90.0` 4 *sessions* later on 2014-12-19, then the 'Growth' value
     for 2014-12-19 will be `0.9`.
+
+    Parameters
+    --
+    eqdata : DataFrame
+        Data such as that returned by `get()`
+
+    selection : str, optional
+        Column from which to determine growth values. Defaults to
+        'Adj Close'.
+
+    n_sessions : int
+        Number of sessions to count back for calculating today's
+        growth. For example, if `n_sessions` is set to 4, growth is
+        calculated relative to the price 4 sessions ago. Defaults
+        to 1 (price of previous session).
+
+    skipstartrows : int
+        Rows to skip at beginning of `eqdata` in addition to the 1 row that must
+        be skipped because the calculation relies on a prior data point.
+        Defaults to 0.
+
+    skipendrows : int
+        Rows to skip at end of `eqdata`. Defaults to 0.
+
+    Returns
+    --
+    out : DataFrame
 
     Notes
     --
@@ -274,12 +303,17 @@ def get_growth(eqdata, selection='Adj Close', n_sessions=1):
     date, but the index date is the later date. This index is chosen because
     it is the date on which the value is known.
     """
-    result = pd.DataFrame(index=eqdata.index[n_sessions:], columns=['Growth'], dtype='float64')
-    selected_data = eqdata.loc[:, selection]
-    result.values[:, 0] = selected_data.values[n_sessions:] / selected_data.values[:-n_sessions]
-    return result
+    selection = kwargs.get('selection', 'Adj Close')
+    n_sessions = kwargs.get('n_sessions', 1)
+    skipstartrows = kwargs.get('skipstartrows', 0)
+    skipendrows = kwargs.get('skipendrows', 0)
+    size = len(eqdata.index)
+    growthdata = eqdata.loc[:, selection].values[(skipstartrows + n_sessions):(size - skipendrows)] / \
+            eqdata.loc[:, selection].values[skipstartrows:(-n_sessions - skipendrows)]
+    growthindex = eqdata.index[(skipstartrows + n_sessions):(size - skipendrows)]
+    return pd.DataFrame(data=growthdata, index=growthindex, columns=['Growth'], dtype='float64')
 
-def get_return(eqdata, selection='Adj Close', n_sessions=1):
+def get_return(eqdata, **kwargs):
     """
     Generate a DataFrame where the sole column, 'Return',
     is the return for the equity over the given number of sessions.
@@ -287,6 +321,33 @@ def get_return(eqdata, selection='Adj Close', n_sessions=1):
     For example, if 'XYZ' has 'Adj Close' of `100.0` on 2014-12-15 and 
     `90.0` 4 *sessions* later on 2014-12-19, then the 'Return' value
     for 2014-12-19 will be `-0.1`.
+
+    Parameters
+    --
+    eqdata : DataFrame
+        Data such as that returned by `get()`
+
+    selection : str, optional
+        Column from which to determine growth values. Defaults to
+        'Adj Close'.
+
+    n_sessions : int
+        Number of sessions to count back for calculating today's
+        return. For example, if `n_sessions` is set to 4, return is
+        calculated relative to the price 4 sessions ago. Defaults
+        to 1 (price of previous session).
+
+    skipstartrows : int
+        Rows to skip at beginning of `eqdata` in addition to the 1 row that must
+        be skipped because the calculation relies on a prior data point.
+        Defaults to 0.
+
+    skipendrows : int
+        Rows to skip at end of `eqdata`. Defaults to 0.
+
+    Returns
+    --
+    out : DataFrame
 
     Notes
     --
@@ -299,9 +360,8 @@ def get_return(eqdata, selection='Adj Close', n_sessions=1):
     that is the date on which the value is known. The percentage measure is because
     that is the way for calculating percent profit and loss.
     """
-    result = pd.DataFrame(index=eqdata.index[n_sessions:], columns=['Return'], dtype='float64')
-    selected_data = eqdata.loc[:, selection]
-    result.values[:, 0] = selected_data.values[n_sessions:] / selected_data.values[:-n_sessions] - 1.
+    result = get_growth(eqdata, **kwargs)
+    result.values[:, :] -= 1.
     return result
 
 def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
@@ -337,8 +397,9 @@ def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
 
     labelfunc : function
         function for deriving labels from `eqdata`. `labelfunc` must
-        take 3 arguments: `eqdata`, `n_sessions` and `pricecol`. The first
-        2 arguments are those currently used. The 3rd argument is the label
+        take 2 arguments: `df` and `pricecol`. The first
+        argument is a dataframe (`labelfunc` will be applied to a slice
+        of `eqdata`). The 2nd argument is the label
         used for the desired price column (Typically 'Adj Close' or 'Close').
         `labelfunc` should return a dataframe of labels followed by an int
         specifying the number of feature rows to skip at the end of the feature
@@ -348,7 +409,7 @@ def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
         should not include the last 64 rows that would otherwise be possible.
 
         Usage:
-        `labels, skipatend = labelfunc(eqdata, n_sessions, pricecol)`
+        `labels, skipatend = labelfunc(eqdata, pricecol)`
 
     pricecol : str, optional
         Column to use for price. Defaults to 'Adj Close'
@@ -367,8 +428,77 @@ def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
     out : tuple (DataFrame, DataFrame)
         features and labels derived from the given parameters.
     """
-    # TODO
-    return None
+    pricecol = kwargs.get('pricecol', 'Adj Close')
+    averaging_interval = kwargs.get('averaging_interval', 252)
+    labels, skipatend = labelfunc(eqdata.iloc[(n_sessions + averaging_interval - 1):, :], pricecol)
+    growth = get_growth(eqdata, selection=pricecol, 
+            skipstartrows=(averaging_interval - 1), skipendrows=skipatend)
+    volume = _get_ratio_to_ave(eqdata, averaging_interval, skipendrows=skipatend)
+    features = _featurize_growth_vol(growth, volume, n_sessions)
+    if kwargs.get('constfeat', True):
+        features = add_const(features)
+    return features, labels
+
+def _featurize_growth_vol(growth, volume, n_sessions):
+    """
+    Combine growth and volume data into a set of features
+    """
+    growth_feat = featurize(growth, n_sessions, selection='Growth')
+    vol_feat = featurize(volume, n_sessions, selection='Rel Vol')
+    growth_cols = map(partial(_concat, strval='G'), range(-n_sessions + 1, 1))
+    vol_cols = map(partial(_concat, strval='V'), range(-n_sessions + 1, 1))
+    all_cols = list(growth_cols) + list(vol_cols)
+    features = pd.DataFrame(index=growth_feat.index, columns=all_cols, dtype='float64')
+    features.iloc[:, :n_sessions] = growth_feat.values
+    features.iloc[:, n_sessions:] = vol_feat.values
+    return features
+
+def _concat(intval, strval):
+    """ helper for creating columns in `_featurize_growth_vol()` """
+    return str(intval) + strval
+
+def _get_ratio_to_ave(eqdata, averaging_interval, **kwargs):
+    """
+    Return values expressed as ratios to the average over some number
+    of prior sessions
+
+    Parameters
+    --
+    eqdata : DataFrame
+
+    averaging_interval : int
+        Interval over which to calculate the average. Normally 252 (1 year)
+
+    selection : str, optional
+        Column to select for calculating ratio. Defaults to 'Volume'
+
+    skipstartrows : int, optional
+        Rows to skip at beginning in addition to the `averaging_interval` rows
+        that must be skipped to get the baseline volume. Defaults to 0.
+
+    skipendrows : int, optional
+        Rows to skip at end. Defaults to 0.
+
+    outputcol : str, optional
+        Name of column in output dataframe.
+
+    Returns
+    --
+    out : DataFrame
+    """
+    datasize = len(eqdata.index)
+    selection = kwargs.get('selection', 'Volume')
+    skipstartrows = kwargs.get('skipstartrows', 0)
+    skipendrows = kwargs.get('skipendrows', 0)
+    outputcol = kwargs.get('outputcol', 'Rel Vol')
+    tmpdata = featurize(eqdata, averaging_interval, selection=selection)
+    averages = tmpdata.mean(axis=1)
+    avesize = len(averages.index)
+    resultdata = eqdata.loc[:, selection].values[(skipstartrows + averaging_interval):(datasize - skipendrows)] / \
+            averages.values[skipstartrows:(avesize - skipendrows - 1)]
+    resultindex = eqdata.index[(skipstartrows + averaging_interval):(datasize - skipendrows)]
+    return pd.DataFrame(data=resultdata, index=resultindex, columns=[outputcol], dtype='float64')
+
 
 def _get_norms_of_rows(data_frame, method):
     """ return a column vector containing the norm of each row """
