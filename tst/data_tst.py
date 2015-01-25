@@ -8,6 +8,7 @@ license http://opensource.org/licenses/MIT
 @summary: Unit tests for data module
 """
 
+from functools import partial
 import sys
 import unittest
 
@@ -274,14 +275,8 @@ class TestData(unittest.TestCase):
             self.assertEqual(eqret.index[i], self.equity_data.index[i + 5])
 
     def test_labeledfeatures(self):
-        def _labeler(df, pricecol):
-            prediction_interval = 1
-            col = df.loc[:, pricecol].values
-            content = col[1:] / col[:-1]
-            return pd.DataFrame(data=content, index=df.index[:-1], columns=['Label'],
-                    dtype='float64'), prediction_interval
-        features, labels = data.labeledfeatures(self.equity_data, 2, _labeler, 
-                averaging_interval=3)
+        features, labels = data.labeledfeatures(self.equity_data, 2, 
+                partial(data.labels.growth, 1), averaging_interval=3)
         self.assertEqual(features.values.shape[0], labels.values.shape[0])
         self.assertEqual(features.values.shape[1], 5)
         for i in range(1, len(features.index)):
@@ -293,6 +288,15 @@ class TestData(unittest.TestCase):
             self.assertAlmostEqual(features.loc[:, '0G'].values[i], (i + 5.) / (i + 4.))
             self.assertAlmostEqual(features.loc[:, '0V'].values[i], (2. * i + 9.) / (2. * i + 5.))
             self.assertAlmostEqual(labels.values[i], (i + 6.) / (i + 5.))
+
+    def test_labels_growth(self):
+        prediction_interval = 2
+        labels, skipatend = data.labels.growth(prediction_interval, self.equity_data,
+                'Adj Close')
+        self.assertEqual(skipatend, prediction_interval)
+        self.assertEqual(len(labels.index), len(self.equity_data.index) - prediction_interval)
+        for i in range(len(labels.index)):
+            self.assertAlmostEqual(labels.values[i], (i + 3.) / (i + 1.))
 
 if __name__ == '__main__':
     unittest.main()

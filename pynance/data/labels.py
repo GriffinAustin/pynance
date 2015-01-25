@@ -1,0 +1,52 @@
+"""
+Labelling functions.
+
+Copyright (c) 2014 Marshall Farrier
+license http://opensource.org/licenses/MIT
+
+These functions are intended to be used in conjunction
+with `functools.partial` to pass to `data.labeledfeatures()`.
+For example,
+
+>>> from functools import partial
+>>> features, labels = pn.data.labeledfeatures(eqdata, 256,
+        partial(pn.data.labels.growth, 32))
+"""
+
+import pandas as pd
+
+def growth(interval, eqdata, pricecol):
+    """
+    Retrieve growth labels.
+
+    Parameters
+    --
+    interval : int
+        Number of sessions over which growth is measured. For example, if
+        the value of 32 is passed for `interval`, the data returned will 
+        show the growth 32 sessions ahead for each data point.
+
+    eqdata : DataFrame
+        Data for evaluating growth.
+
+    pricecol : str
+        Column of `eqdata` to be used for prices (Normally 'Adj Close').
+
+    Returns
+    --
+    out : tuple (DataFrame, int)
+        The first value of the `tuple` contains the growth labels for the
+        desired period. The second value is the interval.
+
+    Example Usage
+    --
+    from functools import partial
+    features, labels = pn.data.labeledfeatures(eqdata, 256, 
+            partial(pn.data.labels.growth, 32))
+    """
+    size = len(eqdata.index)
+    labeldata = eqdata.loc[:, pricecol].values[interval:] /\
+            eqdata.loc[:, pricecol].values[:(size - interval)]
+    df = pd.DataFrame(data=labeldata, index=eqdata.index[:(size - interval)],
+            columns=['Growth'], dtype='float64')
+    return df, interval
