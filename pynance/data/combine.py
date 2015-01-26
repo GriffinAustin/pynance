@@ -36,22 +36,15 @@ def labeledfeatures(eqdata, featurefunc, labelfunc):
         labeled 'Volume' must be present.
 
     featurefunc : function
-        Function for deriving features from `eqdata`. `featurefunc` must
-        take a dataframe as sole argument.
-
-        Parameters:
-
-        -   df : DataFrame
-            Data from which to construct features.
-
-        Returns:
-
-        -   features : DataFrame
-            The desired set of features.
-        -   skipatstart : int
-            The row number of the first feature returned, measured by
-            the index of `df`. This is used to synchronize the indices of
-            labels with those of features.
+        Function taking a dataframe of simple equity data as argument
+        and returning a dataframe of features and an integer representing
+        the number of rows that had to be skipped at the beginning of
+        the index of the input dataframe. The rows skipped are used
+        to synchronize the indices of features and labels. For example,
+        if the features are composed of 4 successive daily returns, then
+        the date of row 0 of features would be the same as the date of row 3
+        (counting from 0) of input data. So the corresponding `featurefunc`
+        would return a dataframe and the value 3.
 
     labelfunc : function
         function for deriving labels from `eqdata`. `labelfunc` must
@@ -68,10 +61,13 @@ def labeledfeatures(eqdata, featurefunc, labelfunc):
 
     Returns
     --
-    out : tuple (DataFrame, DataFrame)
-        features and labels derived from the given parameters.
+    features : DataFrame
+        The features derived from the given parameters.
+
+    labels : DataFrame
+        The labels derived from the given parameters.
     """
+    _size = len(eqdata.index)
     _labels, _skipatend = labelfunc(eqdata)
-    _features, _skipatstart = featurefunc(eqdata)
-    _size = len(_features.index)
-    return _features.iloc[:(_size - _skipatend), :], _labels.iloc[_skipatstart:, :]
+    _features, _skipatstart = featurefunc(eqdata.iloc[:(_size - _skipatend), :])
+    return _features, _labels.iloc[_skipatstart:, :]
