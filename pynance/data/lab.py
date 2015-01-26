@@ -15,7 +15,7 @@ For example,
 
 import pandas as pd
 
-def growth(interval, eqdata, pricecol):
+def growth(interval, pricecol, eqdata):
     """
     Retrieve growth labels.
 
@@ -42,7 +42,7 @@ def growth(interval, eqdata, pricecol):
     --
     from functools import partial
     features, labels = pn.data.labeledfeatures(eqdata, 256, 
-            partial(pn.data.labels.growth, 32))
+            partial(pn.data.labels.growth, 32, 'Adj Close'))
     """
     size = len(eqdata.index)
     labeldata = eqdata.loc[:, pricecol].values[interval:] /\

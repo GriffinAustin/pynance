@@ -36,22 +36,22 @@ class TestData(unittest.TestCase):
                 columns=['Volume', 'Adj Close'])
         self.equity_data.index.name = 'Date'
 
-    def test_featurize_defaults(self):
+    def test_feat_featurize_defaults(self):
         n_sessions = 3
-        features = data.featurize(self.equity_data, n_sessions)
+        features = data.feat.featurize(self.equity_data, n_sessions)
         self.assertEqual(len(features.index), len(self.equity_data.index) - n_sessions + 1)
         self.assertEqual(len(features.columns), n_sessions)
 
-    def test_featurize_selection(self):
+    def test_feat_featurize_selection(self):
         n_sessions = 4
-        features = data.featurize(self.equity_data, n_sessions, selection='Volume')
+        features = data.feat.featurize(self.equity_data, n_sessions, selection='Volume')
         self.assertEqual(len(features.index), len(self.equity_data.index) - n_sessions + 1)
         self.assertEqual(len(features.columns), n_sessions)
 
-    def test_featurize_columns(self):
+    def test_feat_featurize_columns(self):
         cols = ['one', 'two', 'three']
         n_sessions = len(cols)
-        features = data.featurize(self.equity_data, n_sessions, columns=cols)
+        features = data.feat.featurize(self.equity_data, n_sessions, columns=cols)
         self.assertEqual(len(features.index), len(self.equity_data.index) - n_sessions + 1)
         self.assertEqual(len(features.columns), n_sessions)
         for i in range(len(cols)):
@@ -144,7 +144,7 @@ class TestData(unittest.TestCase):
 
     def test_transform_default(self):
         n_sessions = 3
-        features = data.featurize(self.equity_data, n_sessions)
+        features = data.feat.featurize(self.equity_data, n_sessions)
         transformed = data.transform(features)
         norms = np.linalg.norm(np.float64(transformed.values), axis=1)
         for i in range(len(norms)):
@@ -153,7 +153,7 @@ class TestData(unittest.TestCase):
     def test_transform_rows_vector(self):
         n_sessions = 3
         norm = 3.14159
-        features = data.featurize(self.equity_data, n_sessions)
+        features = data.feat.featurize(self.equity_data, n_sessions)
         transformed = data.transform(features, method="vector", norm=norm)
         norms = np.linalg.norm(np.float64(transformed.values), axis=1)
         for i in range(len(norms)):
@@ -162,7 +162,7 @@ class TestData(unittest.TestCase):
     def test_transform_rows_mean(self):
         n_sessions = 3
         norm = 10.0
-        features = data.featurize(self.equity_data, n_sessions)
+        features = data.feat.featurize(self.equity_data, n_sessions)
         transformed = data.transform(features, method="mean", norm=norm, axis=0)
         means = transformed.mean(axis=1)
         for i in range(len(means)):
@@ -170,7 +170,7 @@ class TestData(unittest.TestCase):
 
     def test_transform_rows_last(self):
         n_sessions = 3
-        features = data.featurize(self.equity_data, n_sessions)
+        features = data.feat.featurize(self.equity_data, n_sessions)
         labels = pd.DataFrame(features.iloc[:, -1] * 0.5, index=features.index) 
         transformed_features, transformed_labels = data.transform(features, method="last", labels=labels)
         for i in range(len(transformed_features.index)):
@@ -180,7 +180,7 @@ class TestData(unittest.TestCase):
 
     def test_transform_rows_first(self):
         n_sessions = 3
-        features = data.featurize(self.equity_data, n_sessions)
+        features = data.feat.featurize(self.equity_data, n_sessions)
         # 2 columns of labels
         labels = pd.DataFrame(index=features.index, columns=['Label1', 'Label2'])
         labels['Label1'] = features.iloc[:, 0] * 0.5
@@ -216,10 +216,10 @@ class TestData(unittest.TestCase):
         for i in range(len(transformed.columns)):
             self.assertAlmostEqual(transformed.iloc[0, i], 1.0)
 
-    def test_add_const_df(self):
+    def test_feat_add_const_df(self):
         n_sessions = 3
-        features = data.featurize(self.equity_data, n_sessions)
-        x = data.add_const(features)
+        features = data.feat.featurize(self.equity_data, n_sessions)
+        x = data.feat.add_const(features)
         self.assertTrue(isinstance(x, pd.DataFrame))
         self.assertFalse(isinstance(x, np.ndarray))
         self.assertEqual(len(x.index), len(features.index))
@@ -229,10 +229,10 @@ class TestData(unittest.TestCase):
             for j in range(len(features.columns)):
                 self.assertAlmostEqual(x.iloc[i, j + 1], features.iloc[i, j])
     
-    def test_add_const_ndarray(self):
+    def test_feat_add_const_ndarray(self):
         n_sessions = 3
-        features = data.featurize(self.equity_data, n_sessions).values
-        x = data.add_const(features)
+        features = data.feat.featurize(self.equity_data, n_sessions).values
+        x = data.feat.add_const(features)
         self.assertTrue(isinstance(x, np.ndarray))
         self.assertFalse(isinstance(x, pd.DataFrame))
         self.assertEqual(x.shape[0], features.shape[0])
@@ -242,32 +242,32 @@ class TestData(unittest.TestCase):
             for j in range(features.shape[1]):
                 self.assertAlmostEqual(x[i, j + 1], features[i, j])
 
-    def test_get_growth(self):
+    def test_feat_growth(self):
         # Defaults
-        eqgrowth = data.get_growth(self.equity_data)
+        eqgrowth = data.feat.growth(self.equity_data)
         self.assertEqual(eqgrowth.shape[0], self.equity_data.shape[0] - 1)
         self.assertEqual(eqgrowth.shape[1], 1)
         for i in range(9):
             self.assertAlmostEqual(eqgrowth.iloc[i, 0], (2. + i) / (1. + i))
             self.assertEqual(eqgrowth.index[i], self.equity_data.index[i + 1])
         # n_sessions=5, selection='Volume'
-        eqgrowth = data.get_growth(self.equity_data, selection='Volume', n_sessions=5)
+        eqgrowth = data.feat.growth(self.equity_data, selection='Volume', n_sessions=5)
         self.assertEqual(eqgrowth.shape[0], self.equity_data.shape[0] - 5)
         self.assertEqual(eqgrowth.shape[1], 1)
         for i in range(5):
             self.assertAlmostEqual(eqgrowth.iloc[i, 0], (11. + 2. * i) / (1. + 2. * i))
             self.assertEqual(eqgrowth.index[i], self.equity_data.index[i + 5])
 
-    def test_get_return(self):
+    def test_feat_ret(self):
         # Defaults
-        eqret = data.get_return(self.equity_data)
+        eqret = data.feat.ret(self.equity_data)
         self.assertEqual(eqret.shape[0], self.equity_data.shape[0] - 1)
         self.assertEqual(eqret.shape[1], 1)
         for i in range(9):
             self.assertAlmostEqual(eqret.iloc[i, 0], 1. / (1. + i))
             self.assertEqual(eqret.index[i], self.equity_data.index[i + 1])
         # n_sessions=5, selection='Volume'
-        eqret = data.get_return(self.equity_data, selection='Volume', n_sessions=5)
+        eqret = data.feat.ret(self.equity_data, selection='Volume', n_sessions=5)
         self.assertEqual(eqret.shape[0], self.equity_data.shape[0] - 5)
         self.assertEqual(eqret.shape[1], 1)
         for i in range(5):
@@ -276,7 +276,7 @@ class TestData(unittest.TestCase):
 
     def test_labeledfeatures(self):
         features, labels = data.labeledfeatures(self.equity_data, 2, 
-                partial(data.labels.growth, 1), averaging_interval=3)
+                partial(data.lab.growth, 1, 'Adj Close'), averaging_interval=3)
         self.assertEqual(features.values.shape[0], labels.values.shape[0])
         self.assertEqual(features.values.shape[1], 5)
         for i in range(1, len(features.index)):
@@ -291,8 +291,7 @@ class TestData(unittest.TestCase):
 
     def test_labels_growth(self):
         prediction_interval = 2
-        labels, skipatend = data.labels.growth(prediction_interval, self.equity_data,
-                'Adj Close')
+        labels, skipatend = data.lab.growth(prediction_interval, 'Adj Close', self.equity_data)
         self.assertEqual(skipatend, prediction_interval)
         self.assertEqual(len(labels.index), len(self.equity_data.index) - prediction_interval)
         for i in range(len(labels.index)):
