@@ -10,7 +10,7 @@ For example,
 
 >>> from functools import partial
 >>> features, labels = pn.data.labeledfeatures(eqdata, 256,
-        partial(pn.data.labels.growth, 32))
+        partial(pn.data.lab.growth, 32))
 """
 
 import pandas as pd

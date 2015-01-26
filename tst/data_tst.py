@@ -275,8 +275,9 @@ class TestData(unittest.TestCase):
             self.assertEqual(eqret.index[i], self.equity_data.index[i + 5])
 
     def test_labeledfeatures(self):
-        features, labels = data.labeledfeatures(self.equity_data, 2, 
-                partial(data.lab.growth, 1, 'Adj Close'), averaging_interval=3)
+        features, labels = data.labeledfeatures(self.equity_data, 
+                partial(data.feat.growth_vol, 2, averaging_interval=3),
+                partial(data.lab.growth, 1, 'Adj Close'))
         self.assertEqual(features.values.shape[0], labels.values.shape[0])
         self.assertEqual(features.values.shape[1], 5)
         for i in range(1, len(features.index)):

@@ -9,7 +9,7 @@ import pandas as pd
 
 from . import feat
 
-def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
+def labeledfeatures(eqdata, featurefunc, labelfunc):
     """
     Return features and labels for the given equity data.
 
@@ -35,14 +35,27 @@ def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
         Expected is a dataframe as return by the `get()` function. A column
         labeled 'Volume' must be present.
 
-    n_sessions : int
-        number of sessions to use as features. This is the number
-        of growth and relative volume datapoints to be used in each
-        row of features
+    featurefunc : function
+        Function for deriving features from `eqdata`. `featurefunc` must
+        take a dataframe as sole argument.
+
+        Parameters:
+
+        -   df : DataFrame
+            Data from which to construct features.
+
+        Returns:
+
+        -   features : DataFrame
+            The desired set of features.
+        -   skipatstart : int
+            The row number of the first feature returned, measured by
+            the index of `df`. This is used to synchronize the indices of
+            labels with those of features.
 
     labelfunc : function
         function for deriving labels from `eqdata`. `labelfunc` must
-        take a single arguments: `df`, a dataframe to which `labelfunc` will be applied.
+        take a single argument: `df`, a dataframe to which `labelfunc` will be applied.
         `labelfunc` should return a dataframe of labels followed by an int
         specifying the number of feature rows to skip at the end of the feature
         dataframe. For example, if features are relative prices 64 days out,
@@ -53,30 +66,12 @@ def labeledfeatures(eqdata, n_sessions, labelfunc, **kwargs):
         Usage:
         `labels, skipatend = labelfunc(eqdata)`
 
-    pricecol : str, optional
-        Column to use for price. Defaults to 'Adj Close'
-
-    averaging_interval : int, optional
-        Interval to use for generating the average volume, relative
-        to which current volume will be expressed. Defaults to 252
-        (1 year of sessions)
-
-    constfeat : bool
-        If true, returned dataframe will include as first column
-        the constant feature 1. Defaults to True.
-
     Returns
     --
     out : tuple (DataFrame, DataFrame)
         features and labels derived from the given parameters.
     """
-    pricecol = kwargs.get('pricecol', 'Adj Close')
-    averaging_interval = kwargs.get('averaging_interval', 252)
-    labels, skipatend = labelfunc(eqdata)
-    growth = feat.growth(eqdata, selection=pricecol, 
-            skipstartrows=(averaging_interval - 1), skipendrows=skipatend)
-    volume = feat.ratio_to_ave(eqdata, averaging_interval, skipendrows=skipatend)
-    features = feat._featurize_growth_vol(growth, volume, n_sessions)
-    if kwargs.get('constfeat', True):
-        features = feat.add_const(features)
-    return features, labels.iloc[(n_sessions + averaging_interval - 1):, :]
+    _labels, _skipatend = labelfunc(eqdata)
+    _features, _skipatstart = featurefunc(eqdata)
+    _size = len(_features.index)
+    return _features.iloc[:(_size - _skipatend), :], _labels.iloc[_skipatstart:, :]
