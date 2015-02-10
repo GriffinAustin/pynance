@@ -34,9 +34,12 @@ def growth(interval, pricecol, eqdata):
 
     Returns
     --
-    out : tuple (DataFrame, int)
-        The first value of the `tuple` contains the growth labels for the
-        desired period. The second value is the interval.
+    labels : DataFrame
+        Growth labels for the specified period
+
+    skipatend : int
+        Number of rows skipped at the end of `eqdata` for the given labels.
+        Used to synchronize labels and features.
 
     Example Usage
     --
