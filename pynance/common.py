@@ -54,3 +54,62 @@ def featurize(equity_data, n_sessions, **kwargs):
         features.iloc[:, i] = values[i:(-n_sessions + i + 1)]
     features.iloc[:, n_sessions - 1] = values[(n_sessions - 1):]
     return features
+
+def decorate(fn, *args, **kwargs):
+    """
+    Return a new function that replicates the behavior of the input
+    but also returns an additional value. Used for creating functions
+    of the proper type to pass to `labeledfeatures()`.
+
+    Parameters
+    --
+    fn : function
+
+    *args : any
+        Additional parameters that the returned function will return
+
+    **kwargs : dict
+        Each element in `kwargs` will become an attribute of the output
+        function.
+
+    Returns
+    --
+    wrapped : function
+        New function that acts like `fn` except that it also returns
+        an additional value.
+
+    Examples
+    --
+    from functools import partial
+    forecast_interval = 32
+    features, labels = pn.data.labeledfeatures(eqdata, 256, featurefn
+            decorate(partial(pn.data.lab.growth, forecast_interval, 'Adj Close'), forecast_interval))
+
+    def f():
+        return 0, 1 
+
+    >>> pn.decorate(f, 3, 4, 5)()
+    (0, 1, 3, 4, 5)
+    >>> pn.decorate(lambda x: x * .5, 3, 4, 5)(1.)
+    (1., 3, 4, 5)
+    >>> pn.decorate(lambda x: x, 1 2)('foo')
+    ('foo', 1, 2)
+    >>> pn.decorate(f, 'foo'):
+    (0, 1, 'foo')
+    pn.decorate(f, 0, foo='bar').foo
+    >>> 'bar'
+
+    Notes
+    --
+    If `fn()` returns multiple values, these will be returned in sequence
+    as the first values returned by `add_rets(fn, arg0, arg1, arg2)`. See example
+    above.
+    """
+    def _wrapper(*_args, **kwargs):
+        _ret = fn(*_args, **kwargs)
+        if isinstance(_ret, tuple):
+            return _ret + args
+        return (_ret,) + args
+    for key, value in kwargs.items():
+        _wrapper.__dict__[key] = value
+    return _wrapper

@@ -108,6 +108,102 @@ def _featurize_growth_vol(growth, volume, n_sessions):
     features.iloc[:, n_sessions:] = vol_feat.values
     return features
 
+def fromcols(selection, n_sessions, eqdata, **kwargs):
+    """
+    Generate features from selected columns of a dataframe.
+
+    Parameters
+    --
+    selection : list or tuple {str}
+        Columns to be used as features.
+
+    n_sessions : int
+        Number of sessions over which to create features.
+
+    eqdata : DataFrame
+        Data from which to generate feature set. Must contain
+        as columns the values from which the features are to
+        be generated.
+
+    constfeat : bool, optional
+        Whether or not the returned features will have the constant
+        feature.
+
+    Returns
+    --
+    features : DataFrame
+    """
+    _constfeat = kwargs.get('constfeat', True)
+    _outcols = ['Constant'] if _constfeat else []
+    _n_rows = len(eqdata.index)
+    for _col in selection:
+        _outcols += map(partial(_concat, strval=' ' + _col), range(-n_sessions + 1, 1))
+    _features = pd.DataFrame(index=eqdata.index[n_sessions - 1:], columns=_outcols, dtype=np.float64)
+    _offset = 0
+    if _constfeat:
+        _features.iloc[:, 0] = 1.
+        _offset += 1
+    for _col in selection:
+        _values = eqdata.loc[:, _col].values
+        for i in range(n_sessions):
+            _features.iloc[:, _offset + i] = _values[i:_n_rows - n_sessions + i + 1]
+        _offset += n_sessions
+    return _features
+
+def fromfuncs(funcs, n_sessions, eqdata, **kwargs):
+    """
+    Generate features using a list of functions to apply to input data
+
+    Parameters
+    --
+    funcs : list {function}
+        Functions to apply to eqdata. Each function is expected
+        to output a dataframe with index identical to that of `eqdata`.
+        Each function is also expected to have a function attribute
+        `title`, which is used to generate the column names of the
+        output features.
+
+    n_sessions : int
+        Number of sessions over which to create features.
+
+    eqdata : DataFrame
+        Data from which to generate features. The data will often
+        be retrieved using `pn.get()`.
+
+    constfeat : bool, optional
+        Whether or not the returned features will have the constant
+        feature.
+
+    skipatstart : int, optional
+        Number of rows to omit at the start of the output DataFrame.
+        This parameter is necessary if any of the functions requires
+        a rampup period before returning valid results, e.g. `sma()` or
+        functions calculating volume relative to a past baseline.
+        Defaults to 0.
+
+    Returns
+    --
+    features : DataFrame
+    """
+    _skipatstart = kwargs.get('skipatstart', 0)
+    _constfeat = kwargs.get('constfeat', True)
+    _outcols = ['Constant'] if _constfeat else []
+    _n_rows = len(eqdata.index)
+    for _func in funcs:
+        _outcols += map(partial(_concat, strval=' ' + _func.title), range(-n_sessions + 1, 1))
+    _features = pd.DataFrame(index=eqdata.index[_skipatstart + n_sessions - 1:],
+            columns=_outcols, dtype=np.float64)
+    _offset = 0
+    if _constfeat:
+        _features.iloc[:, 0] = 1.
+        _offset += 1
+    for _func in funcs:
+        _values = _func(eqdata).values
+        for i in range(n_sessions):
+            _features.iloc[:, _offset + i] = _values[_skipatstart + i:_n_rows - n_sessions + i + 1]
+        _offset += n_sessions
+    return _features
+
 def _concat(intval, strval):
     """ helper for creating columns in `_featurize_growth_vol()` """
     return str(intval) + strval

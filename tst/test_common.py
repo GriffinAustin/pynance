@@ -56,5 +56,17 @@ class TestData(unittest.TestCase):
         for i in range(len(cols)):
             self.assertEqual(cols[i], features.columns.values[i])
 
+    def test_decorate(self):
+        def _f():
+            return 0, 1
+        self.assertEqual(pn.decorate(_f, 2, 3)(), (0, 1, 2, 3))
+        self.assertEqual(pn.decorate(lambda x: x * 2, 0)(3), (6, 0))
+        self.assertEqual(pn.decorate(lambda x: x, 4, 5)('foo'), ('foo', 4, 5))
+        self.assertEqual(pn.decorate(_f, 'foo')(), (0, 1, 'foo'))
+        _g = pn.decorate(_f, 2, foo='bar')
+        self.assertEqual(_g.foo, 'bar')
+        self.assertFalse(hasattr(_f, 'foo'))
+        self.assertEqual(_g(), (0, 1, 2))
+
 if __name__ == '__main__':
     unittest.main()
