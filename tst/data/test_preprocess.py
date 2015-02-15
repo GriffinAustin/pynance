@@ -1,5 +1,5 @@
 """
-Copyright (c) 2014 Marshall Farrier
+Copyright (c) 2014, 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT
 
 @author: Marshall Farrier
@@ -9,7 +9,6 @@ license http://opensource.org/licenses/MIT
 """
 
 from functools import partial
-import sys
 import unittest
 
 import numpy as np
@@ -193,56 +192,6 @@ class TestData(unittest.TestCase):
         transformed = pn.data.transform(self.equity_data, method="first", axis=1)
         for i in range(len(transformed.columns)):
             self.assertAlmostEqual(transformed.iloc[0, i], 1.0)
-
-    def test_feat_add_const_df(self):
-        n_sessions = 3
-        features = pn.featurize(self.equity_data, n_sessions)
-        x = pn.data.feat.add_const(features)
-        self.assertTrue(isinstance(x, pd.DataFrame))
-        self.assertFalse(isinstance(x, np.ndarray))
-        self.assertEqual(len(x.index), len(features.index))
-        self.assertEqual(len(x.columns), len(features.columns) + 1)
-        for i in range(len(x.index)):
-            self.assertAlmostEqual(x.iloc[i, 0], 1.0)
-            for j in range(len(features.columns)):
-                self.assertAlmostEqual(x.iloc[i, j + 1], features.iloc[i, j])
-    
-    def test_feat_add_const_ndarray(self):
-        n_sessions = 3
-        features = pn.featurize(self.equity_data, n_sessions).values
-        x = pn.data.feat.add_const(features)
-        self.assertTrue(isinstance(x, np.ndarray))
-        self.assertFalse(isinstance(x, pd.DataFrame))
-        self.assertEqual(x.shape[0], features.shape[0])
-        self.assertEqual(x.shape[1], features.shape[1] + 1)
-        for i in range(x.shape[0]):
-            self.assertAlmostEqual(x[i, 0], 1.0)
-            for j in range(features.shape[1]):
-                self.assertAlmostEqual(x[i, j + 1], features[i, j])
-
-    def test_labeledfeatures(self):
-        features, labels = pn.data.labeledfeatures(self.equity_data, 
-                partial(pn.data.feat.growth_vol, 2, averaging_interval=3),
-                partial(pn.data.lab.growth, 1, 'Adj Close'))
-        self.assertEqual(features.values.shape[0], labels.values.shape[0])
-        self.assertEqual(features.values.shape[1], 5)
-        for i in range(1, len(features.index)):
-            self.assertAlmostEqual(features.loc[:, '-1G'].values[i], 
-                    features.loc[:, '0G'].values[i - 1])
-            self.assertAlmostEqual(features.loc[:, '-1V'].values[i], 
-                    features.loc[:, '0V'].values[i - 1])
-        for i in range(5):
-            self.assertAlmostEqual(features.loc[:, '0G'].values[i], (i + 5.) / (i + 4.))
-            self.assertAlmostEqual(features.loc[:, '0V'].values[i], (2. * i + 9.) / (2. * i + 5.))
-            self.assertAlmostEqual(labels.values[i], (i + 6.) / (i + 5.))
-
-    def test_labels_growth(self):
-        prediction_interval = 2
-        labels, skipatend = pn.data.lab.growth(prediction_interval, 'Adj Close', self.equity_data)
-        self.assertEqual(skipatend, prediction_interval)
-        self.assertEqual(len(labels.index), len(self.equity_data.index) - prediction_interval)
-        for i in range(len(labels.index)):
-            self.assertAlmostEqual(labels.values[i], (i + 3.) / (i + 1.))
 
 if __name__ == '__main__':
     unittest.main()

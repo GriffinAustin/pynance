@@ -52,4 +52,4 @@ def growth(interval, pricecol, eqdata):
             eqdata.loc[:, pricecol].values[:(size - interval)]
     df = pd.DataFrame(data=labeldata, index=eqdata.index[:(size - interval)],
             columns=['Growth'], dtype='float64')
-    return df, interval
+    return df

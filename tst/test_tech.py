@@ -8,8 +8,6 @@ license http://opensource.org/licenses/MIT
 @summary: Unit tests for data module
 """
 
-from functools import partial
-import sys
 import unittest
 
 import numpy as np

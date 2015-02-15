@@ -109,7 +109,47 @@ def decorate(fn, *args, **kwargs):
         _ret = fn(*_args, **kwargs)
         if isinstance(_ret, tuple):
             return _ret + args
+        if len(args) == 0:
+            return _ret
         return (_ret,) + args
     for key, value in kwargs.items():
         _wrapper.__dict__[key] = value
     return _wrapper
+
+def expand(fn, col, inputtype=pd.DataFrame):
+    """
+    Wrap a function applying to a single column to make a function
+    applying to a multi-dimensional dataframe or ndarray
+
+    Parameters
+    --
+    fn : function
+        Function that applies to a series or vector.
+
+    col : str or int
+        Index of column to which to apply `fn`.
+
+    inputtype : class or type
+        Type of input to be expected by the wrapped function.
+        Normally pd.DataFrame or np.ndarray. Defaults to pd.DataFrame.
+
+    Returns
+    --
+    wrapped : function
+        Function that takes an input of type `inputtype` and applies
+        `fn` to the specified `col`.
+    """
+    if inputtype == pd.DataFrame:
+        if isinstance(col, int):
+            def _wrapper(*args, **kwargs):
+                return fn(args[0].iloc[:, col], *args[1:], **kwargs)
+            return _wrapper
+        def _wrapper(*args, **kwargs):
+            return fn(args[0].loc[:, col], *args[1:], **kwargs)
+        return _wrapper
+    elif inputtype == np.ndarray:
+        def _wrapper(*args, **kwargs):
+            return fn(args[0][:, col], *args[1:], **kwargs)
+        return _wrapper
+    raise TypeError("invalid input type")
+

@@ -158,7 +158,8 @@ def fromfuncs(funcs, n_sessions, eqdata, **kwargs):
     --
     funcs : list {function}
         Functions to apply to eqdata. Each function is expected
-        to output a dataframe with index identical to that of `eqdata`.
+        to output a dataframe with index identical to a slice of `eqdata`.
+        The slice must include at least `eqdata.index[skipatstart + n_sessions - 1:]`.
         Each function is also expected to have a function attribute
         `title`, which is used to generate the column names of the
         output features.
@@ -188,7 +189,8 @@ def fromfuncs(funcs, n_sessions, eqdata, **kwargs):
     _skipatstart = kwargs.get('skipatstart', 0)
     _constfeat = kwargs.get('constfeat', True)
     _outcols = ['Constant'] if _constfeat else []
-    _n_rows = len(eqdata.index)
+    _n_allrows = len(eqdata.index)
+    _n_featrows = _n_allrows - _skipatstart - n_sessions + 1
     for _func in funcs:
         _outcols += map(partial(_concat, strval=' ' + _func.title), range(-n_sessions + 1, 1))
     _features = pd.DataFrame(index=eqdata.index[_skipatstart + n_sessions - 1:],
@@ -199,8 +201,10 @@ def fromfuncs(funcs, n_sessions, eqdata, **kwargs):
         _offset += 1
     for _func in funcs:
         _values = _func(eqdata).values
+        _n_values = len(_values)
         for i in range(n_sessions):
-            _features.iloc[:, _offset + i] = _values[_skipatstart + i:_n_rows - n_sessions + i + 1]
+            _val_end = _n_values - n_sessions + i + 1
+            _features.iloc[:, _offset + i] = _values[_val_end - _n_featrows:_val_end]
         _offset += n_sessions
     return _features
 
