@@ -89,7 +89,7 @@ class TestData(unittest.TestCase):
         _n_sess = 3
         _smafunc = pn.expand(pn.tech.sma, 'Adj Close')
         _funcs = [
-                pn.decorate(partial(pn.tech.ratio_to_ave, averaging_interval=_vol_ave_int),
+                pn.decorate(partial(pn.tech.ratio_to_ave, _vol_ave_int),
                     title='MyRelVol'),
                 pn.decorate(partial(_smafunc, window=_sma_window), title='MySMA')]
         _features = pn.data.feat.fromfuncs(_funcs, _n_sess, self.equity_data, 

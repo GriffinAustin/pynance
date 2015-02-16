@@ -70,7 +70,7 @@ def growth_vol(n_sessions, eqdata, **kwargs):
     _skipatstart = n_sessions + _averaging_interval - 1
     _growth = tech.growth(eqdata, selection=_pricecol, skipstartrows=(_averaging_interval - 1),
         skipendrows=_skipatend)
-    _vol = tech.ratio_to_ave(eqdata, _averaging_interval, skipendrows=_skipatend)
+    _vol = tech.ratio_to_ave(_averaging_interval, eqdata, skipendrows=_skipatend, outputcol='Rel Vol')
     _features = _featurize_growth_vol(_growth, _vol, n_sessions) 
     if kwargs.get('constfeat', True):
         _features = add_const(_features)

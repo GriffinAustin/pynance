@@ -33,19 +33,6 @@ class TestData(unittest.TestCase):
                 columns=['Volume', 'Adj Close'])
         self.equity_data.index.name = 'Date'
 
-    def test_ema(self):
-        _span = 4
-        _emadf = pn.tech.ema(self.equity_data.loc[:, 'Adj Close'], span=_span)
-        _prev = _emadf.iloc[0, 0]
-        # values are increasing but smaller than df values
-        for i in range(1, len(_emadf.index)):
-            self.assertTrue(_emadf.iloc[i, 0] < self.equity_data.iloc[i, 1])
-            self.assertTrue(_emadf.iloc[i, 0] > _prev)
-            _prev = _emadf.iloc[i, 0]
-        # values are greater than 2 datapoints back in equity_data
-        for i in range(2, len(_emadf.index)):
-            self.assertTrue(_emadf.iloc[i, 0] > self.equity_data.iloc[i - 2, 1])
-
     def test_growth(self):
         # Defaults
         eqgrowth = pn.tech.growth(self.equity_data)
