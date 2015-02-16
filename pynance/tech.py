@@ -11,6 +11,7 @@ be located in this module.
 
 from __future__ import absolute_import
 
+import numpy as np
 import pandas as pd
 
 from . import common
@@ -27,10 +28,91 @@ def sma(eq_data, window=20):
         lookback period for sma
     """
     if len(eq_data.shape) > 1 and eq_data.shape[1] != 1:
-        raise ValueError("input data must have exactly 1 column")
-    ret = pd.DataFrame(index=eq_data.index, columns=['SMA'], dtype='float')
+        raise ValueError("sma input must have exactly 1 column")
+    ret = pd.DataFrame(index=eq_data.index, columns=['SMA'], dtype=np.float64)
     ret.loc[:, 'SMA'] = pd.rolling_mean(eq_data, window=window).values.flatten()
     return ret
+
+def ema(eqdata, **kwargs):
+    """
+    Exponential moving average with the given span.
+
+    Parameters
+    --
+    eqdata : DataFrame
+        Must have exactly 1 column on which to calculate EMA
+
+    span : int, optional
+        Span for exponential moving average. Cf.
+        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.stats.moments.ewma.html and
+        http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-moment-functions
+
+    outputcol : str, optional
+        Column to use for output. Defaults to 'EMA'.
+
+    Returns
+    --
+    emadf : DataFrame
+        Exponential moving average using the given `span`.
+    """
+    if len(eqdata.shape) > 1 and eqdata.shape[1] != 1:
+        raise ValueError("ema input must have exactly 1 column")
+    _span = kwargs.get('span', 20)
+    _col = kwargs.get('outputcol', 'EMA')
+    # necessary because pd.ewma() outputs Series rather than DataFrame
+    _emadf = pd.DataFrame(index=eqdata.index, columns=[_col], dtype=np.float64)
+    _emadf.loc[:, _col] = pd.ewma(eqdata, span=_span).values.flatten()
+    return _emadf
+
+def ema_growth(eqdata, **kwargs):
+    """
+    Growth of exponential moving average.
+
+    Parameters
+    --
+    eqdata : DataFrame
+        Must have exactly 1 column on which to calculate EMA growth.
+
+    span : int, optional
+        Span for exponential moving average. Defaults to 20.
+
+    outputcol : str, optional.
+        Column to use for output. Defaults to 'EMA Growth'.
+
+    Returns
+    --
+    out : DataFrame
+        Growth of exponential moving average from one day to next
+    """
+    _growth_outputcol = kwargs.get('outputcol', 'EMA Growth')
+    _ema_outputcol = 'EMA'
+    kwargs['outputcol'] = _ema_outputcol
+    _emadf = ema(eqdata, **kwargs)
+    return growth(_emadf, selection=_ema_outputcol, outputcol=_growth_outputcol)
+
+def risk(eqdata, window=20):
+    """
+    Volatility (standard deviation) over the given window
+
+    Parameters
+    --
+    eqdata : DataFrame
+        Must have exactly one column on which to calculate risk.
+
+    window : int
+        Lookback period.
+        
+    Returns
+    --
+    risk : DataFrame
+        Moving volatility with the given lookback.
+    """
+    if len(eqdata.shape) > 1 and eqdata.shape[1] != 1:
+        raise ValueError("risk input must have exactly 1 column")
+    _colname = 'Risk'
+    _risk = pd.DataFrame(index=eqdata.index, columns=[_colname], dtype=np.float64)
+    _risk.loc[:, _colname] = pd.rolling_std(eqdata, window=window).values.flatten()
+    return _risk
 
 def bollinger(eq_data, window=20, k=2.0):
     """ 
@@ -101,6 +183,9 @@ def growth(eqdata, **kwargs):
     skipendrows : int
         Rows to skip at end of `eqdata`. Defaults to 0.
 
+    outputcol : str, optional
+        Name to use for output column. Defaults to 'Growth'
+
     Returns
     --
     out : DataFrame
@@ -119,11 +204,23 @@ def growth(eqdata, **kwargs):
     n_sessions = kwargs.get('n_sessions', 1)
     skipstartrows = kwargs.get('skipstartrows', 0)
     skipendrows = kwargs.get('skipendrows', 0)
+    outputcol = kwargs.get('outputcol', 'Growth')
     size = len(eqdata.index)
     growthdata = eqdata.loc[:, selection].values[(skipstartrows + n_sessions):(size - skipendrows)] / \
             eqdata.loc[:, selection].values[skipstartrows:(-n_sessions - skipendrows)]
     growthindex = eqdata.index[(skipstartrows + n_sessions):(size - skipendrows)]
-    return pd.DataFrame(data=growthdata, index=growthindex, columns=['Growth'], dtype='float64')
+    return pd.DataFrame(data=growthdata, index=growthindex, columns=[outputcol], dtype='float64')
+
+def ln_growth(eqdata, **kwargs):
+    """
+    Return the natural log of growth.
+
+    All parameters and the return are identical to those for `growth()` except that the
+    natural logarithm of all output values is returned.
+    """
+    if 'outputcol' not in kwargs:
+        kwargs['outputcol'] = 'LnGrowth'
+    return np.log(growth(eqdata, **kwargs))
 
 def ret(eqdata, **kwargs):
     """

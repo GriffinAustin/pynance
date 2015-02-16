@@ -153,3 +153,22 @@ def expand(fn, col, inputtype=pd.DataFrame):
         return _wrapper
     raise TypeError("invalid input type")
 
+def has_na(eqdata):
+    """
+    Return false if `eqdata` contains no missing values.
+
+    Parameters
+    --
+    eqdata : DataFrame or ndarray
+        Data to check for missing values (NaN, None)
+
+    Returns
+    --
+    answer : bool
+        False iff `eqdata` contains no missing values.
+    """
+    if isinstance(eqdata, pd.DataFrame):
+        _values = eqdata.values
+    else:
+        _values = eqdata
+    return len(_values[pd.isnull(_values)]) > 0

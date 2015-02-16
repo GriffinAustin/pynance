@@ -68,5 +68,37 @@ class TestData(unittest.TestCase):
         self.assertFalse(hasattr(_f, 'foo'))
         self.assertEqual(_g(), (0, 1, 2))
 
+    def test_expand(self):
+        def _f(eqdata):
+            return 2. * eqdata
+        _expanded_ret = pn.expand(_f, 'Adj Close')(self.equity_data)
+        self.assertEqual(len(_expanded_ret.values.flatten()), len(self.equity_data.index))
+        for i in range(len(_expanded_ret.index)):
+            self.assertEqual(_expanded_ret.index[i], self.equity_data.index[i])
+            self.assertAlmostEqual(_expanded_ret.values[i], 4. + 4. * i) 
+
+    def test_has_na(self):
+        # dataframe
+        # clean
+        self.assertFalse(pn.has_na(self.equity_data))
+        # None
+        self.equity_data.iloc[0, 0] = None
+        self.assertTrue(pn.has_na(self.equity_data))
+        # np.nan
+        self.equity_data.iloc[0, 0] = np.nan
+        self.assertTrue(pn.has_na(self.equity_data))
+        # ndarray
+        _eqdata = np.arange(12.).reshape((3, 4))
+        # clean
+        self.assertFalse(pn.has_na(_eqdata))
+        # None
+        _eqdata[0, 0] = None
+        self.assertTrue(pn.has_na(_eqdata))
+        # np.nan
+        _eqdata[0, 0] = np.nan
+        self.assertTrue(pn.has_na(_eqdata))
+        
+
+
 if __name__ == '__main__':
     unittest.main()
