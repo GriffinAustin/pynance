@@ -90,17 +90,20 @@ def ema_growth(eqdata, **kwargs):
     _emadf = ema(eqdata, **kwargs)
     return growth(_emadf, selection=_ema_outputcol, outputcol=_growth_outputcol)
 
-def risk(eqdata, window=20):
+def volatility(eqdata, **kwargs):
     """
     Volatility (standard deviation) over the given window
 
     Parameters
     --
     eqdata : DataFrame
-        Must have exactly one column on which to calculate risk.
+        Must have exactly one column on which to calculate volatility.
 
-    window : int
-        Lookback period.
+    window : int, optional
+        Lookback period. Defaults to 20.
+
+    outputcol : str, optional
+        Name of column to be used in returned dataframe. Defaults to 'Risk'.
         
     Returns
     --
@@ -109,10 +112,47 @@ def risk(eqdata, window=20):
     """
     if len(eqdata.shape) > 1 and eqdata.shape[1] != 1:
         raise ValueError("risk input must have exactly 1 column")
-    _colname = 'Risk'
+    _window = kwargs.get('window', 20)
+    _colname = kwargs.get('outputcol', 'Risk')
     _risk = pd.DataFrame(index=eqdata.index, columns=[_colname], dtype=np.float64)
-    _risk.loc[:, _colname] = pd.rolling_std(eqdata, window=window).values.flatten()
+    _risk.loc[:, _colname] = pd.rolling_std(eqdata, window=_window).values.flatten()
     return _risk
+
+def growth_volatility(eqdata, **kwargs):
+    """
+    Return the volatility of growth.
+
+    Note that, like `growth()` but in contrast to `volatility()`, `growth_volatility()`
+    applies directly to a dataframe like that returned by `pn.data.get()`,
+    not necessarily to a single-column dataframe.
+
+    Parameters
+    --
+    eqdata : DataFrame
+        Data from which to extract growth volatility. An exception
+        will be raised if `eqdata` does not contain a column 'Adj Close'
+        or an optional name specified by the `selection` parameter.
+
+    window : int, optional
+        Window on which to calculate volatility. Defaults to 20.
+
+    selection : str, optional
+        Column of eqdata on which to calculate volatility of growth. Defaults
+        to 'Adj Close'
+
+    outputcol : str, optional
+        Column to use for output. Defaults to 'Growth Risk'.
+
+    Returns
+    --
+    out : DataFrame
+        Dataframe showing the volatility of growth over the specified `window`.
+    """
+    _window = kwargs.get('window', 20)
+    _selection = kwargs.get('selection', 'Adj Close')
+    _outputcol = kwargs.get('outputcol', 'Growth Risk')
+    _growthdata = growth(eqdata, selection=_selection)
+    return volatility(_growthdata, outputcol=_outputcol, window=_window)
 
 def bollinger(eq_data, window=20, k=2.0):
     """ 
