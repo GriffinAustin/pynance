@@ -14,7 +14,7 @@ from __future__ import absolute_import
 import numpy as np
 import pandas as pd
 
-from .. import common
+from . import simple
 
 def sma(eqdata, **kwargs):
     """ 
@@ -116,7 +116,7 @@ def ema_growth(eqdata, **kwargs):
     _ema_outputcol = 'EMA'
     kwargs['outputcol'] = _ema_outputcol
     _emadf = ema(eqdata, **kwargs)
-    return growth(_emadf, selection=_ema_outputcol, outputcol=_growth_outputcol)
+    return simple.growth(_emadf, selection=_ema_outputcol, outputcol=_growth_outputcol)
 
 def volatility(eqdata, **kwargs):
     """
@@ -187,7 +187,7 @@ def growth_volatility(eqdata, **kwargs):
     _window = kwargs.get('window', 20)
     _selection = kwargs.get('selection', 'Adj Close')
     _outputcol = kwargs.get('outputcol', 'Growth Risk')
-    _growthdata = growth(eqdata, selection=_selection)
+    _growthdata = simple.growth(eqdata, selection=_selection)
     return volatility(_growthdata, outputcol=_outputcol, window=_window)
 
 def bollinger(eqdata, **kwargs):
