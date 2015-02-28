@@ -17,6 +17,11 @@ and Python packages. To verify that it works with yours,
 simply run the unit tests for data retrieval, then try
 making some charts with sample data you retrieve.
 
+Additional dependencies for the `pynance.options` module:
+* [lxml](http://lxml.de/) 3.4.2
+* [html5lib](https://pypi.python.org/pypi/html5lib) 0.999
+* [BeautifulSoup4](https://pypi.python.org/pypi/beautifulsoup4/4.3.2) 4.3.2
+
 Installation
 ---
 Download this repository, then (preferably) create
