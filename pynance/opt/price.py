@@ -5,6 +5,8 @@ Copyright (c) 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT
 """
 
+import pandas as pd
+
 def get(optdata, opttype, strike, expiry, showtimeval=True):
     """
     Retrieve price and time value of an option.
@@ -50,6 +52,84 @@ def get(optdata, opttype, strike, expiry, showtimeval=True):
             _timevalue = _get_call_time_val(_opt_price, strike, _underlying_price)
         return _opt_price, _underlying_price, _timevalue
     return _opt_price, _underlying_price
+
+def allstrikes(optdata, opttype, expiry):
+    """
+    Retrieve option prices for all strikes of a given type with a given expiration.
+
+    Parameters
+    --
+    optdata : DataFrame
+
+    opttype : str {'call', 'put'}
+
+    expiry : date or date str
+
+    Returns
+    --
+    df : DataFrame
+    """
+    _relevant = optdata.loc[(slice(None), expiry, opttype), :]
+    _index = _relevant.index.get_level_values('Strike')
+    _columns = ['Price', 'Time Value', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
+    _df = pd.DataFrame(index=_index, columns=_columns)
+    _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
+    for _col in _columns[2:]:
+        _df.loc[:, _col] = _relevant.loc[:, _col].values
+    _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
+    _set_tv_strike_ix(_df, opttype, 'Price', 'Time Value', _underlying)
+    return _df, _underlying
+
+def allexpiries(optdata, opttype, strike):
+    """
+    Prices for given strike on all available dates.
+
+    Parameters
+    --
+    optdata : DataFrame
+
+    opttype : str {'call', 'put'}
+
+    strike : numeric
+
+    Returns
+    --
+    df : DataFrame
+    """
+    _relevant = optdata.loc[(strike, slice(None), opttype), :]
+    _index = _relevant.index.get_level_values('Expiry')
+    _columns = ['Price', 'Time Value', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
+    _df = pd.DataFrame(index=_index, columns=_columns)
+    _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
+    for _col in _columns[2:]:
+        _df.loc[:, _col] = _relevant.loc[:, _col].values
+    _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
+    _set_tv_other_ix(_df, opttype, 'Price', 'Time Value', _underlying, strike)
+    return _df, _underlying
+
+def _set_tv_other_ix(df, opttype, pricecol, tvcol, eqprice, strike):
+    if opttype == 'put':
+        if strike <= eqprice:
+            df.loc[:, tvcol] = df.loc[:, pricecol]
+        else:
+            _diff = eqprice - strike
+            df.loc[:, tvcol] = df.loc[:, pricecol] + _diff
+    else:
+        if eqprice <= strike:
+            df.loc[:, tvcol] = df.loc[:, pricecol]
+        else:
+            _diff = strike - eqprice
+            df.loc[:, tvcol] = df.loc[:, pricecol] + _diff
+
+def _set_tv_strike_ix(df, opttype, pricecol, tvcol, eqprice):
+    df.loc[:, tvcol] = df.loc[:, pricecol]
+    if opttype == 'put':
+        _mask = (df.index > eqprice)
+        df.loc[_mask, tvcol] += eqprice - df.index[_mask]
+    else:
+        _mask = (df.index < eqprice)
+        df.loc[_mask, tvcol] += df.index[_mask] - eqprice
+    return
 
 def _getprice(optrow):
     _bid = optrow.loc[:, 'Bid'].values[0]
