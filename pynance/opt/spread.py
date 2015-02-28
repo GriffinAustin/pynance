@@ -44,7 +44,7 @@ def calendar(optdata, opttype, strike, expiry1, expiry2):
     _vals = np.array([_price1, _price2, _price2 - _price1, _underlying])
     return pd.DataFrame(_vals, index=_index, columns=['Value'])
 
-def dbl_calendar(optdata, lowstrike, highstrike, expiry1, expiry2):
+def dblcal(optdata, lowstrike, highstrike, expiry1, expiry2):
     """
     Metrics for evaluating a double calendar spread.
 
@@ -72,8 +72,12 @@ def dbl_calendar(optdata, lowstrike, highstrike, expiry1, expiry2):
     --
     metrics : DataFrame
         Metrics for evaluating spread.
+
+    Notes
+    --
+    Cf. McMillan, Options as a Strategic Investment, 5th ed., pp. 334ff.
     """
-    _index = ['Near Put', 'Far Put', 'Put Ratio', 'Near Call', 'Far Call', 'Call Ratio', 'Debit', 'Underlying']
+    _index = ['Near Put', 'Far Put', 'Put Ratio', 'Near Call', 'Far Call', 'Call Ratio', 'Near to Far Ratio', 'Debit', 'Underlying']
     _metrics = pd.DataFrame(index=_index, columns=['Value'])
     _nearput, _metrics.loc['Underlying', 'Value'] = price.get(optdata, 'put', lowstrike, expiry1, False) 
     _metrics.loc['Near Put', 'Value'] = _nearput
@@ -85,7 +89,62 @@ def dbl_calendar(optdata, lowstrike, highstrike, expiry1, expiry2):
     _farcall, _ = price.get(optdata, 'call', highstrike, expiry2, False)
     _metrics.loc['Far Call', 'Value'] = _farcall
     _metrics.loc['Call Ratio', 'Value'] = _nearcall / _farcall
+    _metrics.loc['Near to Far Ratio', 'Value'] = (_nearcall + _nearput) / (_farcall + _farput)
     _metrics.loc['Debit', 'Value'] = _farcall + _farput - _nearcall - _nearput
+    return _metrics
+
+def diagbtrfly(optdata, lowstrike, midstrike, highstrike, expiry1, expiry2):
+    """
+    Metrics for evaluating a diagonal butterfly spread.
+
+    Parameters
+    --
+    optdata : DataFrame
+        Data returned from `pn.opt.get()`
+
+    opttype : str {'call', 'put'}
+        Type of option on which to collect data.
+
+    lowstrike : numeric
+        Lower strike price. To be used for far put.
+
+    midstrike : numeric
+        Middle strike price. To be used for near straddle.
+        Typically at the money.
+
+    highstrike : numeric
+        Higher strike price. To be used for far call.
+
+    expiry1 : date or date str (e.g. '2015-01-01')
+        Earlier expiration date.
+
+    expiry2 : date or date str (e.g. '2015-01-01')
+        Later expiration date.
+
+    Returns
+    --
+    metrics : DataFrame
+        Metrics for evaluating spread.
+
+    Notes
+    --
+    Cf. McMillan, Options as a Strategic Investment, 5th ed., pp. 340ff.
+    """
+    _index = ['Straddle Call', 'Straddle Put', 'Straddle Total', 'Far Call', 'Far Put', 'Far Total',
+            'Straddle to Far Ratio', 'Credit', 'Underlying']
+    _metrics = pd.DataFrame(index=_index, columns=['Value'])
+    _straddlecall, _metrics.loc['Underlying', 'Value'] = price.get(optdata, 'call', midstrike, expiry1, False)
+    _straddleput, _ = price.get(optdata, 'put', midstrike, expiry1, False)
+    _farcall, _ = price.get(optdata, 'call', highstrike, expiry2, False)
+    _farput, _ = price.get(optdata, 'put', lowstrike, expiry2, False)
+    _metrics.loc['Straddle Call', 'Value'] = _straddlecall
+    _metrics.loc['Straddle Put', 'Value'] = _straddleput
+    _metrics.loc['Straddle Total', 'Value'] = _straddle_tot = _straddlecall + _straddleput
+    _metrics.loc['Far Call', 'Value'] = _farcall
+    _metrics.loc['Far Put', 'Value'] = _farput
+    _metrics.loc['Far Total', 'Value'] = _far_tot = _farcall + _farput
+    _metrics.loc['Straddle to Far Ratio', 'Value'] = _straddle_tot / _far_tot 
+    _metrics.loc['Credit', 'Value'] = _straddle_tot - _far_tot
     return _metrics
 
 def straddle(optdata, strike, expiry):
