@@ -68,17 +68,24 @@ def allstrikes(optdata, opttype, expiry):
     Returns
     --
     df : DataFrame
+
+    underlying : float
+        Price of underlying.
+
+    quote_time : pandas.tslib.Timestamp
+        Time of quote.
     """
     _relevant = optdata.loc[(slice(None), expiry, opttype), :]
     _index = _relevant.index.get_level_values('Strike')
-    _columns = ['Price', 'Time Value', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
+    _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)
     _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
+    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0])
     for _col in _columns[2:]:
         _df.loc[:, _col] = _relevant.loc[:, _col].values
     _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
-    _set_tv_strike_ix(_df, opttype, 'Price', 'Time Value', _underlying)
-    return _df, _underlying
+    _set_tv_strike_ix(_df, opttype, 'Price', 'Time_Val', _underlying)
+    return _df, _underlying, _quotetime
 
 def allexpiries(optdata, opttype, strike):
     """
@@ -95,17 +102,24 @@ def allexpiries(optdata, opttype, strike):
     Returns
     --
     df : DataFrame
+
+    underlying : float
+        Price of underlying.
+
+    quote_time : pandas.tslib.Timestamp
+        Time of quote.
     """
     _relevant = optdata.loc[(strike, slice(None), opttype), :]
     _index = _relevant.index.get_level_values('Expiry')
-    _columns = ['Price', 'Time Value', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
+    _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)
     _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
+    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0])
     for _col in _columns[2:]:
         _df.loc[:, _col] = _relevant.loc[:, _col].values
     _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
-    _set_tv_other_ix(_df, opttype, 'Price', 'Time Value', _underlying, strike)
-    return _df, _underlying
+    _set_tv_other_ix(_df, opttype, 'Price', 'Time_Val', _underlying, strike)
+    return _df, _underlying, _quotetime
 
 def _set_tv_other_ix(df, opttype, pricecol, tvcol, eqprice, strike):
     if opttype == 'put':
