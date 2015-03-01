@@ -37,6 +37,16 @@ or for Python 3 installation:
 `pip` should be pre-installed on Linux. On Windows and OS X, you may
 first need to install it. [How?](https://pip.pypa.io/en/latest/installing.html#installation)
 
+#### Issues
+##### Ubuntu
+-   Python 3 installation on Ubuntu 14.04 LTS. Matplotlib does not work properly
+    with pycairo in Python 3. As a result, when I typed `import pynance` at
+    the `python3` prompt, I was getting a warning message. To use matplotlib in Python 3
+    and eliminate the warning, you need
+    to install `cairocffi`, for which I was getting a build error
+    using `sudo -H pip3 install cairocffi`. That issue was
+    resolved by first running `sudo apt-get install libffi-dev`.
+
 ### Manual (Development) Installation
 If you want to contribute to PyNance development, start an
 independent fork, or for any other reason don't want to use `pip`, 

@@ -72,7 +72,7 @@ def allstrikes(optdata, opttype, expiry):
     underlying : float
         Price of underlying.
 
-    quote_time : pandas.tslib.Timestamp
+    quote_time : datetime.datetime
         Time of quote.
     """
     _relevant = optdata.loc[(slice(None), expiry, opttype), :]
@@ -80,7 +80,7 @@ def allstrikes(optdata, opttype, expiry):
     _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)
     _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
-    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0])
+    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
     for _col in _columns[2:]:
         _df.loc[:, _col] = _relevant.loc[:, _col].values
     _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
@@ -106,7 +106,7 @@ def allexpiries(optdata, opttype, strike):
     underlying : float
         Price of underlying.
 
-    quote_time : pandas.tslib.Timestamp
+    quote_time : datetime.datetime
         Time of quote.
     """
     _relevant = optdata.loc[(strike, slice(None), opttype), :]
@@ -114,7 +114,7 @@ def allexpiries(optdata, opttype, strike):
     _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)
     _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
-    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0])
+    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
     for _col in _columns[2:]:
         _df.loc[:, _col] = _relevant.loc[:, _col].values
     _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
