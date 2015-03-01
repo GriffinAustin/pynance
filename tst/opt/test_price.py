@@ -18,7 +18,7 @@ class TestData(unittest.TestCase):
         _indexnames = ['Strike', 'Expiry', 'Type', 'Symbol']
         _iterables = [
                 [8., 10., 12.],
-                [dt.datetime(2014, 5, 1), dt.datetime(2014, 6, 1), dt.datetime(2014, 7, 1)],
+                [dt.datetime(2015, 5, 1), dt.datetime(2015, 6, 1), dt.datetime(2015, 7, 1)],
                 ['call', 'put'],
                 ['blah140x01CP']]
         _index = pd.MultiIndex.from_product(_iterables, names=_indexnames)
@@ -28,7 +28,7 @@ class TestData(unittest.TestCase):
         _n_rows = self.optdata.shape[0]
         self.optdata.loc[:, 'Last'] = np.arange(float(_n_rows))
         self.optdata.loc[:, 'Quote_Time'] = np.datetime64(dt.datetime(2015, 3, 1))
-        self.optdata.loc[:, 'Underlying_Price'] = 10.11
+        self.optdata.loc[:, 'Underlying_Price'] = 10.1
         self.optdata.loc[:, 'Underlying'] = self.optdata.loc[:, 'Root'] = 'GE'
         self.optdata.loc[:, 'Chg'] = -.05
         self.optdata.loc[:, 'PctChg'] = '-11.3%'
@@ -36,10 +36,35 @@ class TestData(unittest.TestCase):
         self.optdata.loc[:, 'Open_Int'] = 400
         self.optdata.loc[:, 'IV'] = '18.0%'
         self.optdata.loc[:, 'IsNonstandard'] = False
+        _callbids = [2.7, 2.8, 2.9, .9, 1., 1.1, .6, .7, .8]
+        _putbids = [.6, .7, .8, .8, .9, 1., 2.5, 2.6, 2.7]
+        _bids = np.array(sum(zip(_callbids, _putbids), ()))
+        self.optdata.loc[:, 'Bid'] = _bids
+        # setting ask as bid + .2 means that price is expected to be bid + .1
+        self.optdata.loc[:, 'Ask'] = _bids + .2
 
     def test_get(self):
-        print(self.optdata)
-        print(pn.opt.price.get(self.optdata, 'put', 10., '2014-06-01'))
+        # call in the money
+        _opt, _eq, _tv = pn.opt.price.get(self.optdata, 'call', 8., '2015-05-01')
+        self.assertAlmostEqual(_opt, 2.8)
+        self.assertAlmostEqual(_eq, 10.1)
+        self.assertAlmostEqual(_tv, .7)
+        # call out of the money
+        _opt, _, _tv = pn.opt.price.get(self.optdata, 'call', 12., '2015-06-01')
+        self.assertAlmostEqual(_opt, .8)
+        self.assertAlmostEqual(_tv, .8)
+        # put in the money
+        _opt, _, _tv = pn.opt.price.get(self.optdata, 'put', 12., '2015-07-01')
+        self.assertAlmostEqual(_opt, 2.8)
+        self.assertAlmostEqual(_tv, .9)
+        # put out of the money
+        _opt, _, _tv = pn.opt.price.get(self.optdata, 'put', 10., '2015-05-01')
+        self.assertAlmostEqual(_opt, .9)
+        self.assertAlmostEqual(_tv, .9)
+        # without time value
+        _opt, _eq = pn.opt.price.get(self.optdata, 'put', 10., '2015-06-01', showtimeval=False)
+        self.assertAlmostEqual(_opt, 1.)
+        self.assertAlmostEqual(_eq, 10.1)
 
 if __name__ == '__main__':
     unittest.main()

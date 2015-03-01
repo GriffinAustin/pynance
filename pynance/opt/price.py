@@ -5,7 +5,11 @@ Copyright (c) 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT
 """
 
+from __future__ import absolute_import
+
 import pandas as pd
+
+from . import constants
 
 def get(optdata, opttype, strike, expiry, showtimeval=True):
     """
@@ -44,7 +48,8 @@ def get(optdata, opttype, strike, expiry, showtimeval=True):
     """
     _optrow = optdata.loc[(strike, expiry, opttype), :]
     _opt_price = _getprice(_optrow)
-    _underlying_price = _optrow.loc[:, 'Underlying_Price'].values[0]
+    _underlying_price = round(_optrow.loc[:, 'Underlying_Price'].values[0],
+            constants.NDIGITS_SIG)
     if showtimeval:
         if opttype == 'put':
             _timevalue = _get_put_time_val(_opt_price, strike, _underlying_price)
@@ -148,14 +153,14 @@ def _set_tv_strike_ix(df, opttype, pricecol, tvcol, eqprice):
 def _getprice(optrow):
     _bid = optrow.loc[:, 'Bid'].values[0]
     _ask = optrow.loc[:, 'Ask'].values[0]
-    return (_bid + _ask) / 2.
+    return round((_bid + _ask) / 2., constants.NDIGITS_SIG)
 
 def _get_put_time_val(putprice, strike, eqprice):
     if strike <= eqprice:
         return putprice
-    return putprice + eqprice - strike
+    return round(putprice + eqprice - strike, constants.NDIGITS_SIG)
     
 def _get_call_time_val(callprice, strike, eqprice):
     if eqprice <= strike:
         return callprice
-    return callprice + strike - eqprice
+    return round(callprice + strike - eqprice, constants.NDIGITS_SIG)
