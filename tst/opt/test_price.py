@@ -65,6 +65,8 @@ class TestData(unittest.TestCase):
         _opt, _eq = pn.opt.price.get(self.optdata, 'put', 10., '2015-06-01', showtimeval=False)
         self.assertAlmostEqual(_opt, 1.)
         self.assertAlmostEqual(_eq, 10.1)
+        # exceptions
+        self.assertRaises(KeyError, pn.opt.price.get, self.optdata, 'call', 10., '2015-06-02')
 
 if __name__ == '__main__':
     unittest.main()
