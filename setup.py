@@ -19,7 +19,7 @@ To upload a new version to PyPI:
 % python setup.py sdist upload -r pypi
 """
 
-import os
+from setuptools import setup, find_packages
 
 MAJOR   = 0
 MINOR   = 1
@@ -62,22 +62,16 @@ DEPENDENCIES = [
         "beautifulsoup4",
         ]
 
-# BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
-# update it when the contents of directories change.
-if os.path.exists('MANIFEST'): os.remove('MANIFEST')
-
-from distutils.core import setup
-
 setup(
         name='pynance',
-        packages=['pynance'],
+        packages=find_packages(),
         version=VERSION,
         description='Retrieve and analyse financial market data',
         author='Marshall Farrier',
         author_email='marshalldfarrier@gmail.com',
         url='https://github.com/aisthesis/pynance',
         download_url=('https://github.com/aisthesis/pynance/tarball/' + VERSION),
-        keywords=KEYWORDS,
+        keywords=' '.join(KEYWORDS),
         classifiers=CLASSIFIERS,
         install_requires=DEPENDENCIES
         )
