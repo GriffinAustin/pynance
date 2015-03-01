@@ -24,12 +24,28 @@ Additional dependencies for the `pynance.options` module:
 
 Installation
 ---
-Download this repository, then (preferably) create
+### The Easy Way
+Use [pip](https://pip.pypa.io/en/latest/index.html). With `pip` installed, just
+enter the following command on Windows, Unix/Linux or OS X:
+
+`$ pip install pynance`
+
+or for Python 3 installation:
+
+`pip3 install pynance`
+
+`pip` should be pre-installed on Linux. On Windows and OS X, you may
+first need to install it. [How?](https://pip.pypa.io/en/latest/installing.html#installation)
+
+### Manual (Development) Installation
+If you want to contribute to PyNance development, start an
+independent fork, or for any other reason don't want to use `pip`, 
+download this repository, then (preferably) create
 a symlink to the standard directory to which you
 have Python libraries installed or (alternatively) add
 the library path to your Python search path.
 
-### Example
+#### Example
 I keep the repository for PyNance on a flash drive. So, in order
 to have access to it on my Mac, where all dependencies are
 installed, I did this:

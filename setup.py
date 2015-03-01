@@ -19,12 +19,15 @@ To upload a new version to PyPI:
 % python setup.py sdist upload -r pypi
 """
 
-from distutils.core import setup
+import os
 
-VERSION = '0.1.0'
+MAJOR   = 0
+MINOR   = 1
+MICRO   = 1
+VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 CLASSIFIERS = [
-        "Development Status :: 4 - Beta",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Financial and Insurance Industry",
         "Intended Audience :: Developers",
         "License :: OSI Approved",
@@ -40,15 +43,41 @@ CLASSIFIERS = [
         "Topic :: Office/Business :: Financial :: Investment",
         ]
 
+KEYWORDS = [
+        "finance",
+        "investment",
+        "stocks",
+        "equities",
+        "market",
+        "options",
+        "derivatives",
+        ]
+
+DEPENDENCIES = [
+        "numpy",
+        "pandas",
+        "matplotlib",
+        "lxml",
+        "html5lib",
+        "beautifulsoup4",
+        ]
+
+# BEFORE importing distutils, remove MANIFEST. distutils doesn't properly
+# update it when the contents of directories change.
+if os.path.exists('MANIFEST'): os.remove('MANIFEST')
+
+from distutils.core import setup
+
 setup(
         name='pynance',
         packages=['pynance'],
         version=VERSION,
-        description='Library for retrieving and analysing financial data',
+        description='Retrieve and analyse financial market data',
         author='Marshall Farrier',
         author_email='marshalldfarrier@gmail.com',
         url='https://github.com/aisthesis/pynance',
-        download_url='https://github.com/aisthesis/pynance/tarball/0.1',
-        keywords=['finance'],
+        download_url=('https://github.com/aisthesis/pynance/tarball/' + VERSION),
+        keywords=KEYWORDS,
         classifiers=CLASSIFIERS,
+        install_requires=DEPENDENCIES
         )
