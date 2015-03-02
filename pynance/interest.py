@@ -1,11 +1,14 @@
 """
 Calculations involving compounded interest.
 
-Copyright (c) 2014 Marshall Farrier
+Copyright (c) 2014, 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT
 """
 
+import datetime as dt
 import math
+
+import pandas as pd
 
 def yrlygrowth(total_growth, years):
     """
@@ -20,6 +23,32 @@ def yrlyret(total_interest, years):
     over an arbitrary time span.
     """
     return yrlygrowth(total_interest + 1.0, years) - 1.0
+
+def growthfromrange(rangegrowth, startdate, enddate):
+    """
+    Annual growth given growth from start date to end date.
+    """
+    _yrs = (pd.Timestamp(enddate) - pd.Timestamp(startdate)).total_seconds() /\
+            dt.timedelta(365.25).total_seconds()
+    return yrlygrowth(rangegrowth, _yrs)
+
+def retfromrange(rangeret, startdate, enddate):
+    """
+    Annual return given return from start date to end date.
+    """
+    return growthfromrange(1. + rangeret, startdate, enddate) - 1.
+
+def growthtocont(annualgr):
+    """
+    Convert annual growth to continuous compounding rate
+    """
+    return math.log(annualgr)
+
+def conttogrowth(contrate):
+    """
+    Convert continuous compounding rate to annual growth
+    """
+    return math.exp(contrate)
 
 def compgrowth(annual_growth, years):
     """
