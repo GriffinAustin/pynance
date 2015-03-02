@@ -36,13 +36,13 @@ def get(optdata, opttype, strike, expiry, showtimeval=True):
 
     Returns
     --
-    opt_price : float
+    opt: float
         Price of option (midpoint between bid and ask).
 
-    underlying_price : float
+    eq : float
         Price of underlying.
 
-    time_value : float
+    tv : float
         Time value of option. Returned only as long as `showtimeval` is set
         to True.
     """
@@ -88,7 +88,8 @@ def allstrikes(optdata, opttype, expiry):
     quote_time : datetime.datetime
         Time of quote.
     """
-    _relevant = optdata.loc[(slice(None), expiry, opttype), :]
+    _relevant = _relevant_rows(optdata, (slice(None), expiry, opttype,),
+            "No key for {} {}".format(expiry, opttype))
     _index = _relevant.index.get_level_values('Strike')
     _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)

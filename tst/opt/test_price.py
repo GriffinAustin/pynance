@@ -68,5 +68,29 @@ class TestData(unittest.TestCase):
         # exceptions
         self.assertRaises(KeyError, pn.opt.price.get, self.optdata, 'call', 10., '2015-06-02')
 
+    def test_allstrikes(self):
+        # call
+        _opt, _eq, _qt = pn.opt.price.allstrikes(self.optdata, 'call', '2015-05-01')
+        # only test price and time val for now
+        self.assertAlmostEqual(_opt.loc[8., 'Price'], 2.8)
+        self.assertAlmostEqual(_opt.loc[10., 'Price'], 1.)
+        self.assertAlmostEqual(_opt.loc[12., 'Price'], .7)
+        self.assertAlmostEqual(_opt.loc[8., 'Time_Val'], .7)
+        self.assertAlmostEqual(_opt.loc[10., 'Time_Val'], .9)
+        self.assertAlmostEqual(_opt.loc[12., 'Time_Val'], .7)
+        self.assertAlmostEqual(_eq, 10.1)
+        self.assertEqual(_qt, dt.datetime(2015, 3, 1))
+        # put
+        _opt, _, _ = pn.opt.price.allstrikes(self.optdata, 'put', '2015-06-01')
+        # only test price and time val for now
+        self.assertAlmostEqual(_opt.loc[8., 'Price'], .8)
+        self.assertAlmostEqual(_opt.loc[10., 'Price'], 1.)
+        self.assertAlmostEqual(_opt.loc[12., 'Price'], 2.7)
+        self.assertAlmostEqual(_opt.loc[8., 'Time_Val'], .8)
+        self.assertAlmostEqual(_opt.loc[10., 'Time_Val'], 1.)
+        self.assertAlmostEqual(_opt.loc[12., 'Time_Val'], .8)
+        # exceptions
+        self.assertRaises(KeyError, pn.opt.price.allstrikes, self.optdata, 'call', '2015-06-30')
+
 if __name__ == '__main__':
     unittest.main()
