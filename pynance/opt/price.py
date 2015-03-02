@@ -42,7 +42,10 @@ def get(optdata, opttype, strike, expiry, showtimeval=True):
     eq : float
         Price of underlying.
 
-    tv : float
+    qt : datetime.datetime
+        Time of quote.
+
+    tv : float, optional
         Time value of option. Returned only as long as `showtimeval` is set
         to True.
     """
@@ -51,13 +54,14 @@ def get(optdata, opttype, strike, expiry, showtimeval=True):
     _opt_price = _getprice(_optrow)
     _underlying_price = round(_optrow.loc[:, 'Underlying_Price'].values[0],
             constants.NDIGITS_SIG)
+    _qt = pd.to_datetime(_optrow.loc[:, 'Quote_Time'].values[0]).to_datetime()
     if showtimeval:
         if opttype == 'put':
             _timevalue = _get_put_time_val(_opt_price, strike, _underlying_price)
         else:
             _timevalue = _get_call_time_val(_opt_price, strike, _underlying_price)
-        return _opt_price, _underlying_price, _timevalue
-    return _opt_price, _underlying_price
+        return _opt_price, _underlying_price, _qt, _timevalue
+    return _opt_price, _underlying_price, _qt
 
 def _relevant_rows(optdata, multikey, errmsg):
     try:

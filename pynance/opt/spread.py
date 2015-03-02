@@ -38,10 +38,10 @@ def calendar(optdata, opttype, strike, expiry1, expiry2):
     metrics : DataFrame
         Metrics for evaluating spread.
     """
-    _price1, _underlying = price.get(optdata, opttype, strike, expiry1, False)
-    _price2, _ = price.get(optdata, opttype, strike, expiry2, False)
-    _index = ['Near', 'Far', 'Debit', 'Underlying']
-    _vals = np.array([_price1, _price2, _price2 - _price1, _underlying])
+    _price1, _underlying, _qt = price.get(optdata, opttype, strike, expiry1, False)
+    _price2 = price.get(optdata, opttype, strike, expiry2, False)[0]
+    _index = ['Near', 'Far', 'Debit', 'Underlying', 'Quote_Time']
+    _vals = np.array([_price1, _price2, _price2 - _price1, _underlying, _qt])
     return pd.DataFrame(_vals, index=_index, columns=['Value'])
 
 def dblcal(optdata, lowstrike, highstrike, expiry1, expiry2):
@@ -77,18 +77,20 @@ def dblcal(optdata, lowstrike, highstrike, expiry1, expiry2):
     --
     Cf. McMillan, Options as a Strategic Investment, 5th ed., pp. 334ff.
     """
-    _index = ['Near Put', 'Far Put', 'Put Ratio', 'Near Call', 'Far Call', 'Call Ratio', 'Near to Far Ratio', 'Debit', 'Underlying']
+    _index = ['Near Call', 'Far Call', 'Call Ratio', 'Near Put', 'Far Put', 
+            'Put Ratio', 'Near to Far Ratio', 'Debit', 'Underlying', 'Quote_Time']
     _metrics = pd.DataFrame(index=_index, columns=['Value'])
-    _nearput, _metrics.loc['Underlying', 'Value'] = price.get(optdata, 'put', lowstrike, expiry1, False) 
-    _metrics.loc['Near Put', 'Value'] = _nearput
-    _farput, _ = price.get(optdata, 'put', lowstrike, expiry2, False)
-    _metrics.loc['Far Put', 'Value'] = _farput
-    _metrics.loc['Put Ratio', 'Value'] = _nearput / _farput
-    _nearcall, _  = price.get(optdata, 'call', highstrike, expiry1, False)
+    _nearcall, _metrics.loc['Underlying', 'Value'], _metrics.loc['Quote_Time', 'Value'] =\
+            price.get(optdata, 'call', highstrike, expiry1, False)
     _metrics.loc['Near Call', 'Value'] = _nearcall
-    _farcall, _ = price.get(optdata, 'call', highstrike, expiry2, False)
+    _farcall = price.get(optdata, 'call', highstrike, expiry2, False)[0]
     _metrics.loc['Far Call', 'Value'] = _farcall
     _metrics.loc['Call Ratio', 'Value'] = _nearcall / _farcall
+    _nearput = price.get(optdata, 'put', lowstrike, expiry1, False)[0]
+    _metrics.loc['Near Put', 'Value'] = _nearput
+    _farput = price.get(optdata, 'put', lowstrike, expiry2, False)[0]
+    _metrics.loc['Far Put', 'Value'] = _farput
+    _metrics.loc['Put Ratio', 'Value'] = _nearput / _farput
     _metrics.loc['Near to Far Ratio', 'Value'] = (_nearcall + _nearput) / (_farcall + _farput)
     _metrics.loc['Debit', 'Value'] = _farcall + _farput - _nearcall - _nearput
     return _metrics
@@ -131,12 +133,13 @@ def diagbtrfly(optdata, lowstrike, midstrike, highstrike, expiry1, expiry2):
     Cf. McMillan, Options as a Strategic Investment, 5th ed., pp. 340ff.
     """
     _index = ['Straddle Call', 'Straddle Put', 'Straddle Total', 'Far Call', 'Far Put', 'Far Total',
-            'Straddle to Far Ratio', 'Credit', 'Underlying']
+            'Straddle to Far Ratio', 'Credit', 'Underlying', 'Quote_Time']
     _metrics = pd.DataFrame(index=_index, columns=['Value'])
-    _straddlecall, _metrics.loc['Underlying', 'Value'] = price.get(optdata, 'call', midstrike, expiry1, False)
-    _straddleput, _ = price.get(optdata, 'put', midstrike, expiry1, False)
-    _farcall, _ = price.get(optdata, 'call', highstrike, expiry2, False)
-    _farput, _ = price.get(optdata, 'put', lowstrike, expiry2, False)
+    _straddlecall, _metrics.loc['Underlying', 'Value'], _metrics.loc['Quote_Time', 'Value'] =\
+            price.get(optdata, 'call', midstrike, expiry1, False)
+    _straddleput = price.get(optdata, 'put', midstrike, expiry1, False)[0]
+    _farcall = price.get(optdata, 'call', highstrike, expiry2, False)[0]
+    _farput = price.get(optdata, 'put', lowstrike, expiry2, False)[0]
     _metrics.loc['Straddle Call', 'Value'] = _straddlecall
     _metrics.loc['Straddle Put', 'Value'] = _straddleput
     _metrics.loc['Straddle Total', 'Value'] = _straddle_tot = _straddlecall + _straddleput
@@ -167,8 +170,8 @@ def straddle(optdata, strike, expiry):
     metrics : DataFrame
         Metrics for evaluating straddle.
     """
-    _callprice, _underlying = price.get(optdata, 'call', strike, expiry, False)
-    _putprice, _ = price.get(optdata, 'put', strike, expiry, False)
-    _index = ['Call', 'Put', 'Credit', 'Underlying']
-    _vals = np.array([_callprice, _putprice, _callprice + _putprice, _underlying])
+    _callprice, _underlying, _qt = price.get(optdata, 'call', strike, expiry, False)
+    _putprice = price.get(optdata, 'put', strike, expiry, False)[0]
+    _index = ['Call', 'Put', 'Credit', 'Underlying', 'Quote_Time']
+    _vals = np.array([_callprice, _putprice, _callprice + _putprice, _underlying, _qt])
     return pd.DataFrame(_vals, index=_index, columns=['Value'])

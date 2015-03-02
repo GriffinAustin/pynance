@@ -45,26 +45,28 @@ class TestData(unittest.TestCase):
 
     def test_get(self):
         # call in the money
-        _opt, _eq, _tv = pn.opt.price.get(self.optdata, 'call', 8., '2015-05-01')
+        _opt, _eq, _qt, _tv = pn.opt.price.get(self.optdata, 'call', 8., '2015-05-01')
         self.assertAlmostEqual(_opt, 2.8)
         self.assertAlmostEqual(_eq, 10.1)
+        self.assertEqual(_qt, dt.datetime(2015, 3, 1))
         self.assertAlmostEqual(_tv, .7)
         # call out of the money
-        _opt, _, _tv = pn.opt.price.get(self.optdata, 'call', 12., '2015-06-01')
+        _opt, _, _, _tv = pn.opt.price.get(self.optdata, 'call', 12., '2015-06-01')
         self.assertAlmostEqual(_opt, .8)
         self.assertAlmostEqual(_tv, .8)
         # put in the money
-        _opt, _, _tv = pn.opt.price.get(self.optdata, 'put', 12., '2015-07-01')
+        _opt, _, _, _tv = pn.opt.price.get(self.optdata, 'put', 12., '2015-07-01')
         self.assertAlmostEqual(_opt, 2.8)
         self.assertAlmostEqual(_tv, .9)
         # put out of the money
-        _opt, _, _tv = pn.opt.price.get(self.optdata, 'put', 10., '2015-05-01')
+        _opt, _, _, _tv = pn.opt.price.get(self.optdata, 'put', 10., '2015-05-01')
         self.assertAlmostEqual(_opt, .9)
         self.assertAlmostEqual(_tv, .9)
         # without time value
-        _opt, _eq = pn.opt.price.get(self.optdata, 'put', 10., '2015-06-01', showtimeval=False)
+        _opt, _eq, _qt = pn.opt.price.get(self.optdata, 'put', 10., '2015-06-01', showtimeval=False)
         self.assertAlmostEqual(_opt, 1.)
         self.assertAlmostEqual(_eq, 10.1)
+        self.assertEqual(_qt, dt.datetime(2015, 3, 1))
         # exceptions
         self.assertRaises(KeyError, pn.opt.price.get, self.optdata, 'call', 10., '2015-06-02')
 
