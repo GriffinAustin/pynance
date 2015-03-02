@@ -86,10 +86,10 @@ def allstrikes(optdata, opttype, expiry):
     --
     df : DataFrame
 
-    underlying : float
+    eq : float
         Price of underlying.
 
-    quote_time : datetime.datetime
+    qt : datetime.datetime
         Time of quote.
     """
     _relevant = _relevant_rows(optdata, (slice(None), expiry, opttype,),
@@ -97,7 +97,8 @@ def allstrikes(optdata, opttype, expiry):
     _index = _relevant.index.get_level_values('Strike')
     _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)
-    _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
+    _underlying = round(_relevant.loc[:, 'Underlying_Price'].values[0],
+            constants.NDIGITS_SIG)
     _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
     for _col in _columns[2:]:
         _df.loc[:, _col] = _relevant.loc[:, _col].values
@@ -121,10 +122,10 @@ def allexpiries(optdata, opttype, strike):
     --
     df : DataFrame
 
-    underlying : float
+    eq : float
         Price of underlying.
 
-    quote_time : datetime.datetime
+    qt : datetime.datetime
         Time of quote.
     """
     _relevant = _relevant_rows(optdata, (strike, slice(None), opttype,),
@@ -132,7 +133,8 @@ def allexpiries(optdata, opttype, strike):
     _index = _relevant.index.get_level_values('Expiry')
     _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)
-    _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
+    _underlying = round(_relevant.loc[:, 'Underlying_Price'].values[0],
+            constants.NDIGITS_SIG)
     _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
     for _col in _columns[2:]:
         _df.loc[:, _col] = _relevant.loc[:, _col].values
