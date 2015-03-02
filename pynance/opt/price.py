@@ -123,7 +123,8 @@ def allexpiries(optdata, opttype, strike):
     quote_time : datetime.datetime
         Time of quote.
     """
-    _relevant = optdata.loc[(strike, slice(None), opttype), :]
+    _relevant = _relevant_rows(optdata, (strike, slice(None), opttype,),
+            "No key for {} {}".format(strike, opttype))
     _index = _relevant.index.get_level_values('Expiry')
     _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
     _df = pd.DataFrame(index=_index, columns=_columns)
