@@ -5,6 +5,7 @@ Copyright (c) 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT
 """
 
+import pandas
 from pandas.io.data import Options
 
 def get(equity):
@@ -27,4 +28,8 @@ def get(equity):
     #    of expiration dates.
     """
     _optmeta = Options(equity, 'yahoo')
-    return _optmeta.get_all_data()
+    try:
+        return _optmeta.get_all_data()
+    except (AttributeError, ValueError, pandas.io.data.RemoteDataError):
+        raise pandas.io.data.RemoteDataError(
+                "No options data available for {!r}".format(equity))
