@@ -7,3 +7,6 @@
 MANIFEST
 dist/
 pynance.egg-info/
+
+# documentation build
+doc/build/
