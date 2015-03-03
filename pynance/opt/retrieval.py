@@ -33,3 +33,31 @@ def get(equity):
     except (AttributeError, ValueError, pandas.io.data.RemoteDataError):
         raise pandas.io.data.RemoteDataError(
                 "No options data available for {!r}".format(equity))
+
+def expiries(optdata):
+    """
+    Get all expiration dates contained in the data index.
+
+    Parameters
+    --
+    optdata : DataFrame
+        Collection of options data as retrieved from `pn.opt.get()`
+
+    Returns
+    --
+    expdates : list {pandas.tslib.Timestamp}
+        List of all active expiration dates.
+    """
+    return list(optdata.index.levels[1])
+
+def showdates(optdata):
+    """
+    Show all expiration dates but return nothing
+
+    Parameters
+    --
+    optdata : DataFrame
+        Collection of options data as retrieved from `pn.opt.get()`
+    """
+    for _datetime in optdata.index.levels[1].to_pydatetime():
+        print(_datetime.strftime('%Y-%m-%d'))
