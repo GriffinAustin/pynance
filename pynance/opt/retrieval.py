@@ -8,7 +8,7 @@ license http://opensource.org/licenses/MIT
 import pandas
 from pandas.io.data import Options
 
-def get(equity):
+def get(equity, expinfo=True):
     """
     Retrieve all current options chains for given equity.
 
@@ -17,24 +17,56 @@ def get(equity):
     equity : str
         Equity for which to retrieve options data.
 
+    expinfo : bool, optional
+        If true (default), available expiries are printed and
+        a list of available expiries is returned.
+
     Returns
     --
     optdata : DataFrame
         All options data for given equity currently available
         from Yahoo! Finance.
 
-    # optmeta : pandas.io.data.Options
-    #    Object containing options metadata, such as a list
-    #    of expiration dates.
+    expdates : pandas.tseries.index.DatetimeIndex
+        Index of all active expiration dates. Only returned if `expinfo`
+        is set to True.
+        
+    Notes
+    --
+    For convenience, expiration dates are shown by default. So you
+    don't have to call other functions to figure out what the exact expiration
+    dates are for the various options you might be considering.
+    An index of the expiration timestamps is also returned,
+    so that you can then pass dates not only in the form
+    '2015-08-21' (or other object are formats that pandas
+    can convert to timestamps) but also as a numerical index
+    in pandas timeseries (cf. example below).
+
+    To disable this feature and return a single dataframe of options
+    data, set the `expinfo` argument to False.
+
+    Examples
+    --
+    >>> fopt, fexp = pn.opt.get('f')
+    Expirations:
+    ...
+    >>> fstraddle = pn.opt.spread.straddle(fopt, 16, fexp[4])
     """
     _optmeta = Options(equity, 'yahoo')
+    _optdata = None
     try:
-        return _optmeta.get_all_data()
+        _optdata = _optmeta.get_all_data()
     except (AttributeError, ValueError, pandas.io.data.RemoteDataError):
         raise pandas.io.data.RemoteDataError(
                 "No options data available for {!r}".format(equity))
+    if expinfo:
+        print("Expirations:")
+        showexpiries(_optdata)
+        print("Stock: {:.2f}".format(_optdata.iloc[0].loc['Underlying_Price']))
+        return _optdata, _optdata.index.levels[1]
+    return _optdata
 
-def expiries(optdata):
+def getexpiries(optdata):
     """
     Get all expiration dates contained in the data index.
 
@@ -45,12 +77,12 @@ def expiries(optdata):
 
     Returns
     --
-    expdates : list {pandas.tslib.Timestamp}
-        List of all active expiration dates.
+    expdates : pandas.tseries.index.DatetimeIndex
+        Index of all active expiration dates.
     """
-    return list(optdata.index.levels[1])
+    return optdata.index.levels[1]
 
-def showdates(optdata):
+def showexpiries(optdata):
     """
     Show all expiration dates but return nothing
 
@@ -59,5 +91,7 @@ def showdates(optdata):
     optdata : DataFrame
         Collection of options data as retrieved from `pn.opt.get()`
     """
+    _i = 0
     for _datetime in optdata.index.levels[1].to_pydatetime():
-        print(_datetime.strftime('%Y-%m-%d'))
+        print("{:2d} {}".format(_i, _datetime.strftime('%Y-%m-%d')))
+        _i += 1
