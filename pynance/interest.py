@@ -1,5 +1,6 @@
 """
-Calculations involving compounded interest.
+interest - Calculations involving compounded interest
+================================================================
 
 Copyright (c) 2014, 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT
@@ -71,24 +72,21 @@ def pvannuity(ret, n):
 
 def loanpayment(amount, rate, n_payments):
     """
-    Return amount of a constant loan payment
+    Amount of a constant loan payment.
 
     Parameters
-    ---
+    ----------
     amount : float
         amount of loan
-
     rate : float
         interest rate for the given payment, i.e., monthly
-        interest if the loand is to be paid off monthly
-
+        interest if the loan is to be paid off monthly.
     n_payments : int
-        number of payments to be made
+        number of payments to be made.
 
     Returns
-    --
+    -------
     out : float
-        amount to be paid each period
+        amount to be paid each period.
     """
     return float(amount) / pvannuity(rate, n_payments)
-
