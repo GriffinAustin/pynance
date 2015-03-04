@@ -5,10 +5,14 @@ Copyright (c) 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT
 """
 
+from __future__ import absolute_import
+
 import pandas
 from pandas.io.data import Options
 
-def get(equity, expinfo=True):
+from . import constants
+
+def get(equity, showinfo=True):
     """
     Retrieve all current options chains for given equity.
 
@@ -17,9 +21,9 @@ def get(equity, expinfo=True):
     equity : str
         Equity for which to retrieve options data.
 
-    expinfo : bool, optional
-        If true (default), available expiries are printed and
-        a list of available expiries is returned.
+    showinfo : bool, optional
+        If true (default), available expiries and equity price are 
+        printed to console. 
 
     Returns
     --
@@ -28,8 +32,11 @@ def get(equity, expinfo=True):
         from Yahoo! Finance.
 
     expdates : pandas.tseries.index.DatetimeIndex
-        Index of all active expiration dates. Only returned if `expinfo`
-        is set to True.
+        Index of all active expiration dates.
+
+    eqprice : float
+        Price of underlying equity at the time options data
+        was retrieved.
         
     Notes
     --
@@ -43,11 +50,11 @@ def get(equity, expinfo=True):
     in pandas timeseries (cf. example below).
 
     To disable this feature and return a single dataframe of options
-    data, set the `expinfo` argument to False.
+    data, set the `showinfo` argument to False.
 
     Examples
     --
-    >>> fopt, fexp = pn.opt.get('f')
+    >>> fopt, fexp, feq = pn.opt.get('f')
     Expirations:
     ...
     >>> fstraddle = pn.opt.spread.straddle(fopt, 16, fexp[4])
@@ -59,12 +66,12 @@ def get(equity, expinfo=True):
     except (AttributeError, ValueError, pandas.io.data.RemoteDataError):
         raise pandas.io.data.RemoteDataError(
                 "No options data available for {!r}".format(equity))
-    if expinfo:
+    if showinfo:
         print("Expirations:")
         showexpiries(_optdata)
         print("Stock: {:.2f}".format(_optdata.iloc[0].loc['Underlying_Price']))
-        return _optdata, _optdata.index.levels[1]
-    return _optdata
+    return _optdata, _optdata.index.levels[1], round(_optdata.iloc[0].loc['Underlying_Price'],
+            constants.NDIGITS_SIG)
 
 def getexpiries(optdata):
     """

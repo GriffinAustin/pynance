@@ -1,5 +1,7 @@
 # Makefile for Sphinx documentation
 #
+# Intro to using Sphinx:
+# https://codeandchaos.wordpress.com/2012/07/30/sphinx-autodoc-tutorial-for-dummies/
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
