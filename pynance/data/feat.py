@@ -1,8 +1,11 @@
 """
-Functions for generating features.
+.. Copyright (c) 2014 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2014 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Features for machine learning (:mod:`pynance.data.feat`)
+===============================================
+
+.. currentmodule:: pynance.data.feat
 
 These functions are intended to be used in conjunction
 with `functools.partial` and other function decorators
@@ -26,7 +29,7 @@ def add_const(features):
     feature set.
 
     Parameters
-    --
+    ----------
     features : ndarray or DataFrame
     """
     content = np.empty((features.shape[0], features.shape[1] + 1), dtype='float64')
@@ -43,7 +46,7 @@ def fromcols(selection, n_sessions, eqdata, **kwargs):
     Generate features from selected columns of a dataframe.
 
     Parameters
-    --
+    ----------
     selection : list or tuple {str}
         Columns to be used as features.
 
@@ -60,7 +63,7 @@ def fromcols(selection, n_sessions, eqdata, **kwargs):
         feature.
 
     Returns
-    --
+    ----------
     features : DataFrame
     """
     _constfeat = kwargs.get('constfeat', True)
@@ -85,7 +88,7 @@ def fromfuncs(funcs, n_sessions, eqdata, **kwargs):
     Generate features using a list of functions to apply to input data
 
     Parameters
-    --
+    ----------
     funcs : list {function}
         Functions to apply to eqdata. Each function is expected
         to output a dataframe with index identical to a slice of `eqdata`.
@@ -113,7 +116,7 @@ def fromfuncs(funcs, n_sessions, eqdata, **kwargs):
         Defaults to 0.
 
     Returns
-    --
+    ----------
     features : DataFrame
     """
     _skipatstart = kwargs.get('skipatstart', 0)

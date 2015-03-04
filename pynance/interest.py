@@ -1,9 +1,11 @@
 """
-interest - Calculations involving compounded interest
-================================================================
+.. Copyright (c) 2014, 2015 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2014, 2015 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Interest rates (:mod:`pynance.interest`)
+========================================
+
+.. currentmodule:: pynance.interest
 """
 
 import datetime as dt

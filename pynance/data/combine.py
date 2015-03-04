@@ -1,8 +1,11 @@
 """
-Functions for generating feature sets from equity data.
+.. Copyright (c) 2014 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2014 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Combine data sets (:mod:`pynance.data.combine`)
+===============================================
+
+.. currentmodule:: pynance.data.combine
 """
 
 import pandas as pd
@@ -30,7 +33,7 @@ def labeledfeatures(eqdata, featurefunc, labelfunc):
     The labels are derived from `eqdata` using `labelfunc`.
 
     Parameters
-    --
+    ----------
     eqdata : DataFrame
         Expected is a dataframe as return by the `get()` function. A column
         labeled 'Volume' must be present.
@@ -60,7 +63,7 @@ def labeledfeatures(eqdata, featurefunc, labelfunc):
         `labels, skipatend = labelfunc(eqdata)`
 
     Returns
-    --
+    -------
     features : DataFrame
         The features derived from the given parameters.
 

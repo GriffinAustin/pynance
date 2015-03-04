@@ -3,19 +3,33 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-PyNance v0.1
-===================================
+.. Examples:
+   https://github.com/scipy/scipy/tree/master/doc/source
+   https://raw.githubusercontent.com/scipy/scipy/master/doc/source/index.rst
+   http://docs.scipy.org/doc/scipy/reference/
 
-.. Contents:
+PyNance 
+=======
+
+:Release: |release|
+:Date:  |today|
+
+PyNance is open-source software for accessing and analysing stocks
+and options.
+
+Reference
+----------------
 
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: interest
-    :members:
+   data
+   data.combine
+   data.feat
+   interest
 
-Indices and tables
-==================
+Index
+-----
 
 * :ref:`genindex`
 * :ref:`modindex`
