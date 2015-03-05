@@ -22,8 +22,8 @@ To upload a new version to PyPI:
 from setuptools import setup, find_packages
 
 MAJOR   = 0
-MINOR   = 1
-MICRO   = 2
+MINOR   = 2
+MICRO   = 0
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 CLASSIFIERS = [
@@ -69,7 +69,7 @@ setup(
         description='Retrieve and analyse financial market data',
         author='Marshall Farrier',
         author_email='marshalldfarrier@gmail.com',
-        url='https://github.com/aisthesis/pynance',
+        url='http://pynance.net',
         download_url=('https://github.com/aisthesis/pynance/tarball/' + VERSION),
         keywords=' '.join(KEYWORDS),
         classifiers=CLASSIFIERS,
