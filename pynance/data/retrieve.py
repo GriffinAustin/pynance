@@ -7,8 +7,8 @@ Data - remote retrieval (:mod:`pynance.data.retrieve`)
 
 .. currentmodule:: pynance.data.retrieve
 
-Wraps Pandas Remote Data Access: 
-http://pandas.pydata.org/pandas-docs/stable/remote_data.html
+Wraps `Pandas Remote Data Access 
+<http://pandas.pydata.org/pandas-docs/stable/remote_data.html>`_.
 """
 
 import pandas.io.data as web

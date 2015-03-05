@@ -1,8 +1,11 @@
 """
-Portfolio optimization.
+.. Copyright (c) 2014, 2015 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2015 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Portfolio optimization (:mod:`pynance.pf`)
+==================================================
+
+.. currentmodule:: pynance.pf
 """
 
 import numpy as np
@@ -12,37 +15,32 @@ def optimize(exp_rets, covs):
     Return parameters for portfolio optimization.
 
     Parameters
-    ---
+    ----------
     exp_rets : ndarray
         Vector of expected returns for each investment..
-
     covs : ndarray
         Covariance matrix for the given investments.
 
     Returns
-    --
+    ---------
     a : ndarray
         The first vector (to be combined with target return as scalar)
         in the linear equation for optimal weights.
-
     b : ndarray
         The second (constant) vector in the linear equation for
         optimal weights.
-
     least_risk_ret : int
         The return achieved on the portfolio that combines the given
         equities so as to achieve the lowest possible risk.
 
     Notes
-    --
+    ---------
     *   The length of `exp_rets` must match the number of rows
         and columns in the `covs` matrix.
-
     *   The weights for an optimal portfolio with expected return
         `ret` is given by the formula `w = ret * a + b` where `a`
         and `b` are the vectors returned here. The weights `w` for
         the portfolio with lowest risk are given by `w = least_risk_ret * a + b`.
-
     *   An exception will be raised if the covariance matrix
         is singular or if each prospective investment has the
         same expected return.

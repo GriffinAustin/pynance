@@ -1,12 +1,11 @@
 """
-Technical analysis
+.. Copyright (c) 2014- Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2014 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Technical analysis - basic metrics (:mod:`pynance.tech.simple`)
+==================================================================
 
-Any function returning dataframes with only
-a few columns calculated from prior data should
-be located in this module.
+.. currentmodule:: pynance.tech.simple
 """
 
 from __future__ import absolute_import
@@ -24,37 +23,32 @@ def growth(eqdata, **kwargs):
     for 2014-12-19 will be `0.9`.
 
     Parameters
-    --
+    ----------
     eqdata : DataFrame
-        Data such as that returned by `get()`
-
+        Data such as that returned by :func:`pynance.data.retrieve.get`
     selection : str, optional
         Column from which to determine growth values. Defaults to
         'Adj Close'.
-
     n_sessions : int
         Number of sessions to count back for calculating today's
         growth. For example, if `n_sessions` is set to 4, growth is
         calculated relative to the price 4 sessions ago. Defaults
         to 1 (price of previous session).
-
     skipstartrows : int
         Rows to skip at beginning of `eqdata` in addition to the 1 row that must
         be skipped because the calculation relies on a prior data point.
         Defaults to 0.
-
     skipendrows : int
         Rows to skip at end of `eqdata`. Defaults to 0.
-
     outputcol : str, optional
         Name to use for output column. Defaults to 'Growth'
 
     Returns
-    --
+    ----------
     out : DataFrame
 
     Notes
-    --
+    ----------
     The interval is the number of *sessions* between the 2 values
     whose ratio is being measured, *not* the number of days (which
     includes days on which the market is closed).
@@ -78,8 +72,9 @@ def ln_growth(eqdata, **kwargs):
     """
     Return the natural log of growth.
 
-    All parameters and the return are identical to those for `growth()` except that the
-    natural logarithm of each value in the output dataframe  is returned.
+    See also
+    --------
+    :func:`growth`
     """
     if 'outputcol' not in kwargs:
         kwargs['outputcol'] = 'LnGrowth'
@@ -95,37 +90,32 @@ def ret(eqdata, **kwargs):
     for 2014-12-19 will be `-0.1`.
 
     Parameters
-    --
+    ----------
     eqdata : DataFrame
         Data such as that returned by `get()`
-
     selection : str, optional
         Column from which to determine growth values. Defaults to
         'Adj Close'.
-
     n_sessions : int
         Number of sessions to count back for calculating today's
         return. For example, if `n_sessions` is set to 4, return is
         calculated relative to the price 4 sessions ago. Defaults
         to 1 (price of previous session).
-
     skipstartrows : int
         Rows to skip at beginning of `eqdata` in addition to the 1 row that must
         be skipped because the calculation relies on a prior data point.
         Defaults to 0.
-
     skipendrows : int
         Rows to skip at end of `eqdata`. Defaults to 0.
-
     outputcol : str, optional
         Name for column of output dataframe. Defaults to 'Return'.
 
     Returns
-    --
+    ----------
     out : DataFrame
 
     Notes
-    --
+    ----------
     The interval is the number of *sessions* between the 2 values
     whose ratio is being measured, *not* the number of days (which
     includes days on which the market is closed).

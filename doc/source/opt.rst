@@ -1,7 +1,7 @@
 .. automodule:: pynance.opt
 
 .. toctree::
-   :maxdepth: 2 
+   :maxdepth: 1 
 
    opt.covcall
    opt.price

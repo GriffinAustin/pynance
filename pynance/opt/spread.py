@@ -22,17 +22,13 @@ def calendar(optdata, opttype, strike, expiry1, expiry2):
     Parameters
     ------------
     optdata : DataFrame
-        Data returned from `pn.opt.get()`
-
-    opttype : str {'call', 'put'}
+        Data returned from :func:`pynance.opt.retrieve.get`
+    opttype : str ('call' or 'put')
         Type of option on which to collect data.
-
     strike : numeric
         Strike price.
-
     expiry1 : date or date str (e.g. '2015-01-01')
         Earlier expiration date.
-
     expiry2 : date or date str (e.g. '2015-01-01')
         Later expiration date.
 
@@ -54,20 +50,15 @@ def dblcal(optdata, lowstrike, highstrike, expiry1, expiry2):
     Parameters
     ------------
     optdata : DataFrame
-        Data returned from `pn.opt.get()`
-
-    opttype : str {'call', 'put'}
+        Data returned from :func:`pynance.opt.retrieve.get`
+    opttype : str ('call' or 'put')
         Type of option on which to collect data.
-
     lowstrike : numeric
         Lower strike price. To be used for put spread.
-
     highstrike : numeric
         Higher strike price. To be used for call spread.
-
     expiry1 : date or date str (e.g. '2015-01-01')
         Earlier expiration date.
-
     expiry2 : date or date str (e.g. '2015-01-01')
         Later expiration date.
 
@@ -101,24 +92,18 @@ def diagbtrfly(optdata, lowstrike, midstrike, highstrike, expiry1, expiry2):
     Parameters
     ------------
     optdata : DataFrame
-        Data returned from `pn.opt.get()`
-
-    opttype : str {'call', 'put'}
+        Data returned from :func:`pynance.opt.retrieve.get`
+    opttype : str ('call' or 'put')
         Type of option on which to collect data.
-
     lowstrike : numeric
         Lower strike price. To be used for far put.
-
     midstrike : numeric
         Middle strike price. To be used for near straddle.
         Typically at the money.
-
     highstrike : numeric
         Higher strike price. To be used for far call.
-
     expiry1 : date or date str (e.g. '2015-01-01')
         Earlier expiration date.
-
     expiry2 : date or date str (e.g. '2015-01-01')
         Later expiration date.
 
@@ -152,11 +137,9 @@ def straddle(optdata, strike, expiry):
     Parameters
     ------------
     optdata : DataFrame
-        Data returned from `pn.opt.get()`.
-
+        Data returned from :func:`pynance.opt.retrieve.get`.
     strike : numeric
         Strike price.
-
     expiry : date or date str (e.g. '2015-01-01')
         Expiration date.
 
