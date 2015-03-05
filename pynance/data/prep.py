@@ -1,8 +1,11 @@
 """
-Functions for preprocessing financial data sets.
+.. Copyright (c) 2014- Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2014 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Data - preprocessing functions (:mod:`pynance.data.prep`)
+=========================================================
+
+.. currentmodule:: pynance.data.prep
 """
 
 import numpy as np
@@ -17,7 +20,7 @@ def center(dataset, out=None):
     transformation is also returned.
 
     Parameters
-    --
+    ----------
     dataset : DataFrame or ndarray
 
     out : DataFrame or ndarray, optional
@@ -26,12 +29,12 @@ def center(dataset, out=None):
         (DataFrame or ndarray) as the expected output.
 
     Returns
-    --
+    ----------
     out : tuple of DataFrame or ndarray
         The output data is of the same type as the input.
 
     Notes
-    --
+    ----------
     To exclude a column (such as a constant feature, which is
     usually the first or last column of data) simply don't
     include it in the input. For example:
@@ -86,7 +89,7 @@ def normalize(centered_data, out=None):
     also returned.
 
     Parameters
-    --
+    ----------
     centered_data : DataFrame or ndarray
 
     out : DataFrame or ndarray, optional
@@ -95,12 +98,12 @@ def normalize(centered_data, out=None):
         (DataFrame or ndarray) as the expected output.
 
     Returns
-    --
+    ----------
     out : tuple of DataFrame or ndarray
         The output data is of the same type as the input.
 
     Notes
-    --
+    ----------
     To exclude a column (such as a constant feature, which is
     usually the first or last column of data) simply don't
     include it in the input. For example:
@@ -121,20 +124,21 @@ def transform(data_frame, **kwargs):
     will be normalized (axis=0)
 
     Parameters
-    ---
+    -----------
     data_frame : DataFrame
         data to be normalized
 
     axis : int in {0, 1}, default: 0
         0 to normalize each row, 1 to normalize each column
     method : str
-        valid methods are
-        - "vector" : Default for normalization by row (axis=0).
-            Normalize along axis as a vector with norm `norm`
-        - "last" : Linear normalization setting last value along the axis to `norm`
-        - "first" : Default for normalization of columns (axis=1).
-            Linear normalization setting first value along the given axis to `norm`
-        - "mean" : Normalize so that the mean of each vector along the given axis is `norm`
+        valid methods are:
+
+        -  "vector" : Default for normalization by row (axis=0).
+           Normalize along axis as a vector with norm `norm`
+        -  "last" : Linear normalization setting last value along the axis to `norm`
+        -  "first" : Default for normalization of columns (axis=1).
+           Linear normalization setting first value along the given axis to `norm`
+        -  "mean" : Normalize so that the mean of each vector along the given axis is `norm`
 
     norm : float, default 1.0
         Target value of normalization.
@@ -144,21 +148,21 @@ def transform(data_frame, **kwargs):
         case the label values will also be normalized and returned
 
     Returns
-    ---
+    -----------
     out : DataFrame or tuple of 2 DataFrames
     
     Normalized data_frame if no labels are provided. Otherwise, a tuple
     containing first normalized data_frame, then normalized labels.
 
     Notes
-    ---
+    -----------
     If labels are real-valued, they should also be normalized.
 
-    Having row_norms as a numpy array should be benchmarked against 
-    using a DataFrame:
-    http://stackoverflow.com/questions/12525722/normalize-data-in-pandas
-    Note: This isn't a bottleneck. Using a feature set with 13k rows and 256
-    data_frame ('ge' from 1962 until now), the normalization was immediate.
+    .. Having row_norms as a numpy array should be benchmarked against 
+       using a DataFrame:
+       http://stackoverflow.com/questions/12525722/normalize-data-in-pandas
+       Note: This isn't a bottleneck. Using a feature set with 13k rows and 256
+       data_frame ('ge' from 1962 until now), the normalization was immediate.
     """
     norm = kwargs.get('norm', 1.0)
     axis = kwargs.get('axis', 0)

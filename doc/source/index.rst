@@ -14,18 +14,42 @@ PyNance
 :Release: |release|
 :Date:  |today|
 
-PyNance is open-source software for accessing and analysing stocks
-and options.
+PyNance is open-source software with tools for retrieving, analysing and visualizing
+data from stock and derivatives markets.
+
+Installation
+------------
+
+For Python 2.7.x::
+
+    pip install pynance
+
+For Python 3.x.x::
+
+    pip3 install pynance
+
+Basics
+---------------
+
+Stock quotes maintained by `Yahoo! Finance <http://finance.yahoo.com/>`_ 
+can be retrieved with the simple command::
+
+    >>> import pynance as pn
+    >>> ge = pn.data.get('ge', '1962', '2015')
+
+Current options quotes can be retrieved using::
+
+    >>> geopt, geexp, geeq = pn.opt.get('ge')
+
+The options data retrieved can then be analysed using functions from :mod:`pynance.opt`.
 
 Reference
 ----------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    data
-   data.combine
-   data.feat
    interest
 
 Index

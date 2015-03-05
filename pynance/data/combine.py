@@ -2,8 +2,8 @@
 .. Copyright (c) 2014 Marshall Farrier
    license http://opensource.org/licenses/MIT
 
-Combine data sets (:mod:`pynance.data.combine`)
-===============================================
+Data - combine features and labels (:mod:`pynance.data.combine`)
+===============================================================
 
 .. currentmodule:: pynance.data.combine
 """

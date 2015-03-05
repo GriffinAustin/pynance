@@ -1,7 +1,7 @@
 .. automodule:: pynance.data
 
 .. toctree::
-   :hidden:
+   :maxdepth: 2 
 
    data.combine
    data.feat

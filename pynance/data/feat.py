@@ -2,8 +2,8 @@
 .. Copyright (c) 2014 Marshall Farrier
    license http://opensource.org/licenses/MIT
 
-Features for machine learning (:mod:`pynance.data.feat`)
-===============================================
+Data - building features (:mod:`pynance.data.feat`)
+==============================================================
 
 .. currentmodule:: pynance.data.feat
 

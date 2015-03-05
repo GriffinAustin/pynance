@@ -1,8 +1,11 @@
 """
-Labelling functions.
+.. Copyright (c) 2014- Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2014 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Data - building labels (:mod:`pynance.data.lab`)
+====================================================
+
+.. currentmodule:: pynance.data.lab
 
 These functions are intended to be used in conjunction
 with `functools.partial` to pass to `data.labeledfeatures()`.
@@ -20,7 +23,7 @@ def growth(interval, pricecol, eqdata):
     Retrieve growth labels.
 
     Parameters
-    --
+    --------------
     interval : int
         Number of sessions over which growth is measured. For example, if
         the value of 32 is passed for `interval`, the data returned will 
@@ -33,7 +36,7 @@ def growth(interval, pricecol, eqdata):
         Column of `eqdata` to be used for prices (Normally 'Adj Close').
 
     Returns
-    --
+    --------
     labels : DataFrame
         Growth labels for the specified period
 
@@ -42,7 +45,7 @@ def growth(interval, pricecol, eqdata):
         Used to synchronize labels and features.
 
     Example Usage
-    --
+    ---------------
     from functools import partial
     features, labels = pn.data.labeledfeatures(eqdata, 256, 
             partial(pn.data.labels.growth, 32, 'Adj Close'))

@@ -10,6 +10,12 @@ Data (:mod:`pynance.data`)
 :mod:`pynance.data.combine`
 
 :mod:`pynance.data.feat`
+
+:mod:`pynance.data.lab`
+
+:mod:`pynance.data.prep`
+
+:mod:`pynance.data.retrieve`
 """
 
 from __future__ import absolute_import
