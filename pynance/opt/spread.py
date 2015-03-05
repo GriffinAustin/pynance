@@ -1,8 +1,11 @@
 """
-Functions for analysing options spreads.
+.. Copyright (c) 2015 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2015 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Options - spreads (:mod:`pynance.opt.spread`)
+==================================================
+
+.. currentmodule:: pynance.opt.spread
 """
 
 from __future__ import absolute_import
@@ -17,7 +20,7 @@ def calendar(optdata, opttype, strike, expiry1, expiry2):
     Metrics for evaluating a simple calendar spread.
 
     Parameters
-    --
+    ------------
     optdata : DataFrame
         Data returned from `pn.opt.get()`
 
@@ -34,7 +37,7 @@ def calendar(optdata, opttype, strike, expiry1, expiry2):
         Later expiration date.
 
     Returns
-    --
+    ------------
     metrics : DataFrame
         Metrics for evaluating spread.
     """
@@ -49,7 +52,7 @@ def dblcal(optdata, lowstrike, highstrike, expiry1, expiry2):
     Metrics for evaluating a double calendar spread.
 
     Parameters
-    --
+    ------------
     optdata : DataFrame
         Data returned from `pn.opt.get()`
 
@@ -69,13 +72,9 @@ def dblcal(optdata, lowstrike, highstrike, expiry1, expiry2):
         Later expiration date.
 
     Returns
-    --
+    ------------
     metrics : DataFrame
         Metrics for evaluating spread.
-
-    Notes
-    --
-    Cf. McMillan, Options as a Strategic Investment, 5th ed., pp. 334ff.
     """
     _index = ['Near Call', 'Far Call', 'Call Ratio', 'Near Put', 'Far Put', 
             'Put Ratio', 'Near to Far Ratio', 'Debit', 'Underlying', 'Quote_Time']
@@ -100,7 +99,7 @@ def diagbtrfly(optdata, lowstrike, midstrike, highstrike, expiry1, expiry2):
     Metrics for evaluating a diagonal butterfly spread.
 
     Parameters
-    --
+    ------------
     optdata : DataFrame
         Data returned from `pn.opt.get()`
 
@@ -124,13 +123,9 @@ def diagbtrfly(optdata, lowstrike, midstrike, highstrike, expiry1, expiry2):
         Later expiration date.
 
     Returns
-    --
+    ------------
     metrics : DataFrame
         Metrics for evaluating spread.
-
-    Notes
-    --
-    Cf. McMillan, Options as a Strategic Investment, 5th ed., pp. 340ff.
     """
     _index = ['Straddle Call', 'Straddle Put', 'Straddle Total', 'Far Call', 'Far Put', 'Far Total',
             'Straddle to Far Ratio', 'Credit', 'Underlying', 'Quote_Time']
@@ -155,7 +150,7 @@ def straddle(optdata, strike, expiry):
     Metrics for evaluating a straddle
 
     Parameters
-    --
+    ------------
     optdata : DataFrame
         Data returned from `pn.opt.get()`.
 
@@ -166,7 +161,7 @@ def straddle(optdata, strike, expiry):
         Expiration date.
 
     Returns
-    --
+    ------------
     metrics : DataFrame
         Metrics for evaluating straddle.
     """

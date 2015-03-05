@@ -3,7 +3,7 @@
    license http://opensource.org/licenses/MIT
 
 Data - combine features and labels (:mod:`pynance.data.combine`)
-===============================================================
+==================================================================
 
 .. currentmodule:: pynance.data.combine
 """

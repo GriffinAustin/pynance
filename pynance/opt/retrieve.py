@@ -1,8 +1,11 @@
 """
-Functions for retrieving options data.
+.. Copyright (c) 2015 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2015 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Options - remote retrieval (:mod:`pynance.opt.retrieve`)
+=========================================================
+
+.. currentmodule:: pynance.opt.retrieve
 """
 
 from __future__ import absolute_import
@@ -17,7 +20,7 @@ def get(equity, showinfo=True):
     Retrieve all current options chains for given equity.
 
     Parameters
-    --
+    -------------
     equity : str
         Equity for which to retrieve options data.
 
@@ -26,7 +29,7 @@ def get(equity, showinfo=True):
         printed to console. 
 
     Returns
-    --
+    -------------
     optdata : DataFrame
         All options data for given equity currently available
         from Yahoo! Finance.
@@ -39,7 +42,7 @@ def get(equity, showinfo=True):
         was retrieved.
         
     Notes
-    --
+    -------------
     For convenience, expiration dates are shown by default. So you
     don't have to call other functions to figure out what the exact expiration
     dates are for the various options you might be considering.
@@ -53,7 +56,7 @@ def get(equity, showinfo=True):
     data, set the `showinfo` argument to False.
 
     Examples
-    --
+    -------------
     >>> fopt, fexp, feq = pn.opt.get('f')
     Expirations:
     ...
@@ -78,12 +81,12 @@ def getexpiries(optdata):
     Get all expiration dates contained in the data index.
 
     Parameters
-    --
+    -------------
     optdata : DataFrame
         Collection of options data as retrieved from `pn.opt.get()`
 
     Returns
-    --
+    -------------
     expdates : pandas.tseries.index.DatetimeIndex
         Index of all active expiration dates.
     """
@@ -94,7 +97,7 @@ def showexpiries(optdata):
     Show all expiration dates but return nothing
 
     Parameters
-    --
+    -------------
     optdata : DataFrame
         Collection of options data as retrieved from `pn.opt.get()`
     """

@@ -1,8 +1,11 @@
 """
-Functions for extracting price and time-value.
+.. Copyright (c) 2014, 2015 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2015 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Options - covered calls (:mod:`pynance.opt.covcall`)
+======================================================
+
+.. currentmodule:: pynance.opt.covcall
 """
 
 from __future__ import absolute_import
@@ -18,7 +21,7 @@ def get(stockprice, callprice, strike, shares=1, buycomm=0., excomm=0., dividend
     Cf. McMillan, Options as a Strategic Investment, 5th ed., p. 43
 
     Parameters
-    --
+    ----------
     stockprice : float
         Price at which stock is purchased.
 
@@ -41,7 +44,7 @@ def get(stockprice, callprice, strike, shares=1, buycomm=0., excomm=0., dividend
         Total dividends per share expected between purchase and expiration.
 
     Returns
-    --
+    ----------
     metrics : pd.DataFrame
         Investment metrics
     """

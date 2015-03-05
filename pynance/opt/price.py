@@ -1,8 +1,11 @@
 """
-Functions for extracting price and time-value.
+.. Copyright (c) 2014, 2015 Marshall Farrier
+   license http://opensource.org/licenses/MIT
 
-Copyright (c) 2015 Marshall Farrier
-license http://opensource.org/licenses/MIT
+Options - price (:mod:`pynance.opt.price`)
+==================================================
+
+.. currentmodule:: pynance.opt.price
 """
 
 from __future__ import absolute_import
@@ -16,7 +19,7 @@ def get(optdata, opttype, strike, expiry, showtimeval=True):
     Retrieve price and time value of an option.
 
     Parameters
-    --
+    ----------
     optdata : DataFrame
         Data returned from `pn.opt.get()`
 
@@ -35,8 +38,8 @@ def get(optdata, opttype, strike, expiry, showtimeval=True):
         being used inside a loop. Defaults to True.
 
     Returns
-    --
-    opt: float
+    ----------
+    opt : float
         Price of option (midpoint between bid and ask).
 
     eq : float
@@ -75,7 +78,7 @@ def allstrikes(optdata, opttype, expiry):
     Retrieve option prices for all strikes of a given type with a given expiration.
 
     Parameters
-    --
+    ----------
     optdata : DataFrame
 
     opttype : str {'call', 'put'}
@@ -83,7 +86,7 @@ def allstrikes(optdata, opttype, expiry):
     expiry : date or date str
 
     Returns
-    --
+    ----------
     df : DataFrame
 
     eq : float
@@ -111,7 +114,7 @@ def allexpiries(optdata, opttype, strike):
     Prices for given strike on all available dates.
 
     Parameters
-    --
+    ----------
     optdata : DataFrame
 
     opttype : str {'call', 'put'}
@@ -119,7 +122,7 @@ def allexpiries(optdata, opttype, strike):
     strike : numeric
 
     Returns
-    --
+    ----------
     df : DataFrame
 
     eq : float

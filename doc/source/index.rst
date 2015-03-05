@@ -49,8 +49,11 @@ Reference
 .. toctree::
    :maxdepth: 1
 
+   chart
+   common
    data
    interest
+   opt
 
 Index
 -----
@@ -58,4 +61,3 @@ Index
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
