@@ -4,17 +4,19 @@ http://peterdowns.com/posts/first-time-with-pypi.html
 
 To upload a new version to PyPI:
 1. Udate `VERSION` below. 
-2. Commit all changes. 
-3. Create a tag for new version in git:
+2. Update version and release in `pynance/doc/source/conf.py`
+3. Build documentation.
+4. Commit all changes. 
+5. Create a tag for new version in git:
     % git tag 0.0.1 -m "Fixed some problems"
     % git tag # to verify that new tag is in list
     % git push --tags
 
-4. Register and upload to PyPI Test:
+6. Register and upload to PyPI Test:
 % python setup.py register -r pypitest
 % python setup.py sdist upload -r pypitest
 
-5. Register and upload to PyPI Live:
+7. Register and upload to PyPI Live:
 % python setup.py register -r pypi
 % python setup.py sdist upload -r pypi
 """
