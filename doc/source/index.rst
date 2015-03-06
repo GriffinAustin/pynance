@@ -43,6 +43,19 @@ Current options quotes can be retrieved using::
 
 The options data retrieved can then be analysed using functions from :mod:`pynance.opt`.
 
+Many of the functions in the submodules of :mod:`pynance.data` have been designed
+for easy creation of features and labels for machine learning applications. You can
+pass metrics from :mod:`pynance.tech` along with numeric parameters to create highly
+customizable data sets to which machine learning algorithms can then be applied.
+Examples can be found in the documentation for :mod:`pynance.data`.
+
+Issues
+------
+PyNance is still in its early development stage. If you find a bug or think of a feature
+you would like to see included in the next release,
+please report the issue on 
+`GitHub <https://github.com/aisthesis/pynance/issues>`_.
+
 Reference
 ----------------
 

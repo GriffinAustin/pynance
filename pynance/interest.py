@@ -67,7 +67,7 @@ def compret(annual_interest, years):
 
 def pvannuity(ret, n):
     """
-    Present value of n constant payments assuming
+    Present value of `n` payments of size 1.0 given
     an interest rate per payment interval of `ret`
     """
     return (1. - (1. + ret)**-n) / ret
