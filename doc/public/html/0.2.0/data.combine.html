@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data - combine features and labels (pynance.data.combine) &mdash; PyNance 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.2.0 documentation" href="index.html" />
+    <link rel="up" title="Data (pynance.data)" href="data.html" />
+    <link rel="next" title="Data - building features (pynance.data.feat)" href="data.feat.html" />
+    <link rel="prev" title="Data (pynance.data)" href="data.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.feat.html" title="Data - building features (pynance.data.feat)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="Data (pynance.data)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="data.html" accesskey="U">Data (<tt class="docutils literal"><span class="pre">pynance.data</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-pynance.data.combine"></span><div class="section" id="data-combine-features-and-labels-pynance-data-combine">
+<h1>Data - combine features and labels (<a class="reference internal" href="#module-pynance.data.combine" title="pynance.data.combine"><tt class="xref py py-mod docutils literal"><span class="pre">pynance.data.combine</span></tt></a>)<a class="headerlink" href="#data-combine-features-and-labels-pynance-data-combine" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.data.combine.labeledfeatures">
+<tt class="descclassname">pynance.data.combine.</tt><tt class="descname">labeledfeatures</tt><big>(</big><em>eqdata</em>, <em>featurefunc</em>, <em>labelfunc</em><big>)</big><a class="reference internal" href="_modules/pynance/data/combine.html#labeledfeatures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.data.combine.labeledfeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return features and labels for the given equity data.</p>
+<p>Each row of the features returned contains <cite>2 * n_sessions + 1</cite> columns
+(or 1 less if the constant feature is excluded). After the constant feature,
+if present, there will be <cite>n_sessions</cite> columns derived from daily growth
+of the given price column, which defaults to &#8216;Adj Close&#8217;. There will then
+follow another <cite>n_sessions</cite> columns representing current volume as
+a multiple of average volume over the previous 252 (or other value determined
+by the user) sessions.</p>
+<p>The returned features are not centered or normalized because these
+adjustments need to be made after test or cross-validation data has
+been removed.</p>
+<p>The constant feature is prepended by default.</p>
+<p>The labels are derived from <cite>eqdata</cite> using <cite>labelfunc</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Expected is a dataframe as return by the <cite>get()</cite> function. A column
+labeled &#8216;Volume&#8217; must be present.</p>
+</div></blockquote>
+<p><strong>featurefunc</strong> : function</p>
+<blockquote>
+<div><p>Function taking a dataframe of simple equity data as argument
+and returning a dataframe of features and an integer representing
+the number of rows that had to be skipped at the beginning of
+the index of the input dataframe. The rows skipped are used
+to synchronize the indices of features and labels. For example,
+if the features are composed of 4 successive daily returns, then
+the date of row 0 of features would be the same as the date of row 3
+(counting from 0) of input data. So the corresponding <cite>featurefunc</cite>
+would return a dataframe and the value 3.</p>
+</div></blockquote>
+<p><strong>labelfunc</strong> : function</p>
+<blockquote>
+<div><p>function for deriving labels from <cite>eqdata</cite>. <cite>labelfunc</cite> must
+take a single argument: <cite>df</cite>, a dataframe to which <cite>labelfunc</cite> will be applied.
+<cite>labelfunc</cite> should return a dataframe of labels followed by an int
+specifying the number of feature rows to skip at the end of the feature
+dataframe. For example, if features are relative prices 64 days out,
+these features will only be known up until 64 days before the data
+runs out. In order to properly align features and labels, the features
+should not include the last 64 rows that would otherwise be possible.</p>
+<p>Usage:
+<cite>labels, skipatend = labelfunc(eqdata)</cite></p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>features</strong> : DataFrame</p>
+<blockquote>
+<div><p>The features derived from the given parameters.</p>
+</div></blockquote>
+<p><strong>labels</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>The labels derived from the given parameters.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data.html"
+                        title="previous chapter">Data (<tt class="docutils literal"><span class="pre">pynance.data</span></tt>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data.feat.html"
+                        title="next chapter">Data - building features (<tt class="docutils literal"><span class="pre">pynance.data.feat</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/data.combine.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.feat.html" title="Data - building features (pynance.data.feat)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="Data (pynance.data)"
+             >previous</a> |</li>
+        <li><a href="index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="data.html" >Data (<tt class="docutils literal"><span class="pre">pynance.data</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

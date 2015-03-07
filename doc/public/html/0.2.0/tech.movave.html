@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Technical analysis - moving averages (pynance.tech.movave) &mdash; PyNance 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.2.0 documentation" href="index.html" />
+    <link rel="up" title="Technical analysis (pynance.tech)" href="tech.html" />
+    <link rel="next" title="Technical analysis - basic metrics (pynance.tech.simple)" href="tech.simple.html" />
+    <link rel="prev" title="Technical analysis (pynance.tech)" href="tech.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tech.simple.html" title="Technical analysis - basic metrics (pynance.tech.simple)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tech.html" title="Technical analysis (pynance.tech)"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="tech.html" accesskey="U">Technical analysis (<tt class="docutils literal"><span class="pre">pynance.tech</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="module-pynance.tech.movave"></span><div class="section" id="technical-analysis-moving-averages-pynance-tech-movave">
+<h1>Technical analysis - moving averages (<a class="reference internal" href="#module-pynance.tech.movave" title="pynance.tech.movave"><tt class="xref py py-mod docutils literal"><span class="pre">pynance.tech.movave</span></tt></a>)<a class="headerlink" href="#technical-analysis-moving-averages-pynance-tech-movave" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.tech.movave.bollinger">
+<tt class="descclassname">pynance.tech.movave.</tt><tt class="descname">bollinger</tt><big>(</big><em>eqdata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/pynance/tech/movave.html#bollinger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.movave.bollinger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bollinger bands</p>
+<p>Returns bolldf, smadf where bolldf is a DataFrame containing
+Bollinger bands with columns &#8216;Upper&#8217; and &#8216;Lower&#8217; and smadf contains
+the simple moving average.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Must include a column specified in the <cite>selection</cite> parameter or, 
+if no <cite>selection</cite> parameter is given, a column &#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+<p><strong>window</strong> : int, optional</p>
+<blockquote>
+<div><p>Lookback period.</p>
+</div></blockquote>
+<p><strong>multiple</strong> : float, optional</p>
+<blockquote>
+<div><p>Multiple of standard deviation above and below sma to use
+in calculating band value. Defaults to 2.0.</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column of <cite>eqdata</cite> on which to calculate bollinger bands.
+Defaults to &#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>bolldf</strong> : DataFrame</p>
+<blockquote>
+<div><p>Dataframe containing columns &#8216;Upper&#8217; and &#8216;Lower&#8217; describing
+the given multiple of standard deviations above and below
+simple moving average for the lookback period.</p>
+</div></blockquote>
+<p><strong>smadf</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>Simple moving average given the specified lookback.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.movave.ema">
+<tt class="descclassname">pynance.tech.movave.</tt><tt class="descname">ema</tt><big>(</big><em>eqdata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/pynance/tech/movave.html#ema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.movave.ema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exponential moving average with the given span.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Must have exactly 1 column on which to calculate EMA</p>
+</div></blockquote>
+<p><strong>span</strong> : int, optional</p>
+<blockquote>
+<div><p>Span for exponential moving average. Cf. <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.stats.moments.ewma.html">pandas.stats.moments.ewma</a> and
+<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-moment-functions">additional Pandas documentation</a>.</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional</p>
+<blockquote>
+<div><p>Column to use for output. Defaults to &#8216;EMA&#8217;.</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column of eqdata on which to calculate ema. If
+<cite>eqdata</cite> has only 1 column, <cite>selection</cite> is ignored,
+and ema is calculated on that column. Defaults
+to &#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>emadf</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>Exponential moving average using the given <cite>span</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.movave.ema_growth">
+<tt class="descclassname">pynance.tech.movave.</tt><tt class="descname">ema_growth</tt><big>(</big><em>eqdata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/pynance/tech/movave.html#ema_growth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.movave.ema_growth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Growth of exponential moving average.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<p><strong>span</strong> : int, optional</p>
+<blockquote>
+<div><p>Span for exponential moving average. Defaults to 20.</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional.</p>
+<blockquote>
+<div><p>Column to use for output. Defaults to &#8216;EMA Growth&#8217;.</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column of eqdata on which to calculate ema growth. If
+<cite>eqdata</cite> has only 1 column, <cite>selection</cite> is ignored,
+and ema growth is calculated on that column. Defaults
+to &#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>Growth of exponential moving average from one day to next</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.movave.growth_volatility">
+<tt class="descclassname">pynance.tech.movave.</tt><tt class="descname">growth_volatility</tt><big>(</big><em>eqdata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/pynance/tech/movave.html#growth_volatility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.movave.growth_volatility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the volatility of growth.</p>
+<p>Note that, like <a class="reference internal" href="tech.simple.html#pynance.tech.simple.growth" title="pynance.tech.simple.growth"><tt class="xref py py-func docutils literal"><span class="pre">pynance.tech.simple.growth()</span></tt></a> but in contrast to 
+<a class="reference internal" href="#pynance.tech.movave.volatility" title="pynance.tech.movave.volatility"><tt class="xref py py-func docutils literal"><span class="pre">volatility()</span></tt></a>, <a class="reference internal" href="#pynance.tech.movave.growth_volatility" title="pynance.tech.movave.growth_volatility"><tt class="xref py py-func docutils literal"><span class="pre">growth_volatility()</span></tt></a>
+applies directly to a dataframe like that returned by 
+<a class="reference internal" href="data.retrieve.html#pynance.data.retrieve.get" title="pynance.data.retrieve.get"><tt class="xref py py-func docutils literal"><span class="pre">pynance.data.retrieve.get()</span></tt></a>, not necessarily to a single-column dataframe.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Data from which to extract growth volatility. An exception
+will be raised if <cite>eqdata</cite> does not contain a column &#8216;Adj Close&#8217;
+or an optional name specified by the <cite>selection</cite> parameter.</p>
+</div></blockquote>
+<p><strong>window</strong> : int, optional</p>
+<blockquote>
+<div><p>Window on which to calculate volatility. Defaults to 20.</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column of eqdata on which to calculate volatility of growth. Defaults
+to &#8216;Adj Close&#8217;</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional</p>
+<blockquote>
+<div><p>Column to use for output. Defaults to &#8216;Growth Risk&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>Dataframe showing the volatility of growth over the specified <cite>window</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.movave.ratio_to_ave">
+<tt class="descclassname">pynance.tech.movave.</tt><tt class="descname">ratio_to_ave</tt><big>(</big><em>window</em>, <em>eqdata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/pynance/tech/movave.html#ratio_to_ave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.movave.ratio_to_ave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return values expressed as ratios to the average over some number
+of prior sessions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Must contain a column with name matching <cite>selection</cite>, or, if
+<cite>selection</cite> is not specified, a column named &#8216;Volume&#8217;</p>
+</div></blockquote>
+<p><strong>window</strong> : int</p>
+<blockquote>
+<div><p>Interval over which to calculate the average. Normally 252 (1 year)</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column to select for calculating ratio. Defaults to &#8216;Volume&#8217;</p>
+</div></blockquote>
+<p><strong>skipstartrows</strong> : int, optional</p>
+<blockquote>
+<div><p>Rows to skip at beginning in addition to the <cite>window</cite> rows
+that must be skipped to get the baseline volume. Defaults to 0.</p>
+</div></blockquote>
+<p><strong>skipendrows</strong> : int, optional</p>
+<blockquote>
+<div><p>Rows to skip at end. Defaults to 0.</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional</p>
+<blockquote>
+<div><p>Name of column in output dataframe. Defaults to &#8216;Ratio to Ave&#8217;</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>out</strong> : DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.movave.sma">
+<tt class="descclassname">pynance.tech.movave.</tt><tt class="descname">sma</tt><big>(</big><em>eqdata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/pynance/tech/movave.html#sma"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.movave.sma" title="Permalink to this definition">¶</a></dt>
+<dd><p>simple moving average</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<p><strong>window</strong> : int, optional</p>
+<blockquote>
+<div><p>Lookback period for sma. Defaults to 20.</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional</p>
+<blockquote>
+<div><p>Column to use for output. Defaults to &#8216;SMA&#8217;.</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote class="last">
+<div><p>Column of eqdata on which to calculate sma. If
+<cite>eqdata</cite> has only 1 column, <cite>selection</cite> is ignored,
+and sma is calculated on that column. Defaults
+to &#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.movave.volatility">
+<tt class="descclassname">pynance.tech.movave.</tt><tt class="descname">volatility</tt><big>(</big><em>eqdata</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/pynance/tech/movave.html#volatility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.movave.volatility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Volatility (standard deviation) over the given window</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<p><strong>window</strong> : int, optional</p>
+<blockquote>
+<div><p>Lookback period. Defaults to 20.</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional</p>
+<blockquote>
+<div><p>Name of column to be used in returned dataframe. Defaults to &#8216;Risk&#8217;.</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column of eqdata on which to calculate volatility. If
+<cite>eqdata</cite> has only 1 column, <cite>selection</cite> is ignored,
+and volatility is calculated on that column. Defaults
+to &#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>risk</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>Moving volatility with the given lookback.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tech.html"
+                        title="previous chapter">Technical analysis (<tt class="docutils literal"><span class="pre">pynance.tech</span></tt>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tech.simple.html"
+                        title="next chapter">Technical analysis - basic metrics (<tt class="docutils literal"><span class="pre">pynance.tech.simple</span></tt>)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tech.movave.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tech.simple.html" title="Technical analysis - basic metrics (pynance.tech.simple)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tech.html" title="Technical analysis (pynance.tech)"
+             >previous</a> |</li>
+        <li><a href="index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="tech.html" >Technical analysis (<tt class="docutils literal"><span class="pre">pynance.tech</span></tt>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.opt.spread &mdash; PyNance 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.2.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pynance.opt.spread</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2015 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Options - spreads (:mod:`pynance.opt.spread`)</span>
+<span class="sd">==================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.opt.spread</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">price</span>
+
+<div class="viewcode-block" id="calendar"><a class="viewcode-back" href="../../../opt.spread.html#pynance.opt.spread.calendar">[docs]</a><span class="k">def</span> <span class="nf">calendar</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metrics for evaluating a simple calendar spread.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ------------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        Data returned from :func:`pynance.opt.retrieve.get`</span>
+<span class="sd">    opttype : str (&#39;call&#39; or &#39;put&#39;)</span>
+<span class="sd">        Type of option on which to collect data.</span>
+<span class="sd">    strike : numeric</span>
+<span class="sd">        Strike price.</span>
+<span class="sd">    expiry1 : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Earlier expiration date.</span>
+<span class="sd">    expiry2 : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Later expiration date.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------------</span>
+<span class="sd">    metrics : DataFrame</span>
+<span class="sd">        Metrics for evaluating spread.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_price1</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">,</span> <span class="n">_qt</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="n">_price2</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Near&#39;</span><span class="p">,</span> <span class="s">&#39;Far&#39;</span><span class="p">,</span> <span class="s">&#39;Debit&#39;</span><span class="p">,</span> <span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span>
+    <span class="n">_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_price1</span><span class="p">,</span> <span class="n">_price2</span><span class="p">,</span> <span class="n">_price2</span> <span class="o">-</span> <span class="n">_price1</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">,</span> <span class="n">_qt</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">])</span>
+</div>
+<div class="viewcode-block" id="dblcal"><a class="viewcode-back" href="../../../opt.spread.html#pynance.opt.spread.dblcal">[docs]</a><span class="k">def</span> <span class="nf">dblcal</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">lowstrike</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metrics for evaluating a double calendar spread.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ------------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        Data returned from :func:`pynance.opt.retrieve.get`</span>
+<span class="sd">    opttype : str (&#39;call&#39; or &#39;put&#39;)</span>
+<span class="sd">        Type of option on which to collect data.</span>
+<span class="sd">    lowstrike : numeric</span>
+<span class="sd">        Lower strike price. To be used for put spread.</span>
+<span class="sd">    highstrike : numeric</span>
+<span class="sd">        Higher strike price. To be used for call spread.</span>
+<span class="sd">    expiry1 : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Earlier expiration date.</span>
+<span class="sd">    expiry2 : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Later expiration date.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------------</span>
+<span class="sd">    metrics : DataFrame</span>
+<span class="sd">        Metrics for evaluating spread.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Near Call&#39;</span><span class="p">,</span> <span class="s">&#39;Far Call&#39;</span><span class="p">,</span> <span class="s">&#39;Call Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Near Put&#39;</span><span class="p">,</span> <span class="s">&#39;Far Put&#39;</span><span class="p">,</span> 
+            <span class="s">&#39;Put Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Near to Far Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Debit&#39;</span><span class="p">,</span> <span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span>
+    <span class="n">_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">])</span>
+    <span class="n">_nearcall</span><span class="p">,</span> <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">],</span> <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Quote_Time&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span>\
+            <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;call&#39;</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Near Call&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_nearcall</span>
+    <span class="n">_farcall</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;call&#39;</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Far Call&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_farcall</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Call Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_nearcall</span> <span class="o">/</span> <span class="n">_farcall</span>
+    <span class="n">_nearput</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;put&#39;</span><span class="p">,</span> <span class="n">lowstrike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Near Put&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_nearput</span>
+    <span class="n">_farput</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;put&#39;</span><span class="p">,</span> <span class="n">lowstrike</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Far Put&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_farput</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Put Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_nearput</span> <span class="o">/</span> <span class="n">_farput</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Near to Far Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">_nearcall</span> <span class="o">+</span> <span class="n">_nearput</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">_farcall</span> <span class="o">+</span> <span class="n">_farput</span><span class="p">)</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Debit&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_farcall</span> <span class="o">+</span> <span class="n">_farput</span> <span class="o">-</span> <span class="n">_nearcall</span> <span class="o">-</span> <span class="n">_nearput</span>
+    <span class="k">return</span> <span class="n">_metrics</span>
+</div>
+<div class="viewcode-block" id="diagbtrfly"><a class="viewcode-back" href="../../../opt.spread.html#pynance.opt.spread.diagbtrfly">[docs]</a><span class="k">def</span> <span class="nf">diagbtrfly</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">lowstrike</span><span class="p">,</span> <span class="n">midstrike</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metrics for evaluating a diagonal butterfly spread.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ------------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        Data returned from :func:`pynance.opt.retrieve.get`</span>
+<span class="sd">    opttype : str (&#39;call&#39; or &#39;put&#39;)</span>
+<span class="sd">        Type of option on which to collect data.</span>
+<span class="sd">    lowstrike : numeric</span>
+<span class="sd">        Lower strike price. To be used for far put.</span>
+<span class="sd">    midstrike : numeric</span>
+<span class="sd">        Middle strike price. To be used for near straddle.</span>
+<span class="sd">        Typically at the money.</span>
+<span class="sd">    highstrike : numeric</span>
+<span class="sd">        Higher strike price. To be used for far call.</span>
+<span class="sd">    expiry1 : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Earlier expiration date.</span>
+<span class="sd">    expiry2 : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Later expiration date.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------------</span>
+<span class="sd">    metrics : DataFrame</span>
+<span class="sd">        Metrics for evaluating spread.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Straddle Call&#39;</span><span class="p">,</span> <span class="s">&#39;Straddle Put&#39;</span><span class="p">,</span> <span class="s">&#39;Straddle Total&#39;</span><span class="p">,</span> <span class="s">&#39;Far Call&#39;</span><span class="p">,</span> <span class="s">&#39;Far Put&#39;</span><span class="p">,</span> <span class="s">&#39;Far Total&#39;</span><span class="p">,</span>
+            <span class="s">&#39;Straddle to Far Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Credit&#39;</span><span class="p">,</span> <span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span>
+    <span class="n">_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">])</span>
+    <span class="n">_straddlecall</span><span class="p">,</span> <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">],</span> <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Quote_Time&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span>\
+            <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;call&#39;</span><span class="p">,</span> <span class="n">midstrike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="n">_straddleput</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;put&#39;</span><span class="p">,</span> <span class="n">midstrike</span><span class="p">,</span> <span class="n">expiry1</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_farcall</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;call&#39;</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_farput</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;put&#39;</span><span class="p">,</span> <span class="n">lowstrike</span><span class="p">,</span> <span class="n">expiry2</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Straddle Call&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_straddlecall</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Straddle Put&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_straddleput</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Straddle Total&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_straddle_tot</span> <span class="o">=</span> <span class="n">_straddlecall</span> <span class="o">+</span> <span class="n">_straddleput</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Far Call&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_farcall</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Far Put&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_farput</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Far Total&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_far_tot</span> <span class="o">=</span> <span class="n">_farcall</span> <span class="o">+</span> <span class="n">_farput</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Straddle to Far Ratio&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_straddle_tot</span> <span class="o">/</span> <span class="n">_far_tot</span> 
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Credit&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_straddle_tot</span> <span class="o">-</span> <span class="n">_far_tot</span>
+    <span class="k">return</span> <span class="n">_metrics</span>
+</div>
+<div class="viewcode-block" id="straddle"><a class="viewcode-back" href="../../../opt.spread.html#pynance.opt.spread.straddle">[docs]</a><span class="k">def</span> <span class="nf">straddle</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metrics for evaluating a straddle</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ------------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        Data returned from :func:`pynance.opt.retrieve.get`.</span>
+<span class="sd">    strike : numeric</span>
+<span class="sd">        Strike price.</span>
+<span class="sd">    expiry : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Expiration date.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ------------</span>
+<span class="sd">    metrics : DataFrame</span>
+<span class="sd">        Metrics for evaluating straddle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_callprice</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">,</span> <span class="n">_qt</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;call&#39;</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="n">_putprice</span> <span class="o">=</span> <span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="s">&#39;put&#39;</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">,</span> <span class="bp">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Call&#39;</span><span class="p">,</span> <span class="s">&#39;Put&#39;</span><span class="p">,</span> <span class="s">&#39;Credit&#39;</span><span class="p">,</span> <span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span>
+    <span class="n">_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_callprice</span><span class="p">,</span> <span class="n">_putprice</span><span class="p">,</span> <span class="n">_callprice</span> <span class="o">+</span> <span class="n">_putprice</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">,</span> <span class="n">_qt</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">])</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

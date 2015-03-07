@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.opt.price &mdash; PyNance 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.2.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pynance.opt.price</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2014, 2015 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Options - price (:mod:`pynance.opt.price`)</span>
+<span class="sd">==================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.opt.price</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">constants</span>
+
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../../opt.price.html#pynance.opt.price.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">,</span> <span class="n">showtimeval</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve price and time value of an option.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        Data returned from `pn.opt.get()`</span>
+
+<span class="sd">    opttype : str {&#39;call&#39;, &#39;put&#39;}</span>
+<span class="sd">        Type of option on which to collect data.</span>
+
+<span class="sd">    strike : numeric</span>
+<span class="sd">        Strike price.</span>
+
+<span class="sd">    expiry : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">        Expiration date.</span>
+
+<span class="sd">    showtimeval : bool, optional</span>
+<span class="sd">        Whether or not to include time value calculation. Setting</span>
+<span class="sd">        this value to false will save time if the function is potentially</span>
+<span class="sd">        being used inside a loop. Defaults to True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    opt : float</span>
+<span class="sd">        Price of option (midpoint between bid and ask).</span>
+
+<span class="sd">    eq : float</span>
+<span class="sd">        Price of underlying.</span>
+
+<span class="sd">    qt : datetime.datetime</span>
+<span class="sd">        Time of quote.</span>
+
+<span class="sd">    tv : float, optional</span>
+<span class="sd">        Time value of option. Returned only as long as `showtimeval` is set</span>
+<span class="sd">        to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_optrow</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="p">(</span><span class="n">strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,),</span>
+            <span class="s">&quot;No key for {} strike {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">expiry</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">opttype</span><span class="p">))</span>
+    <span class="n">_opt_price</span> <span class="o">=</span> <span class="n">_getprice</span><span class="p">(</span><span class="n">_optrow</span><span class="p">)</span>
+    <span class="n">_underlying_price</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_optrow</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Underlying_Price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+    <span class="n">_qt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">_optrow</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">showtimeval</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">opttype</span> <span class="o">==</span> <span class="s">&#39;put&#39;</span><span class="p">:</span>
+            <span class="n">_timevalue</span> <span class="o">=</span> <span class="n">_get_put_time_val</span><span class="p">(</span><span class="n">_opt_price</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">_underlying_price</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_timevalue</span> <span class="o">=</span> <span class="n">_get_call_time_val</span><span class="p">(</span><span class="n">_opt_price</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">_underlying_price</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_opt_price</span><span class="p">,</span> <span class="n">_underlying_price</span><span class="p">,</span> <span class="n">_qt</span><span class="p">,</span> <span class="n">_timevalue</span>
+    <span class="k">return</span> <span class="n">_opt_price</span><span class="p">,</span> <span class="n">_underlying_price</span><span class="p">,</span> <span class="n">_qt</span>
+</div>
+<span class="k">def</span> <span class="nf">_relevant_rows</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">multikey</span><span class="p">,</span> <span class="n">errmsg</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">optdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">multikey</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+        <span class="c"># message generated by pandas is cryptic</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="n">errmsg</span><span class="p">)</span>
+
+<div class="viewcode-block" id="allstrikes"><a class="viewcode-back" href="../../../opt.price.html#pynance.opt.price.allstrikes">[docs]</a><span class="k">def</span> <span class="nf">allstrikes</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">expiry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve option prices for all strikes of a given type with a given expiration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optdata : DataFrame</span>
+
+<span class="sd">    opttype : str {&#39;call&#39;, &#39;put&#39;}</span>
+
+<span class="sd">    expiry : date or date str</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : DataFrame</span>
+
+<span class="sd">    eq : float</span>
+<span class="sd">        Price of underlying.</span>
+
+<span class="sd">    qt : datetime.datetime</span>
+<span class="sd">        Time of quote.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_relevant</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">),</span> <span class="n">expiry</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,),</span>
+            <span class="s">&quot;No key for {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">expiry</span><span class="p">,</span> <span class="n">opttype</span><span class="p">))</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="n">_relevant</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="s">&#39;Strike&#39;</span><span class="p">)</span>
+    <span class="n">_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Price&#39;</span><span class="p">,</span> <span class="s">&#39;Time_Val&#39;</span><span class="p">,</span> <span class="s">&#39;Last&#39;</span><span class="p">,</span> <span class="s">&#39;Bid&#39;</span><span class="p">,</span> <span class="s">&#39;Ask&#39;</span><span class="p">,</span> <span class="s">&#39;Vol&#39;</span><span class="p">,</span> <span class="s">&#39;Open_Int&#39;</span><span class="p">]</span>
+    <span class="n">_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">_columns</span><span class="p">)</span>
+    <span class="n">_underlying</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_relevant</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Underlying_Price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+    <span class="n">_quotetime</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">_relevant</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_col</span> <span class="ow">in</span> <span class="n">_columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+        <span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_relevant</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Bid&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Ask&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.</span>
+    <span class="n">_set_tv_strike_ix</span><span class="p">(</span><span class="n">_df</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="s">&#39;Price&#39;</span><span class="p">,</span> <span class="s">&#39;Time_Val&#39;</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_df</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">,</span> <span class="n">_quotetime</span>
+</div>
+<div class="viewcode-block" id="allexpiries"><a class="viewcode-back" href="../../../opt.price.html#pynance.opt.price.allexpiries">[docs]</a><span class="k">def</span> <span class="nf">allexpiries</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">strike</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prices for given strike on all available dates.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optdata : DataFrame</span>
+
+<span class="sd">    opttype : str {&#39;call&#39;, &#39;put&#39;}</span>
+
+<span class="sd">    strike : numeric</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : DataFrame</span>
+
+<span class="sd">    eq : float</span>
+<span class="sd">        Price of underlying.</span>
+
+<span class="sd">    qt : datetime.datetime</span>
+<span class="sd">        Time of quote.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_relevant</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="n">optdata</span><span class="p">,</span> <span class="p">(</span><span class="n">strike</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">),</span> <span class="n">opttype</span><span class="p">,),</span>
+            <span class="s">&quot;No key for {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">strike</span><span class="p">,</span> <span class="n">opttype</span><span class="p">))</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="n">_relevant</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">get_level_values</span><span class="p">(</span><span class="s">&#39;Expiry&#39;</span><span class="p">)</span>
+    <span class="n">_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Price&#39;</span><span class="p">,</span> <span class="s">&#39;Time_Val&#39;</span><span class="p">,</span> <span class="s">&#39;Last&#39;</span><span class="p">,</span> <span class="s">&#39;Bid&#39;</span><span class="p">,</span> <span class="s">&#39;Ask&#39;</span><span class="p">,</span> <span class="s">&#39;Vol&#39;</span><span class="p">,</span> <span class="s">&#39;Open_Int&#39;</span><span class="p">]</span>
+    <span class="n">_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">_columns</span><span class="p">)</span>
+    <span class="n">_underlying</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_relevant</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Underlying_Price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+    <span class="n">_quotetime</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">_relevant</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">_col</span> <span class="ow">in</span> <span class="n">_columns</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+        <span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_relevant</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Bid&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Ask&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.</span>
+    <span class="n">_set_tv_other_ix</span><span class="p">(</span><span class="n">_df</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="s">&#39;Price&#39;</span><span class="p">,</span> <span class="s">&#39;Time_Val&#39;</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">,</span> <span class="n">strike</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_df</span><span class="p">,</span> <span class="n">_underlying</span><span class="p">,</span> <span class="n">_quotetime</span>
+</div>
+<span class="k">def</span> <span class="nf">_set_tv_other_ix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">pricecol</span><span class="p">,</span> <span class="n">tvcol</span><span class="p">,</span> <span class="n">eqprice</span><span class="p">,</span> <span class="n">strike</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">opttype</span> <span class="o">==</span> <span class="s">&#39;put&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">strike</span> <span class="o">&lt;=</span> <span class="n">eqprice</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">tvcol</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pricecol</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_diff</span> <span class="o">=</span> <span class="n">eqprice</span> <span class="o">-</span> <span class="n">strike</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">tvcol</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pricecol</span><span class="p">]</span> <span class="o">+</span> <span class="n">_diff</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">eqprice</span> <span class="o">&lt;=</span> <span class="n">strike</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">tvcol</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pricecol</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_diff</span> <span class="o">=</span> <span class="n">strike</span> <span class="o">-</span> <span class="n">eqprice</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">tvcol</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pricecol</span><span class="p">]</span> <span class="o">+</span> <span class="n">_diff</span>
+
+<span class="k">def</span> <span class="nf">_set_tv_strike_ix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,</span> <span class="n">pricecol</span><span class="p">,</span> <span class="n">tvcol</span><span class="p">,</span> <span class="n">eqprice</span><span class="p">):</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">tvcol</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">pricecol</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">opttype</span> <span class="o">==</span> <span class="s">&#39;put&#39;</span><span class="p">:</span>
+        <span class="n">_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;</span> <span class="n">eqprice</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">_mask</span><span class="p">,</span> <span class="n">tvcol</span><span class="p">]</span> <span class="o">+=</span> <span class="n">eqprice</span> <span class="o">-</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">_mask</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;</span> <span class="n">eqprice</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">_mask</span><span class="p">,</span> <span class="n">tvcol</span><span class="p">]</span> <span class="o">+=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">_mask</span><span class="p">]</span> <span class="o">-</span> <span class="n">eqprice</span>
+    <span class="k">return</span>
+
+<span class="k">def</span> <span class="nf">_getprice</span><span class="p">(</span><span class="n">optrow</span><span class="p">):</span>
+    <span class="n">_bid</span> <span class="o">=</span> <span class="n">optrow</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Bid&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">_ask</span> <span class="o">=</span> <span class="n">optrow</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s">&#39;Ask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">((</span><span class="n">_bid</span> <span class="o">+</span> <span class="n">_ask</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_get_put_time_val</span><span class="p">(</span><span class="n">putprice</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">eqprice</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">strike</span> <span class="o">&lt;=</span> <span class="n">eqprice</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">putprice</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">putprice</span> <span class="o">+</span> <span class="n">eqprice</span> <span class="o">-</span> <span class="n">strike</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+    
+<span class="k">def</span> <span class="nf">_get_call_time_val</span><span class="p">(</span><span class="n">callprice</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">eqprice</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">eqprice</span> <span class="o">&lt;=</span> <span class="n">strike</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">callprice</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">callprice</span> <span class="o">+</span> <span class="n">strike</span> <span class="o">-</span> <span class="n">eqprice</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

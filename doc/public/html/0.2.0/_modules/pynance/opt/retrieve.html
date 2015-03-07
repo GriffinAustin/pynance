@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.opt.retrieve &mdash; PyNance 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.2.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pynance.opt.retrieve</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2015 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Options - remote retrieval (:mod:`pynance.opt.retrieve`)</span>
+<span class="sd">=========================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.opt.retrieve</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">pandas.io.data</span> <span class="kn">import</span> <span class="n">Options</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">constants</span>
+
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../../opt.retrieve.html#pynance.opt.retrieve.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="n">showinfo</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve all current options chains for given equity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -------------</span>
+<span class="sd">    equity : str</span>
+<span class="sd">        Equity for which to retrieve options data.</span>
+
+<span class="sd">    showinfo : bool, optional</span>
+<span class="sd">        If true (default), available expiries and equity price are </span>
+<span class="sd">        printed to console. </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        All options data for given equity currently available</span>
+<span class="sd">        from Yahoo! Finance.</span>
+
+<span class="sd">    expdates : pandas.tseries.index.DatetimeIndex</span>
+<span class="sd">        Index of all active expiration dates.</span>
+
+<span class="sd">    eqprice : float</span>
+<span class="sd">        Price of underlying equity at the time options data</span>
+<span class="sd">        was retrieved.</span>
+<span class="sd">        </span>
+<span class="sd">    Notes</span>
+<span class="sd">    -------------</span>
+<span class="sd">    For convenience, expiration dates are shown by default. So you</span>
+<span class="sd">    don&#39;t have to call other functions to figure out what the exact expiration</span>
+<span class="sd">    dates are for the various options you might be considering.</span>
+<span class="sd">    An index of the expiration timestamps is also returned,</span>
+<span class="sd">    so that you can then pass dates not only in the form</span>
+<span class="sd">    &#39;2015-08-21&#39; (or other object are formats that pandas</span>
+<span class="sd">    can convert to timestamps) but also as a numerical index</span>
+<span class="sd">    in pandas timeseries (cf. example below).</span>
+
+<span class="sd">    To disable this feature and return a single dataframe of options</span>
+<span class="sd">    data, set the `showinfo` argument to False.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    -------------</span>
+<span class="sd">    &gt;&gt;&gt; fopt, fexp, feq = pn.opt.get(&#39;f&#39;)</span>
+<span class="sd">    Expirations:</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; fstraddle = pn.opt.spread.straddle(fopt, 16, fexp[4])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_optmeta</span> <span class="o">=</span> <span class="n">Options</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="s">&#39;yahoo&#39;</span><span class="p">)</span>
+    <span class="n">_optdata</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_optdata</span> <span class="o">=</span> <span class="n">_optmeta</span><span class="o">.</span><span class="n">get_all_data</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">RemoteDataError</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">pandas</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">RemoteDataError</span><span class="p">(</span>
+                <span class="s">&quot;No options data available for {!r}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">equity</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">showinfo</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Expirations:&quot;</span><span class="p">)</span>
+        <span class="n">showexpiries</span><span class="p">(</span><span class="n">_optdata</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Stock: {:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_optdata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Underlying_Price&#39;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">_optdata</span><span class="p">,</span> <span class="n">_optdata</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">round</span><span class="p">(</span><span class="n">_optdata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Underlying_Price&#39;</span><span class="p">],</span>
+            <span class="n">constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="getexpiries"><a class="viewcode-back" href="../../../opt.retrieve.html#pynance.opt.retrieve.getexpiries">[docs]</a><span class="k">def</span> <span class="nf">getexpiries</span><span class="p">(</span><span class="n">optdata</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get all expiration dates contained in the data index.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -------------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        Collection of options data as retrieved from `pn.opt.get()`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------------</span>
+<span class="sd">    expdates : pandas.tseries.index.DatetimeIndex</span>
+<span class="sd">        Index of all active expiration dates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">optdata</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="showexpiries"><a class="viewcode-back" href="../../../opt.retrieve.html#pynance.opt.retrieve.showexpiries">[docs]</a><span class="k">def</span> <span class="nf">showexpiries</span><span class="p">(</span><span class="n">optdata</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Show all expiration dates but return nothing</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -------------</span>
+<span class="sd">    optdata : DataFrame</span>
+<span class="sd">        Collection of options data as retrieved from `pn.opt.get()`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_datetime</span> <span class="ow">in</span> <span class="n">optdata</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;{:2d} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_i</span><span class="p">,</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">&#39;</span><span class="p">)))</span>
+        <span class="n">_i</span> <span class="o">+=</span> <span class="mi">1</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">PyNance 0.2.0 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
