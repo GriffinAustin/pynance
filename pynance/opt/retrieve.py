@@ -12,8 +12,7 @@ from __future__ import absolute_import
 
 import pandas as pd
 
-from . import constants
-from .options import Options
+from .core import Options
 
 def get(equity, showinfo=True):
     """

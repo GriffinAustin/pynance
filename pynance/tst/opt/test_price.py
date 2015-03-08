@@ -44,11 +44,11 @@ class TestData(unittest.TestCase):
         _optdata.loc[:, 'Ask'] = _bids + .2
         self.price = pn.opt.price.Price(_optdata)
 
-    def test_cost(self):
+    def test_get(self):
         # call
-        self.assertAlmostEqual(self.price.cost('call', 8., '2015-05-01'), 2.8)
+        self.assertAlmostEqual(self.price.get('call', 8., '2015-05-01'), 2.8)
         # put
-        self.assertAlmostEqual(self.price.cost('put', 10., '2015-05-01'), .9)
+        self.assertAlmostEqual(self.price.get('put', 10., '2015-05-01'), .9)
 
     def test_metrics(self):
         # call in the money

@@ -12,7 +12,7 @@ from __future__ import absolute_import
 
 import pandas as pd
 
-from . import constants
+from . import _constants
 
 def get(eqprice, callprice, strike, shares=1, buycomm=0., excomm=0., dividend=0.):
     """
@@ -39,7 +39,7 @@ def get(eqprice, callprice, strike, shares=1, buycomm=0., excomm=0., dividend=0.
 
     Returns
     ----------
-    metrics : pd.DataFrame
+    metrics : :class:`pandas.DataFrame`
         Investment metrics
     """
     _index = ['Eq Cost', 'Option Premium', 'Commission', 'Total Invested', 'Dividends', 'Eq if Ex', 
@@ -56,11 +56,11 @@ def get(eqprice, callprice, strike, shares=1, buycomm=0., excomm=0., dividend=0.
     _metrics.loc['Eq if Ex', 'Value'] = _eqsale = strike * _shares
     _metrics.loc['Comm if Ex', 'Value'] = float(excomm)
     _metrics.loc['Profit if Ex', 'Value'] = _profitex = _eqsale + _dividends - _invested - excomm
-    _metrics.loc['Ret if Ex', 'Value'] = round(_profitex / _invested, constants.NDIGITS_SIG)
+    _metrics.loc['Ret if Ex', 'Value'] = round(_profitex / _invested, _constants.NDIGITS_SIG)
     _metrics.loc['Profit if Unch', 'Value'] = _profitunch = _eqcost + _dividends - _invested
-    _metrics.loc['Ret if Unch', 'Value'] = round(_profitunch / _invested, constants.NDIGITS_SIG)
+    _metrics.loc['Ret if Unch', 'Value'] = round(_profitunch / _invested, _constants.NDIGITS_SIG)
     _metrics.loc['Break_Even Price', 'Value'] = _breakeven = round((_invested - _dividends) / _shares, 
-            constants.NDIGITS_SIG)
+            _constants.NDIGITS_SIG)
     _metrics.loc['Protection Pts', 'Value'] = _protpts = eqprice - _breakeven
-    _metrics.loc['Protection Pct', 'Value'] = round(_protpts / eqprice, constants.NDIGITS_SIG)
+    _metrics.loc['Protection Pct', 'Value'] = round(_protpts / eqprice, _constants.NDIGITS_SIG)
     return _metrics

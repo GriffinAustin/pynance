@@ -2,15 +2,16 @@
 .. Copyright (c) 2015 Marshall Farrier
    license http://opensource.org/licenses/MIT
 
-Options - remote retrieval (:mod:`pynance.opt.options`)
+Options - options class (:mod:`pynance.opt.core`)
 =========================================================
 
-.. currentmodule:: pynance.opt.options
+.. currentmodule:: pynance.opt.core
 """
 
 from __future__ import absolute_import
 
 from .price import Price
+from .spread.core import Spread
 
 class Options(object):
     """
@@ -90,3 +91,13 @@ class Options(object):
         out : :class:`pynance.opt.price.Price`
         """
         return Price(self.data)
+
+    def spread(self):
+        """
+        Return a wrapper providing easy access to spread metrics.
+
+        Returns
+        -------
+        out : :class:`pynance.opt.spread.core.Spread`
+        """
+        return Spread(self.data)

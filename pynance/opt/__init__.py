@@ -7,6 +7,8 @@ Options (:mod:`pynance.opt`)
 
 .. currentmodule:: pynance.opt
 
+:mod:`pynance.opt.core`
+
 :mod:`pynance.opt.covcall`
 
 :mod:`pynance.opt.price`
@@ -20,6 +22,8 @@ from __future__ import absolute_import
 __all__ = ["covcall", "price", "retrieve", "spread"]
 
 # imported directly into module
+from . import core
+from .core import *
 from . import retrieve
 from .retrieve import *
 
