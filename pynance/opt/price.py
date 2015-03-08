@@ -14,57 +14,141 @@ import pandas as pd
 
 from . import constants
 
-def get(optdata, opttype, strike, expiry, showtimeval=True):
+class Price(object):
     """
-    Retrieve price and time value of an option.
+    Wrapper class for :class:`pandas.DataFrame` for retrieving
+    options prices.
 
     Parameters
     ----------
-    optdata : DataFrame
-        Data returned from `pn.opt.get()`
+    df : :class:`pandas.DataFrame`
+        Options data.
 
-    opttype : str {'call', 'put'}
-        Type of option on which to collect data.
-
-    strike : numeric
-        Strike price.
-
-    expiry : date or date str (e.g. '2015-01-01')
-        Expiration date.
-
-    showtimeval : bool, optional
-        Whether or not to include time value calculation. Setting
-        this value to false will save time if the function is potentially
-        being used inside a loop. Defaults to True.
-
-    Returns
+    Attributes
     ----------
-    opt : float
-        Price of option (midpoint between bid and ask).
-
-    eq : float
-        Price of underlying.
-
-    qt : datetime.datetime
-        Time of quote.
-
-    tv : float, optional
-        Time value of option. Returned only as long as `showtimeval` is set
-        to True.
+    data : :class:`pandas.DataFrame`
+        Options data.
     """
-    _optrow = _relevant_rows(optdata, (strike, expiry, opttype,),
-            "No key for {} strike {} {}".format(expiry, strike, opttype))
-    _opt_price = _getprice(_optrow)
-    _underlying_price = round(_optrow.loc[:, 'Underlying_Price'].values[0],
-            constants.NDIGITS_SIG)
-    _qt = pd.to_datetime(_optrow.loc[:, 'Quote_Time'].values[0]).to_datetime()
-    if showtimeval:
+    def __init__(self, df):
+        self.data = df
+
+    def cost(self, opttype, strike, expiry):
+        """
+        Price as midpoint between bid and ask.
+
+        Parameters
+        ----------
+        opttype : str
+            'call' or 'put'.
+        strike : numeric
+            Strike price.
+        expiry : date-like
+            Expiration date. Can be a :class:`datetime.datetime` or
+            a string that :mod:`pandas` can interpret as such, e.g.
+            '2015-01-01'.
+
+        Returns
+        -------
+        out : float
+        """
+        _optrow = _relevant_rows(self.data, (strike, expiry, opttype,),
+                "No key for {} strike {} {}".format(expiry, strike, opttype))
+        return _getprice(_optrow)
+
+    def metrics(self, opttype, strike, expiry):
+        """
+        Basic metrics for a specific option.
+
+        Parameters
+        ----------
+        opttype : str ('call' or 'put')
+        strike : numeric
+            Strike price.
+        expiry : date-like
+            Expiration date. Can be a :class:`datetime.datetime` or
+            a string that :mod:`pandas` can interpret as such, e.g.
+            '2015-01-01'.
+
+        Returns
+        -------
+        out : :class:`pandas.DataFrame`
+        """
+        _optrow = _relevant_rows(self.data, (strike, expiry, opttype,),
+                "No key for {} strike {} {}".format(expiry, strike, opttype))
+        _index = ['Opt_Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int', 'Underlying_Price', 'Quote_Time']
+        _out = pd.DataFrame(index=_index, columns=['Value'])
+        _out.loc['Opt_Price', 'Value'] = _opt_price = _getprice(_optrow)
+        for _name in _index[2:]:
+            _out.loc[_name, 'Value'] = _optrow.loc[:, _name].values[0]
+        _eq_price = _out.loc['Underlying_Price', 'Value']
         if opttype == 'put':
-            _timevalue = _get_put_time_val(_opt_price, strike, _underlying_price)
+            _out.loc['Time_Val'] = _get_put_time_val(_opt_price, strike, _eq_price)
         else:
-            _timevalue = _get_call_time_val(_opt_price, strike, _underlying_price)
-        return _opt_price, _underlying_price, _qt, _timevalue
-    return _opt_price, _underlying_price, _qt
+            _out.loc['Time_Val'] = _get_call_time_val(_opt_price, strike, _eq_price)
+        return _out
+
+    def strikes(self, opttype, expiry):
+        """
+        Retrieve option prices for all strikes of a given type with a given expiration.
+
+        Parameters
+        ----------
+        opttype : str ('call' or 'put')
+        expiry : date-like
+            Expiration date. Can be a :class:`datetime.datetime` or
+            a string that :mod:`pandas` can interpret as such, e.g.
+            '2015-01-01'.
+
+        Returns
+        ----------
+        df : :class:`pandas.DataFrame`
+        eq : float
+            Price of underlying.
+        qt : datetime.datetime
+            Time of quote.
+        """
+        _relevant = _relevant_rows(self.data, (slice(None), expiry, opttype,),
+                "No key for {} {}".format(expiry, opttype))
+        _index = _relevant.index.get_level_values('Strike')
+        _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
+        _df = pd.DataFrame(index=_index, columns=_columns)
+        _underlying = _relevant.loc[:, 'Underlying_Price'].values[0]
+        _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
+        for _col in _columns[2:]:
+            _df.loc[:, _col] = _relevant.loc[:, _col].values
+        _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
+        _set_tv_strike_ix(_df, opttype, 'Price', 'Time_Val', _underlying)
+        return _df, _underlying, _quotetime
+
+    def exps(self, opttype, strike):
+        """
+        Prices for given strike on all available dates.
+
+        Parameters
+        ----------
+        opttype : str ('call' or 'put')
+        strike : numeric
+
+        Returns
+        ----------
+        df : :class:`pandas.DataFrame`
+        eq : float
+            Price of underlying.
+        qt : :class:`datetime.datetime`
+            Time of quote.
+        """
+        _relevant = _relevant_rows(self.data, (strike, slice(None), opttype,),
+                "No key for {} {}".format(strike, opttype))
+        _index = _relevant.index.get_level_values('Expiry')
+        _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
+        _df = pd.DataFrame(index=_index, columns=_columns)
+        _eq = _relevant.loc[:, 'Underlying_Price'].values[0]
+        _qt = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
+        for _col in _columns[2:]:
+            _df.loc[:, _col] = _relevant.loc[:, _col].values
+        _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
+        _set_tv_other_ix(_df, opttype, 'Price', 'Time_Val', _eq, strike)
+        return _df, _eq, _qt
 
 def _relevant_rows(optdata, multikey, errmsg):
     try:
@@ -72,78 +156,6 @@ def _relevant_rows(optdata, multikey, errmsg):
     except (TypeError, KeyError):
         # message generated by pandas is cryptic
         raise KeyError(errmsg)
-
-def allstrikes(optdata, opttype, expiry):
-    """
-    Retrieve option prices for all strikes of a given type with a given expiration.
-
-    Parameters
-    ----------
-    optdata : DataFrame
-
-    opttype : str {'call', 'put'}
-
-    expiry : date or date str
-
-    Returns
-    ----------
-    df : DataFrame
-
-    eq : float
-        Price of underlying.
-
-    qt : datetime.datetime
-        Time of quote.
-    """
-    _relevant = _relevant_rows(optdata, (slice(None), expiry, opttype,),
-            "No key for {} {}".format(expiry, opttype))
-    _index = _relevant.index.get_level_values('Strike')
-    _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
-    _df = pd.DataFrame(index=_index, columns=_columns)
-    _underlying = round(_relevant.loc[:, 'Underlying_Price'].values[0],
-            constants.NDIGITS_SIG)
-    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
-    for _col in _columns[2:]:
-        _df.loc[:, _col] = _relevant.loc[:, _col].values
-    _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
-    _set_tv_strike_ix(_df, opttype, 'Price', 'Time_Val', _underlying)
-    return _df, _underlying, _quotetime
-
-def allexpiries(optdata, opttype, strike):
-    """
-    Prices for given strike on all available dates.
-
-    Parameters
-    ----------
-    optdata : DataFrame
-
-    opttype : str {'call', 'put'}
-
-    strike : numeric
-
-    Returns
-    ----------
-    df : DataFrame
-
-    eq : float
-        Price of underlying.
-
-    qt : datetime.datetime
-        Time of quote.
-    """
-    _relevant = _relevant_rows(optdata, (strike, slice(None), opttype,),
-            "No key for {} {}".format(strike, opttype))
-    _index = _relevant.index.get_level_values('Expiry')
-    _columns = ['Price', 'Time_Val', 'Last', 'Bid', 'Ask', 'Vol', 'Open_Int']
-    _df = pd.DataFrame(index=_index, columns=_columns)
-    _underlying = round(_relevant.loc[:, 'Underlying_Price'].values[0],
-            constants.NDIGITS_SIG)
-    _quotetime = pd.to_datetime(_relevant.loc[:, 'Quote_Time'].values[0]).to_datetime()
-    for _col in _columns[2:]:
-        _df.loc[:, _col] = _relevant.loc[:, _col].values
-    _df.loc[:, 'Price'] = (_df.loc[:, 'Bid'] + _df.loc[:, 'Ask']) / 2.
-    _set_tv_other_ix(_df, opttype, 'Price', 'Time_Val', _underlying, strike)
-    return _df, _underlying, _quotetime
 
 def _set_tv_other_ix(df, opttype, pricecol, tvcol, eqprice, strike):
     if opttype == 'put':

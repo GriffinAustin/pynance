@@ -51,10 +51,13 @@ Examples can be found in the documentation for :mod:`pynance.data`.
 
 Issues
 ------
-PyNance is still in its early development stage. If you find a bug or think of a feature
+Please help us by reporting any problems you find and sharing your ideas for new features.
+
+If you find a bug or think of a feature
 you would like to see included in the next release,
 please report the issue on 
-`GitHub <https://github.com/aisthesis/pynance/issues>`_.
+`GitHub <https://github.com/aisthesis/pynance/issues>`_ in accordance with
+the `Scipy guidelines <http://scipy.org/bug-report.html#guidelines-for-submitting-bugs>`_.
 
 Reference
 ----------------

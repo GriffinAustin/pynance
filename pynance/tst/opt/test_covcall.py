@@ -15,12 +15,12 @@ class TestData(unittest.TestCase):
 
     def test_get(self):
         df = pn.opt.covcall.get(*self.args)
-        self.assertAlmostEqual(df.loc['Stock Cost', 'Value'], 21500.)
+        self.assertAlmostEqual(df.loc['Eq Cost', 'Value'], 21500.)
         self.assertAlmostEqual(df.loc['Option Premium', 'Value'], 1500.)
         self.assertAlmostEqual(df.loc['Commission', 'Value'], 40.)
         self.assertAlmostEqual(df.loc['Total Invested', 'Value'], 20040.)
         self.assertAlmostEqual(df.loc['Dividends', 'Value'], 500.)
-        self.assertAlmostEqual(df.loc['Stock if Ex', 'Value'], 22500.)
+        self.assertAlmostEqual(df.loc['Eq if Ex', 'Value'], 22500.)
         self.assertAlmostEqual(df.loc['Comm if Ex', 'Value'], 15.)
         self.assertAlmostEqual(df.loc['Profit if Ex', 'Value'], 2945.)
         self.assertAlmostEqual(df.loc['Ret if Ex', 'Value'], .147)
