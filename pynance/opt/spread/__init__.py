@@ -17,13 +17,5 @@ Options spreads (:mod:`pynance.opt.spread`)
 
 :mod:`pynance.opt.spread.vert`
 """
-from __future__ import absolute_import
 
-__all__ = ["diag", "core"]
-
-# imported directly into module
-from . import core
-from .core import *
-
-# imported as submodule
-#from . import diag
+__all__ = ["core", "diag", "multi", "vert",]

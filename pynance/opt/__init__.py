@@ -19,15 +19,11 @@ Options (:mod:`pynance.opt`)
 """
 from __future__ import absolute_import
 
-__all__ = ["covcall", "price", "retrieve", "spread"]
+__all__ = ["covcall", "retrieve"]
 
 # imported directly into module
-from . import core
-from .core import *
 from . import retrieve
 from .retrieve import *
 
 # imported as submodule
 from . import covcall
-from . import price
-from . import spread

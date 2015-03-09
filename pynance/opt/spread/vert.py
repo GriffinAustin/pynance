@@ -23,6 +23,12 @@ class Vertical(object):
     Wrapper class for :class:`pandas.DataFrame` for retrieving
     metrics on vertical options spreads
 
+    Objects of this class are not intended for direct instantiation
+    but are created as attributes of objects of type 
+    :class:`pynance.opt.spread.core.Spread`.
+
+    .. versionadded:: 0.3.0
+
     Parameters
     ----------
     df : :class:`pandas.DataFrame`

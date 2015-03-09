@@ -19,6 +19,9 @@ class Options(object):
 
     .. versionadded:: 0.3.0
 
+    Objects of this class are not intended for direct instantiation
+    but are created on calling :func:`pynance.opt.retrieve.get` 
+
     Parameters
     ----------
     df : :class:`pandas.DataFrame`
@@ -30,8 +33,14 @@ class Options(object):
 
     Examples
     --------
-    >>> import pynance as pn
-    >>> fopt = pn.opt.get('f').info()
+    Just retrieve data (no info message)::
+
+    >>> geopt = pn.opt.get('ge')
+    >>>
+
+    or retrieve dat with useful information output to console::
+
+    >>> fopt, fexp = pn.opt.get('f').info()
     Expirations:
     ...
     Stock: 16.25
@@ -53,6 +62,15 @@ class Options(object):
         self : :class:`pynance.opt.options.Options`
             Returns a reference to the calling object to allow
             chaining.
+
+        Examples
+        --------
+        >>> fopt, fexp = pn.opt.get('f').info()
+        Expirations:
+        ...
+        Stock: 16.25
+        Quote time: 2015-03-01 16:00
+        >>>
         """
         print("Expirations:")
         _i = 0
@@ -61,7 +79,7 @@ class Options(object):
             _i += 1
         print("Stock: {:.2f}".format(self.data.iloc[0].loc['Underlying_Price']))
         print("Quote time: {}".format(self.quotetime().strftime('%Y-%m-%d %H:%M%z')))
-        return self
+        return self, self.exps()
 
     def exps(self):
         """
