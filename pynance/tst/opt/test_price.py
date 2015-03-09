@@ -42,17 +42,18 @@ class TestData(unittest.TestCase):
         _optdata.loc[:, 'Bid'] = _bids
         # setting ask as bid + .2 means that price is expected to be bid + .1
         _optdata.loc[:, 'Ask'] = _bids + .2
+        self.opts = pn.opt.core.Options(_optdata)
         self.price = pn.opt.price.Price(_optdata)
 
     def test_get(self):
         # call
-        self.assertAlmostEqual(self.price.get('call', 8., '2015-05-01'), 2.8)
+        self.assertAlmostEqual(self.opts.price.get('call', 8., '2015-05-01'), 2.8)
         # put
-        self.assertAlmostEqual(self.price.get('put', 10., '2015-05-01'), .9)
+        self.assertAlmostEqual(self.opts.price.get('put', 10., '2015-05-01'), .9)
 
     def test_metrics(self):
         # call in the money
-        _df = self.price.metrics('call', 8., '2015-05-01')
+        _df = self.opts.price.metrics('call', 8., '2015-05-01')
         self.assertAlmostEqual(_df.loc['Opt_Price', 'Value'], 2.8)
         self.assertAlmostEqual(_df.loc['Time_Val', 'Value'], .7)
         self.assertAlmostEqual(_df.loc['Last', 'Value'], 0.)
@@ -63,24 +64,24 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_df.loc['Underlying_Price', 'Value'], 10.1)
         self.assertEqual(_df.loc['Quote_Time', 'Value'], np.datetime64(dt.datetime(2015, 3, 1)))
         # call out of the money
-        _df = self.price.metrics('call', 12., '2015-06-01')
+        _df = self.opts.price.metrics('call', 12., '2015-06-01')
         self.assertAlmostEqual(_df.loc['Opt_Price', 'Value'], .8)
         self.assertAlmostEqual(_df.loc['Time_Val', 'Value'], .8)
         self.assertAlmostEqual(_df.loc['Last', 'Value'], 14.)
         # put in the money
-        _df = self.price.metrics('put', 12., '2015-07-01')
+        _df = self.opts.price.metrics('put', 12., '2015-07-01')
         self.assertAlmostEqual(_df.loc['Opt_Price', 'Value'], 2.8)
         self.assertAlmostEqual(_df.loc['Time_Val', 'Value'], .9)
         # put out of the money
-        _df = self.price.metrics('put', 10., '2015-05-01')
+        _df = self.opts.price.metrics('put', 10., '2015-05-01')
         self.assertAlmostEqual(_df.loc['Opt_Price', 'Value'], .9)
         self.assertAlmostEqual(_df.loc['Time_Val', 'Value'], .9)
         # exceptions
-        self.assertRaises(KeyError, self.price.metrics, 'call', 10., '2015-06-02')
+        self.assertRaises(KeyError, self.opts.price.metrics, 'call', 10., '2015-06-02')
 
     def test_strikes(self):
         # call
-        _opt, _eq, _qt = self.price.strikes('call', '2015-05-01')
+        _opt, _eq, _qt = self.opts.price.strikes('call', '2015-05-01')
         # only test price and time val for now
         self.assertAlmostEqual(_opt.loc[8., 'Price'], 2.8)
         self.assertAlmostEqual(_opt.loc[10., 'Price'], 1.)
@@ -91,7 +92,7 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_eq, 10.1)
         self.assertEqual(_qt, dt.datetime(2015, 3, 1))
         # put
-        _opt, _, _ = self.price.strikes('put', '2015-06-01')
+        _opt, _, _ = self.opts.price.strikes('put', '2015-06-01')
         # only test price and time val for now
         self.assertAlmostEqual(_opt.loc[8., 'Price'], .8)
         self.assertAlmostEqual(_opt.loc[10., 'Price'], 1.)
@@ -100,11 +101,11 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_opt.loc[10., 'Time_Val'], 1.)
         self.assertAlmostEqual(_opt.loc[12., 'Time_Val'], .8)
         # exceptions
-        self.assertRaises(KeyError, self.price.strikes, 'call', '2015-06-30')
+        self.assertRaises(KeyError, self.opts.price.strikes, 'call', '2015-06-30')
 
     def test_exps(self):
         # call
-        _opt, _eq, _qt = self.price.exps('call', 8)
+        _opt, _eq, _qt = self.opts.price.exps('call', 8)
         # only test price and time val for now
         self.assertAlmostEqual(_opt.loc['2015-05-01', 'Price'], 2.8)
         self.assertAlmostEqual(_opt.loc['2015-06-01', 'Price'], 2.9)
@@ -113,7 +114,7 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_opt.loc['2015-06-01', 'Time_Val'], .8)
         self.assertAlmostEqual(_opt.loc['2015-07-01', 'Time_Val'], .9)
         # put
-        _opt, _eq, _qt = self.price.exps('put', 10)
+        _opt, _eq, _qt = self.opts.price.exps('put', 10)
         # only test price and time val for now
         self.assertAlmostEqual(_opt.loc['2015-05-01', 'Price'], .9)
         self.assertAlmostEqual(_opt.loc['2015-06-01', 'Price'], 1.)
@@ -124,7 +125,7 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_eq, 10.1)
         self.assertEqual(_qt, dt.datetime(2015, 3, 1))
         # exceptions
-        self.assertRaises(KeyError, self.price.exps, 'call', 10.5)
+        self.assertRaises(KeyError, self.opts.price.exps, 'call', 10.5)
 
 if __name__ == '__main__':
     unittest.main()

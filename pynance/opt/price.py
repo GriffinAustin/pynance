@@ -12,9 +12,9 @@ from __future__ import absolute_import
 
 import pandas as pd
 
-from . import _constants
-from ._common import _relevant_rows
 from ._common import _getprice
+from ._common import _relevant_rows
+from . import _constants
 
 class Price(object):
     """

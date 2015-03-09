@@ -41,6 +41,8 @@ class Options(object):
 
     def __init__(self, df):
         self.data = df
+        self.price = Price(df)
+        self.spread = Spread(df)
 
     def info(self):
         """
@@ -81,23 +83,3 @@ class Options(object):
         qt : :class:`datetime.datetime`
         """
         return self.data.iloc[0].loc['Quote_Time'].to_datetime()
-
-    def price(self):
-        """
-        Return a wrapper providing easy access to price data.
-
-        Returns
-        -------
-        out : :class:`pynance.opt.price.Price`
-        """
-        return Price(self.data)
-
-    def spread(self):
-        """
-        Return a wrapper providing easy access to spread metrics.
-
-        Returns
-        -------
-        out : :class:`pynance.opt.spread.core.Spread`
-        """
-        return Spread(self.data)

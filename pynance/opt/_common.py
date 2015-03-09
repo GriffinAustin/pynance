@@ -23,3 +23,6 @@ def _getprice(optrow):
     _bid = optrow.loc[:, 'Bid'].values[0]
     _ask = optrow.loc[:, 'Ask'].values[0]
     return round((_bid + _ask) / 2., _constants.NDIGITS_SIG)
+
+def _getkeys(optrow, keys):
+    return optrow.loc[:, keys].values.flatten().tolist()
