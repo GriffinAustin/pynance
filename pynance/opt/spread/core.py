@@ -35,9 +35,15 @@ class Spread(object):
 
     Attributes
     ----------
-    data
-    multi
-    vert
+    data : :class:`pandas.DataFrame`
+    multi : :class:`~pynance.opt.spread.multi.Multi`
+        Wrapper for retrieving metrics on composite spreads.
+    vert : :class:`~pynance.opt.spread.vert.Vertical`
+        Wrapper for retrieving metrics on vertical spreads.
+
+    Methods
+    -------
+    .. automethod:: cal
     """
     def __init__(self, df):
         self.data = df

@@ -36,7 +36,11 @@ class Vertical(object):
 
     Attributes
     ----------
-    data
+    data : :class:`pandas.DataFrame`
+
+    Methods
+    -------
+    .. automethod:: straddle
     """
     def __init__(self, df):
         self.data = df

@@ -18,8 +18,6 @@ def get(eqprice, callprice, strike, shares=1, buycomm=0., excomm=0., dividend=0.
     """
     Metrics for covered calls.
 
-    Cf. Lawrence McMillan, Options as a Strategic Investment, 5th ed., p. 43
-
     Parameters
     ----------
     eqprice : float
@@ -41,6 +39,10 @@ def get(eqprice, callprice, strike, shares=1, buycomm=0., excomm=0., dividend=0.
     ----------
     metrics : :class:`pandas.DataFrame`
         Investment metrics
+
+    Notes
+    -----
+    Cf. Lawrence McMillan, Options as a Strategic Investment, 5th ed., p. 43
     """
     _index = ['Eq Cost', 'Option Premium', 'Commission', 'Total Invested', 'Dividends', 'Eq if Ex', 
             'Comm if Ex', 'Profit if Ex', 'Ret if Ex', 'Profit if Unch', 'Ret if Unch', 'Break_Even Price',

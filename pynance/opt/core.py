@@ -29,7 +29,20 @@ class Options(object):
 
     Attributes
     ----------
-    data
+    data : :class:`pandas.DataFrame`
+        Options data.
+    price : :class:`pynance.opt.price.Price`
+        Wrapper containing methods for determining price.
+    spread : :class:`pynance.opt.spread.core.Spread`
+        Wrapper containing methods for evaluating spreads.
+
+    Methods
+    -------
+    .. automethod:: exps
+
+    .. automethod:: info
+
+    .. automethod:: quotetime
 
     Examples
     --------
@@ -37,7 +50,7 @@ class Options(object):
 
     >>> geopt = pn.opt.get('ge')
 
-    or retrieve data with useful information output to console::
+    or retrieve data with info::
     
         >>> fopt, fexp = pn.opt.get('f').info()
         Expirations:
@@ -57,9 +70,11 @@ class Options(object):
 
         Returns
         -------
-        self : :class:`pynance.opt.options.Options`
+        self : :class:`pynance.opt.core.Options`
             Returns a reference to the calling object to allow
             chaining.
+
+        expiries : :class:`pandas.tseries.index.DatetimeIndex`
 
         Examples
         --------

@@ -35,6 +35,16 @@ class Price(object):
     ----------
     data : :class:`pandas.DataFrame`
         Options data.
+
+    Methods
+    -------
+    .. automethod:: exps
+
+    .. automethod:: get
+
+    .. automethod:: metrics
+
+    .. automethod:: strikes
     """
     def __init__(self, df):
         self.data = df
@@ -61,6 +71,8 @@ class Price(object):
         Examples
         --------
         >>> geopts = pn.opt.get('ge')
+        >>> geopts.price.get('call', 26., '2015-09-18')
+        0.94
         """
         _optrow = _relevant_rows(self.data, (strike, expiry, opttype,),
                 "No key for {} strike {} {}".format(expiry, strike, opttype))
@@ -117,6 +129,10 @@ class Price(object):
             Price of underlying.
         qt : datetime.datetime
             Time of quote.
+
+        See Also
+        --------
+        :meth:`exps`
         """
         _relevant = _relevant_rows(self.data, (slice(None), expiry, opttype,),
                 "No key for {} {}".format(expiry, opttype))
@@ -147,6 +163,10 @@ class Price(object):
             Price of underlying.
         qt : :class:`datetime.datetime`
             Time of quote.
+
+        See Also
+        --------
+        :meth:`strikes`
         """
         _relevant = _relevant_rows(self.data, (strike, slice(None), opttype,),
                 "No key for {} {}".format(strike, opttype))

@@ -25,7 +25,7 @@ def get(equity, showinfo=True):
 
     Returns
     -------------
-    optdata : :class:`pynance.opt.options.Options`
+    optdata : :class:`~pynance.opt.core.Options`
         All options data for given equity currently available
         from Yahoo! Finance.
         
@@ -36,8 +36,8 @@ def get(equity, showinfo=True):
     >>> fopt = pn.opt.get('f')
 
     To show useful information (expiration dates, stock price, quote time)
-    when retrieving options data, you can simply chain the call to
-    :func:`get` with :meth:`pynance.opt.core.Options.info`::
+    when retrieving options data, you can chain the call to
+    :func:`get` with :meth:`~pynance.opt.core.Options.info`::
     
         >>> fopt = pn.opt.get('f').info()
         Expirations:

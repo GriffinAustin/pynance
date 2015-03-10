@@ -114,6 +114,10 @@ def ret(eqdata, **kwargs):
     ----------
     out : DataFrame
 
+    See Also
+    --------
+    :func:`growth`
+
     Notes
     ----------
     The interval is the number of *sessions* between the 2 values

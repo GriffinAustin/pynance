@@ -37,7 +37,13 @@ class Multi(object):
 
     Attributes
     ----------
-    data
+    data : :class:`pandas.DataFrame`
+
+    Methods
+    -------
+    .. automethod:: dblcal
+
+    .. automethod:: diagbtrfly
     """
     def __init__(self, df):
         self.data = df
