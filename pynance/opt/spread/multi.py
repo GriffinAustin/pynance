@@ -3,7 +3,7 @@
    license http://opensource.org/licenses/MIT
 
 Options - composite spreads (:mod:`pynance.opt.spread.multi`)
-==================================================
+=============================================================
 
 .. currentmodule:: pynance.opt.spread.multi
 """

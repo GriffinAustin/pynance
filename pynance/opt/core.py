@@ -20,7 +20,7 @@ class Options(object):
     .. versionadded:: 0.3.0
 
     Objects of this class are not intended for direct instantiation
-    but are created on calling :func:`pynance.opt.retrieve.get` 
+    but are created by calling :func:`pynance.opt.retrieve.get` 
 
     Parameters
     ----------
@@ -36,16 +36,14 @@ class Options(object):
     Just retrieve data (no info message)::
 
     >>> geopt = pn.opt.get('ge')
-    >>>
 
-    or retrieve dat with useful information output to console::
-
-    >>> fopt, fexp = pn.opt.get('f').info()
-    Expirations:
-    ...
-    Stock: 16.25
-    Quote time: 2015-03-01 16:00
-    >>>
+    or retrieve data with useful information output to console::
+    
+        >>> fopt, fexp = pn.opt.get('f').info()
+        Expirations:
+        ...
+        Stock: 16.25
+        Quote time: 2015-03-01 16:00
     """
 
     def __init__(self, df):
@@ -70,7 +68,6 @@ class Options(object):
         ...
         Stock: 16.25
         Quote time: 2015-03-01 16:00
-        >>>
         """
         print("Expirations:")
         _i = 0

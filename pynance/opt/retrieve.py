@@ -37,13 +37,13 @@ def get(equity, showinfo=True):
 
     To show useful information (expiration dates, stock price, quote time)
     when retrieving options data, you can simply chain the call to
-    :func:`get` with :meth:`pynance.opt.options.Options.info`::
+    :func:`get` with :meth:`pynance.opt.core.Options.info`::
     
-    >>> fopt = pn.opt.get('f').info()
-    Expirations:
-    ...
-    Stock: 15.93
-    Quote time: 2015-03-07 16:00
+        >>> fopt = pn.opt.get('f').info()
+        Expirations:
+        ...
+        Stock: 15.93
+        Quote time: 2015-03-07 16:00
     """
     _optmeta = pd.io.data.Options(equity, 'yahoo')
     _optdata = None

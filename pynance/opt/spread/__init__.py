@@ -9,10 +9,6 @@ Options spreads (:mod:`pynance.opt.spread`)
 
 :mod:`pynance.opt.spread.core`
 
-:mod:`pynance.opt.spread.diag`
-
-:mod:`pynance.opt.spread.horiz`
-
 :mod:`pynance.opt.spread.multi`
 
 :mod:`pynance.opt.spread.vert`

@@ -1,6 +1,7 @@
 .. automodule:: pynance.opt.spread
-   :members:
-   :undoc-members:
-   :special-members:
-   :inherited-members:
-   :show-inheritance:
+
+.. toctree::
+
+   opt.spread.core
+   opt.spread.multi
+   opt.spread.vert

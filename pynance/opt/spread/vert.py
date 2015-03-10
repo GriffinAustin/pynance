@@ -3,7 +3,7 @@
    license http://opensource.org/licenses/MIT
 
 Options - vertical spreads (:mod:`pynance.opt.spread.vert`)
-==================================================
+===========================================================
 
 .. currentmodule:: pynance.opt.spread.vert
 """

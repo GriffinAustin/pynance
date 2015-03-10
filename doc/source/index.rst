@@ -39,7 +39,7 @@ can be retrieved with the simple command::
 
 Current options quotes can be retrieved using::
 
-    >>> geopt, geexp, geeq = pn.opt.get('ge')
+    >>> geopt, geexp = pn.opt.get('ge').info()
 
 The options data retrieved can then be analysed using functions from :mod:`pynance.opt`.
 
@@ -63,7 +63,6 @@ Reference
 ----------------
 
 .. toctree::
-   :maxdepth: 1
 
    chart
    common

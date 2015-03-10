@@ -1,8 +1,8 @@
 .. automodule:: pynance.opt
 
 .. toctree::
-   :maxdepth: 1 
 
+   opt.core
    opt.covcall
    opt.price
    opt.retrieve
