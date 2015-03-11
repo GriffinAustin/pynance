@@ -25,7 +25,7 @@ class Vert(object):
 
     Objects of this class are not intended for direct instantiation
     but are created as attributes of objects of type 
-    :class:`pynance.opt.spread.core.Spread`.
+    :class:`~pynance.opt.spread.core.Spread`.
 
     .. versionadded:: 0.3.0
 

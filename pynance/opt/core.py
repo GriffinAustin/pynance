@@ -20,7 +20,7 @@ class Options(object):
     .. versionadded:: 0.3.0
 
     Objects of this class are not intended for direct instantiation
-    but are created by calling :func:`pynance.opt.retrieve.get` 
+    but are created by calling :func:`~pynance.opt.retrieve.get` 
 
     Parameters
     ----------
@@ -31,9 +31,9 @@ class Options(object):
     ----------
     data : :class:`pandas.DataFrame`
         Options data.
-    price : :class:`pynance.opt.price.Price`
+    price : :class:`~pynance.opt.price.Price`
         Wrapper containing methods for determining price.
-    spread : :class:`pynance.opt.spread.core.Spread`
+    spread : :class:`~pynance.opt.spread.core.Spread`
         Wrapper containing methods for evaluating spreads.
 
     Methods
@@ -70,7 +70,7 @@ class Options(object):
 
         Returns
         -------
-        self : :class:`pynance.opt.core.Options`
+        self : :class:`~pynance.opt.core.Options`
             Returns a reference to the calling object to allow
             chaining.
 
