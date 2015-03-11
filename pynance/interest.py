@@ -70,6 +70,9 @@ def pvannuity(rate, npmts, amt=1.):
     Present value of `n` payments of a given size given
     an interest rate per payment interval of `rate`.
 
+    .. versionchanged:: 0.3.0
+       `amt` can be specified in function call.
+
     Parameters
     ----------
     rate : float
