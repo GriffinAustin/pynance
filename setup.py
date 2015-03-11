@@ -28,8 +28,9 @@ MINOR   = 3
 MICRO   = 0
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
+# https://pypi.python.org/pypi?%3Aaction=list_classifiers
 CLASSIFIERS = [
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Financial and Insurance Industry",
         "Intended Audience :: Developers",
         "License :: OSI Approved",
