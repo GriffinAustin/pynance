@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Common - generic functions (pynance.common) &mdash; PyNance 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.3.0 documentation" href="index.html" />
+    <link rel="next" title="Data (pynance.data)" href="data.html" />
+    <link rel="prev" title="Charts (pynance.chart)" href="chart.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="Data (pynance.data)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chart.html" title="Charts (pynance.chart)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chart.html"
+                        title="previous chapter">Charts (<code class="docutils literal"><span class="pre">pynance.chart</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data.html"
+                        title="next chapter">Data (<code class="docutils literal"><span class="pre">pynance.data</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/common.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.common"></span><div class="section" id="common-generic-functions-pynance-common">
+<h1>Common - generic functions (<a class="reference internal" href="#module-pynance.common" title="pynance.common"><code class="xref py py-mod docutils literal"><span class="pre">pynance.common</span></code></a>)<a class="headerlink" href="#common-generic-functions-pynance-common" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.common.decorate">
+<code class="descclassname">pynance.common.</code><code class="descname">decorate</code><span class="sig-paren">(</span><em>fn</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/common.html#decorate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.common.decorate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new function that replicates the behavior of the input
+but also returns an additional value. Used for creating functions
+of the proper type to pass to <cite>labeledfeatures()</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fn</strong> : function</p>
+<p><strong>*args</strong> : any</p>
+<blockquote>
+<div><p>Additional parameters that the returned function will return</p>
+</div></blockquote>
+<p><strong>**kwargs</strong> : dict</p>
+<blockquote>
+<div><p>Each element in <cite>kwargs</cite> will become an attribute of the output
+function.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>wrapped</strong> : function</p>
+<blockquote class="last">
+<div><p>New function that acts like <cite>fn</cite> except that it also returns
+an additional value.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>If <cite>fn</cite> returns multiple values, these will be returned in sequence
+as the first values returned by <cite>add_rets(fn, arg0, arg1, arg2)</cite>. See example
+above.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">forecast_interval</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">labeledfeatures</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">featurefn</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">decorate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">growth</span><span class="p">,</span> <span class="n">forecast_interval</span><span class="p">,</span> <span class="s">&#39;Adj Close&#39;</span><span class="p">),</span> <span class="n">forecast_interval</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+<span class="gp">... </span>   <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> 
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pn</span><span class="o">.</span><span class="n">decorate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)()</span>
+<span class="go">(0, 1, 3, 4, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pn</span><span class="o">.</span><span class="n">decorate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)(</span><span class="mf">1.</span><span class="p">)</span>
+<span class="go">(1., 3, 4, 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pn</span><span class="o">.</span><span class="n">decorate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)(</span><span class="s">&#39;foo&#39;</span><span class="p">)</span>
+<span class="go">(&#39;foo&#39;, 1, 2)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pn</span><span class="o">.</span><span class="n">decorate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s">&#39;foo&#39;</span><span class="p">):</span>
+<span class="go">(0, 1, &#39;foo&#39;)</span>
+<span class="go">pn.decorate(f, 0, foo=&#39;bar&#39;).foo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s">&#39;bar&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.common.expand">
+<code class="descclassname">pynance.common.</code><code class="descname">expand</code><span class="sig-paren">(</span><em>fn</em>, <em>col</em>, <em>inputtype=&lt;class 'pandas.core.frame.DataFrame'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/common.html#expand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.common.expand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap a function applying to a single column to make a function
+applying to a multi-dimensional dataframe or ndarray</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>fn</strong> : function</p>
+<blockquote>
+<div><p>Function that applies to a series or vector.</p>
+</div></blockquote>
+<p><strong>col</strong> : str or int</p>
+<blockquote>
+<div><p>Index of column to which to apply <cite>fn</cite>.</p>
+</div></blockquote>
+<p><strong>inputtype</strong> : class or type</p>
+<blockquote>
+<div><p>Type of input to be expected by the wrapped function.
+Normally pd.DataFrame or np.ndarray. Defaults to pd.DataFrame.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>wrapped</strong> : function</p>
+<blockquote class="last">
+<div><p>Function that takes an input of type <cite>inputtype</cite> and applies
+<cite>fn</cite> to the specified <cite>col</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.common.featurize">
+<code class="descclassname">pynance.common.</code><code class="descname">featurize</code><span class="sig-paren">(</span><em>equity_data</em>, <em>n_sessions</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/common.html#featurize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.common.featurize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a raw (unnormalized) feature set from the input data.
+The value at <cite>column</cite> on the given date is taken
+as a feature, and each row contains values for n_sessions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>equity_data</strong> : DataFrame</p>
+<blockquote>
+<div><p>data from which to generate features</p>
+</div></blockquote>
+<p><strong>n_sessions</strong> : int</p>
+<blockquote>
+<div><p>number of sessions to use as features</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, default: &#8216;Adj Close&#8217;</p>
+<blockquote>
+<div><p>column of <cite>equity_data</cite> from which to generate features.</p>
+</div></blockquote>
+<p><strong>columns</strong> : list, default: <code class="docutils literal"><span class="pre">map(str,</span> <span class="pre">range((-n_sessions</span> <span class="pre">+</span> <span class="pre">1),</span> <span class="pre">1))</span></code></p>
+<blockquote>
+<div><p>column names for output DataFrame. Default will look like:
+[&#8216;-5&#8217;, &#8216;-4&#8217;, &#8216;-3&#8217;, &#8216;-2&#8217;, &#8216;-1&#8217;, &#8216;0&#8217;].</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>out</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>Each row is a sequence of <cite>n_sessions</cite> session values where
+the last column matches the value on the date specified by
+the DataFrame index.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pn</span><span class="o">.</span><span class="n">featurize</span><span class="p">(</span><span class="n">equity_data</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.common.has_na">
+<code class="descclassname">pynance.common.</code><code class="descname">has_na</code><span class="sig-paren">(</span><em>eqdata</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/common.html#has_na"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.common.has_na" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return false if <cite>eqdata</cite> contains no missing values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame or ndarray</p>
+<blockquote>
+<div><p>Data to check for missing values (NaN, None)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>answer</strong> : bool</p>
+<blockquote class="last">
+<div><p>False iff <cite>eqdata</cite> contains no missing values.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.html" title="Data (pynance.data)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chart.html" title="Charts (pynance.chart)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

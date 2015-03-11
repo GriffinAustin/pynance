@@ -49,7 +49,7 @@ def get(equity, showinfo=True):
     _optdata = None
     try:
         _optdata = _optmeta.get_all_data()
-    except (AttributeError, ValueError, pandas.io.data.RemoteDataError):
+    except (AttributeError, ValueError, pd.io.data.RemoteDataError):
         raise pd.io.data.RemoteDataError(
                 "No options data available for {!r}".format(equity))
     return Options(_optdata)
