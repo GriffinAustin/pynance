@@ -3,5 +3,5 @@
 .. toctree::
 
    opt.spread.core
-   opt.spread.multi
+   opt.spread.diag
    opt.spread.vert

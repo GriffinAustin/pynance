@@ -15,8 +15,8 @@ import pandas as pd
 
 from .._common import _relevant_rows
 from .._common import _getprice
-from .multi import Multi
-from .vert import Vertical
+from .diag import Diag
+from .vert import Vert
 
 class Spread(object):
     """
@@ -36,8 +36,8 @@ class Spread(object):
     Attributes
     ----------
     data : :class:`pandas.DataFrame`
-    multi : :class:`~pynance.opt.spread.multi.Multi`
-        Wrapper for retrieving metrics on composite spreads.
+    diag : :class:`~pynance.opt.spread.diag.Diag`
+        Wrapper for retrieving metrics on diagonal spreads.
     vert : :class:`~pynance.opt.spread.vert.Vertical`
         Wrapper for retrieving metrics on vertical spreads.
 
@@ -47,8 +47,8 @@ class Spread(object):
     """
     def __init__(self, df):
         self.data = df
-        self.vert = Vertical(df)
-        self.multi = Multi(df)
+        self.vert = Vert(df)
+        self.diag = Diag(df)
 
     def cal(self, opttype, strike, exp1, exp2):
         """

@@ -45,7 +45,7 @@ class TestData(unittest.TestCase):
         self.opts = pn.opt.core.Options(_optdata)
 
     def test_dblcal(self):
-        _df = self.opts.spread.multi.dblcal(8., 12., '2015-05-01', '2015-07-01')
+        _df = self.opts.spread.diag.dblcal(8., 12., '2015-05-01', '2015-07-01')
         # calls
         self.assertAlmostEqual(_df.loc['Near Call', 'Value'], .7)
         self.assertAlmostEqual(_df.loc['Far Call', 'Value'], .9)
@@ -59,13 +59,13 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_df.loc['Underlying_Price', 'Value'], 10.1)
         self.assertEqual(_df.loc['Quote_Time', 'Value'], dt.datetime(2015, 3, 1))
         # exceptions
-        self.assertRaises(KeyError, self.opts.spread.multi.dblcal, 8., 11.9,
+        self.assertRaises(KeyError, self.opts.spread.diag.dblcal, 8., 11.9,
                 '2015-05-01', '2015-07-01')
-        self.assertRaises(KeyError, self.opts.spread.multi.dblcal, 10., 12.,
+        self.assertRaises(KeyError, self.opts.spread.diag.dblcal, 10., 12.,
                 '2015-05-01', '2015-06-15')
 
     def test_diagbtrfly(self):
-        _df = self.opts.spread.multi.diagbtrfly(8., 10., 12., '2015-06-01', '2015-07-01')
+        _df = self.opts.spread.diag.diagbtrfly(8., 10., 12., '2015-06-01', '2015-07-01')
         # near
         self.assertAlmostEqual(_df.loc['Straddle Call', 'Value'], 1.1)
         self.assertAlmostEqual(_df.loc['Straddle Put', 'Value'], 1.)
@@ -79,9 +79,9 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_df.loc['Underlying_Price', 'Value'], 10.1)
         self.assertEqual(_df.loc['Quote_Time', 'Value'], dt.datetime(2015, 3, 1))
         #exceptions
-        self.assertRaises(KeyError, self.opts.spread.multi.diagbtrfly, 8., 10., 11.9, 
+        self.assertRaises(KeyError, self.opts.spread.diag.diagbtrfly, 8., 10., 11.9, 
                 '2015-06-01', '2015-07-01')
-        self.assertRaises(KeyError, self.opts.spread.multi.diagbtrfly, 8., 10., 12., 
+        self.assertRaises(KeyError, self.opts.spread.diag.diagbtrfly, 8., 10., 12., 
                 '2015-06-11', '2015-07-01')
 
 if __name__ == '__main__':

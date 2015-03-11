@@ -1,2 +1,5 @@
 #!/bin/bash
+echo "Running tests using Python 2:"
 nosetests --exe -vv
+echo "Running tests using Python 3.4:"
+nosetests-3.4 --exe -vv
