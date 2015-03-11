@@ -65,14 +65,25 @@ def compret(annual_interest, years):
     """
     return (1.0 + annual_interest)**years - 1.0
 
-def pvannuity(ret, n):
+def pvannuity(rate, npmts, amt=1.):
     """
-    Present value of `n` payments of size 1.0 given
-    an interest rate per payment interval of `ret`
-    """
-    return (1. - (1. + ret)**-n) / ret
+    Present value of `n` payments of a given size given
+    an interest rate per payment interval of `rate`.
 
-def loanpayment(amount, rate, n_payments):
+    Parameters
+    ----------
+    rate : float
+        Interest rate per payment period. Note that if
+        payments are monthly and known interest rate is annual,
+        `rate` must be calculated as effective *monthly* interest.
+    npmts : int
+        Number of payments.
+    amt : float, optional
+        Amount of each payment. Defaults to 1.
+    """
+    return amt * (1. - (1. + rate)**-npmts) / rate
+
+def loanpayment(amount, rate, npmts):
     """
     Amount of a constant loan payment.
 
@@ -83,7 +94,7 @@ def loanpayment(amount, rate, n_payments):
     rate : float
         interest rate for the given payment, i.e., monthly
         interest if the loan is to be paid off monthly.
-    n_payments : int
+    npmts : int
         number of payments to be made.
 
     Returns
@@ -91,4 +102,4 @@ def loanpayment(amount, rate, n_payments):
     out : float
         amount to be paid each period.
     """
-    return float(amount) / pvannuity(rate, n_payments)
+    return float(amount) / pvannuity(rate, npmts)

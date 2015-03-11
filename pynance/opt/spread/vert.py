@@ -42,6 +42,8 @@ class Vert(object):
     -------
     .. automethod:: call
 
+    .. automethod:: put
+
     .. automethod:: straddle
     """
     def __init__(self, df):
@@ -49,10 +51,10 @@ class Vert(object):
 
     def call(self, lowstrike, highstrike, expiry):
         """
-        Metrics for evaluating a vertical call spread.
+        Metrics for evaluating a bull call spread.
         
-        The metrics returned apply to both bull and bear
-        spreads. The difference is only whether one buys
+        The metrics returned can easily be translated into bear
+        spread metrics. The difference is only whether one buys
         the call at the lower strike and sells at the higher
         (bull call spread) or sells at the lower while buying
         at the higher (bear call spread). The metrics
@@ -74,11 +76,14 @@ class Vert(object):
         Returns
         ------------
         metrics : DataFrame
-            Metrics for evaluating straddle.
 
         Notes
         -----
         Cf. Lawrence McMillan, Options as a Strategic Investment, 5th ed., pp. 157ff.
+
+        See Also
+        --------
+        :meth:`put`
         """
         _rows = {}
         _prices = {}
@@ -93,10 +98,67 @@ class Vert(object):
         _breakeven = lowstrike + _debit
         if _breakeven > highstrike:
             _breakeven = np.nan
+        _maxprof = highstrike - lowstrike -_debit
         _index = ['Low Strike Call', 'High Strike Call', 'Debit',  'Break_Even',
-                'Underlying_Price', 'Quote_Time']
+                'Max Profit', 'Underlying_Price', 'Quote_Time']
         _vals = np.array([_prices[lowstrike], _prices[highstrike], _debit,
-                _breakeven, _eq, _qt])
+                _breakeven, _maxprof, _eq, _qt])
+        return pd.DataFrame(_vals, index=_index, columns=['Value'])
+
+    def put(self, lowstrike, highstrike, expiry):
+        """
+        Metrics for evaluating a bear put spread.
+        
+        The metrics returned can easily be translated into bull
+        spread metrics. The difference is only whether one buys
+        the put at the lower strike and sells at the higher
+        (bear put spread) or sells at the lower while buying
+        at the higher (bull put spread). The metrics
+        dataframe shows values for a bear put spread, where
+        the transaction is a debit. A bull put spread
+        is created by *selling* a bear put spread, so the transaction
+        amount is the same, but it
+        is a credit rather than a debit.
+
+        Parameters
+        ------------
+        lowstrike : numeric
+            Lower strike price.
+        highstrike : numeric
+            Higher strike sprice.
+        expiry : date or date str (e.g. '2015-01-01')
+            Expiration date.
+
+        Returns
+        ------------
+        metrics : DataFrame
+
+        Notes
+        -----
+        Cf. Lawrence McMillan, Options as a Strategic Investment, 5th ed., pp. 316ff.
+
+        See Also
+        --------
+        :meth:`call`
+        """
+        _rows = {}
+        _prices = {}
+        _opttype = 'put'
+        for _strike in (lowstrike, highstrike):
+            _rows[_strike] = _relevant_rows(self.data, (_strike, expiry, _opttype,),
+                    "No key for {} strike {} {}".format(expiry, _strike, _opttype))
+            _prices[_strike] = _getprice(_rows[_strike])
+        _eq = _rows[lowstrike].loc[:, 'Underlying_Price'].values[0]
+        _qt = _rows[lowstrike].loc[:, 'Quote_Time'].values[0]
+        _debit = _prices[highstrike] - _prices[lowstrike]
+        _breakeven = highstrike - _debit
+        _maxprof = highstrike - lowstrike -_debit
+        if _breakeven < lowstrike:
+            _breakeven = np.nan
+        _index = ['Low Strike Put', 'High Strike Put', 'Debit',  'Break_Even',
+                'Max Profit', 'Underlying_Price', 'Quote_Time']
+        _vals = np.array([_prices[lowstrike], _prices[highstrike], _debit,
+                _breakeven, _maxprof, _eq, _qt])
         return pd.DataFrame(_vals, index=_index, columns=['Value'])
 
     def straddle(self, strike, expiry):

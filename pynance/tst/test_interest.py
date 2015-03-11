@@ -32,6 +32,8 @@ class TestData(unittest.TestCase):
     def test_pvannuity(self):
         # 15% return for 5 years
         self.assertAlmostEqual(pn.interest.pvannuity(0.15, 5), 3.352, places=3)
+        # 10 payments of 10k at 18%
+        self.assertAlmostEqual(pn.interest.pvannuity(.18, 10, 10000.), 44941., places=0)
 
     def test_loanpayment(self):
         # 15% interest with 5 yrly payments for a loan of 1000

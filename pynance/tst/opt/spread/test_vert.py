@@ -50,12 +50,26 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_df.loc['Low Strike Call', 'Value'], 2.8)
         self.assertAlmostEqual(_df.loc['High Strike Call', 'Value'], .7)
         self.assertAlmostEqual(_df.loc['Debit', 'Value'], 2.1)
+        self.assertAlmostEqual(_df.loc['Max Profit', 'Value'], 1.9)
         self.assertAlmostEqual(_df.loc['Break_Even', 'Value'], 10.1)
         self.assertAlmostEqual(_df.loc['Underlying_Price', 'Value'], 10.1)
         self.assertEqual(_df.loc['Quote_Time', 'Value'], dt.datetime(2015, 3, 1))
         self.assertRaises(KeyError, self.options.spread.vert.call, 7.9, 12., '2015-05-01')
         self.assertRaises(KeyError, self.options.spread.vert.call, 8., 12.3, '2015-05-01')
         self.assertRaises(KeyError, self.options.spread.vert.call, 8., 12., '2015-05-27')
+
+    def test_put(self):
+        _df = self.options.spread.vert.put(8., 12., '2015-07-01')
+        self.assertAlmostEqual(_df.loc['Low Strike Put', 'Value'], .8)
+        self.assertAlmostEqual(_df.loc['High Strike Put', 'Value'], 2.8)
+        self.assertAlmostEqual(_df.loc['Debit', 'Value'], 2.)
+        self.assertAlmostEqual(_df.loc['Max Profit', 'Value'], 2.)
+        self.assertAlmostEqual(_df.loc['Break_Even', 'Value'], 10.)
+        self.assertAlmostEqual(_df.loc['Underlying_Price', 'Value'], 10.1)
+        self.assertEqual(_df.loc['Quote_Time', 'Value'], dt.datetime(2015, 3, 1))
+        self.assertRaises(KeyError, self.options.spread.vert.put, 7.9, 12., '2015-07-01')
+        self.assertRaises(KeyError, self.options.spread.vert.put, 8., 12.3, '2015-07-01')
+        self.assertRaises(KeyError, self.options.spread.vert.put, 8., 12., '2015-07-04')
 
     def test_straddle(self):
         _df = self.options.spread.vert.straddle(10., '2015-06-01')
