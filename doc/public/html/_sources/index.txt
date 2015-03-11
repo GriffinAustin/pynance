@@ -80,5 +80,5 @@ Index
 * :ref:`search`
 
 Earlier Versions
---------
+----------------
 * `0.2.0 <http://pynance.net/0.2.0/index.html>`_

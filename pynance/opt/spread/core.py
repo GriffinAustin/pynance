@@ -38,7 +38,7 @@ class Spread(object):
     data : :class:`pandas.DataFrame`
     diag : :class:`~pynance.opt.spread.diag.Diag`
         Wrapper for retrieving metrics on diagonal spreads.
-    vert : :class:`~pynance.opt.spread.vert.Vertical`
+    vert : :class:`~pynance.opt.spread.vert.Vert`
         Wrapper for retrieving metrics on vertical spreads.
 
     Methods
