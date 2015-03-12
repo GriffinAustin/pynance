@@ -187,8 +187,9 @@ pubhtml:
 	@echo "Html documentation copied from $(BUILDDIR)/html to $(PUBDIR)/."
 
 archhtml:
-	#pushd $(PUBDIR)/html && mkdir $(ARCHDIR) && popd
+	pushd $(PUBDIR)/html && mkdir $(ARCHDIR) && popd
 	rsync -rv --remove-source-files --exclude="/[0-9].[0-9].[0-9]/" --exclude=".buildinfo" \
 		--exclude="/README*" --exclude="objects.inv" $(PUBDIR)/html/ $(PUBDIR)/html/$(ARCHDIR)
 	@echo
-	@echo "Directory $(ARCHDIR) created"
+	@echo "Last documentation archived as version $(ARCHDIR)"
+	@echo "Create documentation for active version using 'make pubhtml'"
