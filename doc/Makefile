@@ -49,6 +49,7 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  pubhtml    to copy built html files to public directory"
+	@echo "  archhtml   to copy current version docs to archive directory passed as ARCHDIR variable"
 
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -185,3 +186,9 @@ pubhtml:
 	@echo
 	@echo "Html documentation copied from $(BUILDDIR)/html to $(PUBDIR)/."
 
+archhtml:
+	#pushd $(PUBDIR)/html && mkdir $(ARCHDIR) && popd
+	rsync -rv --remove-source-files --exclude="/[0-9].[0-9].[0-9]/" --exclude=".buildinfo" \
+		--exclude="/README*" --exclude="objects.inv" $(PUBDIR)/html/ $(PUBDIR)/html/$(ARCHDIR)
+	@echo
+	@echo "Directory $(ARCHDIR) created"
