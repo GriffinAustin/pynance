@@ -55,7 +55,7 @@ class Diag(object):
         Parameters
         ------------
         optdata : DataFrame
-            Data returned from :func:`pynance.opt.retrieve.get`
+            Data returned from :func:`~pynance.opt.retrieve.get`
         opttype : str ('call' or 'put')
             Type of option on which to collect data.
         lowstrike : numeric
