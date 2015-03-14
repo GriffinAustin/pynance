@@ -85,6 +85,7 @@ class Vert(object):
         --------
         :meth:`put`
         """
+        assert lowstrike < highstrike
         _rows = {}
         _prices = {}
         _opttype = 'call'
@@ -141,6 +142,7 @@ class Vert(object):
         --------
         :meth:`call`
         """
+        assert lowstrike < highstrike
         _rows = {}
         _prices = {}
         _opttype = 'put'

@@ -113,3 +113,32 @@ class Options(object):
         qt : :class:`datetime.datetime`
         """
         return self.data.iloc[0].loc['Quote_Time'].to_datetime()
+
+    def tolist(self):
+        """
+        Return the array as a list of rows.
+
+        Each row is a `dict` of values. Allows direct entry
+        into `mongodb`.
+
+        Returns
+        -------
+        quotes : list
+            A list in which each entry is a dictionary representing
+            a single options quote.
+        """
+        return [_todict(key, self.data.loc[key, :]) for key in self.data.index]
+
+def _todict(rowindex, row):
+    _indexkeys = ('Strike', 'Expiry', 'Opt_Type', 'Opt_Symbol',)
+    _datakeys = ('Last', 'Bid', 'Ask', 'Vol', 'Open_Int', 'Underlying', 'Quote_Time',)
+    _datetimekeys = ('Expiry', 'Quote_Time',)
+    _ret = {}
+    for _i in range(len(_indexkeys)):
+        _ret[_indexkeys[_i]] = rowindex[_i]
+    for _key in _datakeys:
+        _ret[_key] = row[_key]
+    # convert dates to standard datetime.datetime
+    for _key in _datetimekeys:
+        _ret[_key] = _ret[_key].to_datetime()
+    return _ret

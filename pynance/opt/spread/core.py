@@ -70,6 +70,7 @@ class Spread(object):
         metrics : DataFrame
             Metrics for evaluating spread.
         """
+        assert pd.Timestamp(exp1) < pd.Timestamp(exp2)
         _row1 = _relevant_rows(self.data, (strike, exp1, opttype,),
                 "No key for {} strike {} {}".format(exp1, strike, opttype))
         _row2 = _relevant_rows(self.data, (strike, exp2, opttype,),

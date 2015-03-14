@@ -72,6 +72,8 @@ class Diag(object):
         metrics : DataFrame
             Metrics for evaluating spread.
         """
+        assert lowstrike < highstrike
+        assert pd.Timestamp(expiry1) < pd.Timestamp(expiry2)
         _rows1 = {}
         _rows2 = {}
         _prices1 = {}
@@ -133,6 +135,9 @@ class Diag(object):
         metrics : DataFrame
             Metrics for evaluating spread.
         """
+        assert lowstrike < midstrike
+        assert midstrike < highstrike
+        assert pd.Timestamp(expiry1) < pd.Timestamp(expiry2)
         _rows1 = {}
         _rows2 = {}
         _prices1 = {}

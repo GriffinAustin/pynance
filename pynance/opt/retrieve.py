@@ -29,6 +29,13 @@ def get(equity, showinfo=True):
         All options data for given equity currently available
         from Yahoo! Finance.
         
+    Raises
+    ------
+    pandas.io.data.RemoteDataError
+        If remote data is not available, as is often the case at night
+        when Yahoo! is resetting its servers in preparation for the
+        next session.
+        
     Examples
     -------------
     Basic usage::
