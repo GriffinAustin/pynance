@@ -59,11 +59,16 @@ KEYWORDS = [
 DEPENDENCIES = [
         "numpy",
         "pandas",
-        "matplotlib",
-        "lxml",
-        "html5lib",
-        "beautifulsoup4",
         ]
+
+SOFT_DEPENDENCIES = {
+        "charts": [
+            "matplotlib",],
+        "options": [
+            "lxml", 
+            "html5lib",
+            "beautifulsoup4",],
+        }
 
 setup(
         name='pynance',
@@ -76,5 +81,6 @@ setup(
         download_url=('https://github.com/aisthesis/pynance/tarball/' + VERSION),
         keywords=' '.join(KEYWORDS),
         classifiers=CLASSIFIERS,
-        install_requires=DEPENDENCIES
+        install_requires=DEPENDENCIES,
+        extras_require=SOFT_DEPENDENCIES
         )
