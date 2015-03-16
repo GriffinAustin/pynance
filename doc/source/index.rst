@@ -79,6 +79,6 @@ Index
 * :ref:`modindex`
 * :ref:`search`
 
-Earlier Versions
---------
+Prior Versions
+--------------
 * `0.2.0 <http://pynance.net/0.2.0/index.html>`_

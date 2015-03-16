@@ -35,7 +35,7 @@ import matplotlib.ticker as mticker
 def candlestick(df, **kwargs):
     """
     Show and optionally save candlestick chart of a DataFrame as retrieved using
-    :func:`pynance.data.get`.
+    :func:`~pynance.data.retrieve.get`.
 
     Parameters
     -----------
@@ -72,7 +72,7 @@ def candlestick(df, **kwargs):
 
 def adj_close(df, **kwargs):
     """
-    Show and optionally save adj_close chart of a DataFrame as retrieved using :func:`pynance.data.get`.
+    Show and optionally save adj_close chart of a DataFrame as retrieved using :func:`~pynance.data.retrieve.get`.
 
     Examples
     --------
@@ -81,13 +81,13 @@ def adj_close(df, **kwargs):
 
     See also
     --------
-    :func:`pynance.chart.candlestick`
+    :func:`candlestick`
     """
     _make_chart(df, _adj_close_ax, **kwargs)
 
 def close(df, **kwargs):
     """
-    Show and optionally save close chart of a DataFrame as retrieved using :func:`pynance.data.get`.
+    Show and optionally save close chart of a DataFrame as retrieved using :func:`~pynance.data.retrieve.get`.
 
     Examples
     --------
@@ -96,7 +96,7 @@ def close(df, **kwargs):
 
     See also
     --------
-    :func:`pynance.chart.candlestick`
+    :func:`candlestick`
     """
     _make_chart(df, _close_ax, **kwargs)
 
