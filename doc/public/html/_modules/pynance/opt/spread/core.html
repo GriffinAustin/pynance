@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pynance.opt.spread.core &mdash; PyNance 0.3.0 documentation</title>
+    <title>pynance.opt.spread.core &mdash; PyNance 0.3.1 documentation</title>
     
     <link rel="stylesheet" href="../../../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-    <link rel="top" title="PyNance 0.3.0 documentation" href="../../../../index.html" />
+    <link rel="top" title="PyNance 0.3.1 documentation" href="../../../../index.html" />
     <link rel="up" title="Module code" href="../../../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>
@@ -136,6 +136,7 @@
 <span class="sd">        metrics : DataFrame</span>
 <span class="sd">            Metrics for evaluating spread.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">exp1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="n">exp2</span><span class="p">)</span>
         <span class="n">_row1</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">strike</span><span class="p">,</span> <span class="n">exp1</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,),</span>
                 <span class="s">&quot;No key for {} strike {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exp1</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">opttype</span><span class="p">))</span>
         <span class="n">_row2</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">strike</span><span class="p">,</span> <span class="n">exp2</span><span class="p">,</span> <span class="n">opttype</span><span class="p">,),</span>
@@ -163,7 +164,7 @@
         <li class="right" >
           <a href="../../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../../index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

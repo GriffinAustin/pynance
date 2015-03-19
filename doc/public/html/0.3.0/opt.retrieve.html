@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Options - remote retrieval (pynance.opt.retrieve) &mdash; PyNance 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.3.0 documentation" href="index.html" />
+    <link rel="up" title="Options (pynance.opt)" href="opt.html" />
+    <link rel="next" title="Options spreads (pynance.opt.spread)" href="opt.spread.html" />
+    <link rel="prev" title="Options - price (pynance.opt.price)" href="opt.price.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.html" title="Options spreads (pynance.opt.spread)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="opt.price.html" title="Options - price (pynance.opt.price)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="opt.html" accesskey="U">Options (<code class="docutils literal"><span class="pre">pynance.opt</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="opt.price.html"
+                        title="previous chapter">Options - price (<code class="docutils literal"><span class="pre">pynance.opt.price</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="opt.spread.html"
+                        title="next chapter">Options spreads (<code class="docutils literal"><span class="pre">pynance.opt.spread</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/opt.retrieve.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.opt.retrieve"></span><div class="section" id="options-remote-retrieval-pynance-opt-retrieve">
+<h1>Options - remote retrieval (<a class="reference internal" href="#module-pynance.opt.retrieve" title="pynance.opt.retrieve"><code class="xref py py-mod docutils literal"><span class="pre">pynance.opt.retrieve</span></code></a>)<a class="headerlink" href="#options-remote-retrieval-pynance-opt-retrieve" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.opt.retrieve.get">
+<code class="descclassname">pynance.opt.retrieve.</code><code class="descname">get</code><span class="sig-paren">(</span><em>equity</em>, <em>showinfo=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/retrieve.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.retrieve.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve all current options chains for given equity.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>equity</strong> : str</p>
+<blockquote>
+<div><p>Equity for which to retrieve options data.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>optdata</strong> : <a class="reference internal" href="opt.core.html#pynance.opt.core.Options" title="pynance.opt.core.Options"><code class="xref py py-class docutils literal"><span class="pre">Options</span></code></a></p>
+<blockquote class="last">
+<div><p>All options data for given equity currently available
+from Yahoo! Finance.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Basic usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fopt</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To show useful information (expiration dates, stock price, quote time)
+when retrieving options data, you can chain the call to
+<a class="reference internal" href="#pynance.opt.retrieve.get" title="pynance.opt.retrieve.get"><code class="xref py py-func docutils literal"><span class="pre">get()</span></code></a> with <a class="reference internal" href="opt.core.html#pynance.opt.core.Options.info" title="pynance.opt.core.Options.info"><code class="xref py py-meth docutils literal"><span class="pre">info()</span></code></a>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fopt</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;f&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="go">Expirations:</span>
+<span class="gp">...</span>
+<span class="go">Stock: 15.93</span>
+<span class="go">Quote time: 2015-03-07 16:00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.html" title="Options spreads (pynance.opt.spread)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="opt.price.html" title="Options - price (pynance.opt.price)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="opt.html" >Options (<code class="docutils literal"><span class="pre">pynance.opt</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

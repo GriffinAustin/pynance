@@ -5,7 +5,7 @@ http://peterdowns.com/posts/first-time-with-pypi.html
 To upload a new version to PyPI:
 1. Udate `VERSION` below. 
 2. Update version and release in `pynance/doc/source/conf.py`
-3. Build documentation.
+3. Build documentation. Cf. instructions in `pynance/doc/Makefile`
 4. Commit all changes. 
 5. Create a tag for new version in git:
     % git tag 0.0.1 -m "Fixed some problems"
@@ -25,7 +25,7 @@ from setuptools import setup, find_packages
 
 MAJOR   = 0
 MINOR   = 3
-MICRO   = 0
+MICRO   = 1
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers

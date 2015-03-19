@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.common &mdash; PyNance 0.3.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.3.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.3.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.common</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2014, 2015 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Common - generic functions (:mod:`pynance.common`)</span>
+<span class="sd">==================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.common</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="featurize"><a class="viewcode-back" href="../../common.html#pynance.common.featurize">[docs]</a><span class="k">def</span> <span class="nf">featurize</span><span class="p">(</span><span class="n">equity_data</span><span class="p">,</span> <span class="n">n_sessions</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a raw (unnormalized) feature set from the input data.</span>
+<span class="sd">    The value at `column` on the given date is taken</span>
+<span class="sd">    as a feature, and each row contains values for n_sessions</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    equity_data : DataFrame</span>
+<span class="sd">        data from which to generate features</span>
+
+<span class="sd">    n_sessions : int</span>
+<span class="sd">        number of sessions to use as features</span>
+
+<span class="sd">    selection : str, default: &#39;Adj Close&#39;</span>
+<span class="sd">        column of `equity_data` from which to generate features.</span>
+
+<span class="sd">    columns : list, default: ``map(str, range((-n_sessions + 1), 1))``</span>
+<span class="sd">        column names for output DataFrame. Default will look like:</span>
+<span class="sd">        [&#39;-5&#39;, &#39;-4&#39;, &#39;-3&#39;, &#39;-2&#39;, &#39;-1&#39;, &#39;0&#39;].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    out : DataFrame</span>
+<span class="sd">        Each row is a sequence of `n_sessions` session values where</span>
+<span class="sd">        the last column matches the value on the date specified by</span>
+<span class="sd">        the DataFrame index.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; pn.featurize(equity_data, n_sessions, **kwargs)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c">#Benchmarking</span>
+    <span class="c">#&gt;&gt;&gt; s = &#39;from __main__ import data\nimport datetime as dt\n&#39;</span>
+    <span class="c">#&gt;&gt;&gt; timeit.timeit(&#39;data.featurize(data.get(&quot;ge&quot;, dt.date(1960, 1, 1), </span>
+    <span class="c">#        dt.date(2014, 12, 31)), 256)&#39;, setup=s, number=1)</span>
+    <span class="c">#1.6771750450134277</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;columns&#39;</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">n_sessions</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;selection&#39;</span><span class="p">,</span> <span class="s">&#39;Adj Close&#39;</span><span class="p">)</span>
+    <span class="c"># empty DataFrame with desired index and column labels</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">equity_data</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">n_sessions</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):],</span>
+            <span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s">&#39;float64&#39;</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">equity_data</span><span class="p">[</span><span class="n">selection</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sessions</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">features</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">:(</span><span class="o">-</span><span class="n">n_sessions</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="n">features</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">n_sessions</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">values</span><span class="p">[(</span><span class="n">n_sessions</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):]</span>
+    <span class="k">return</span> <span class="n">features</span>
+</div>
+<div class="viewcode-block" id="decorate"><a class="viewcode-back" href="../../common.html#pynance.common.decorate">[docs]</a><span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a new function that replicates the behavior of the input</span>
+<span class="sd">    but also returns an additional value. Used for creating functions</span>
+<span class="sd">    of the proper type to pass to `labeledfeatures()`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fn : function</span>
+
+<span class="sd">    *args : any</span>
+<span class="sd">        Additional parameters that the returned function will return</span>
+
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Each element in `kwargs` will become an attribute of the output</span>
+<span class="sd">        function.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wrapped : function</span>
+<span class="sd">        New function that acts like `fn` except that it also returns</span>
+<span class="sd">        an additional value.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ----------</span>
+<span class="sd">    &gt;&gt;&gt; from functools import partial</span>
+<span class="sd">    &gt;&gt;&gt; forecast_interval = 32</span>
+<span class="sd">    &gt;&gt;&gt; features, labels = pn.data.labeledfeatures(eqdata, 256, featurefn,</span>
+<span class="sd">    ...        decorate(partial(pn.data.lab.growth, forecast_interval, &#39;Adj Close&#39;), forecast_interval))</span>
+<span class="sd">    &gt;&gt;&gt; def f():</span>
+<span class="sd">    ...    return 0, 1 </span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; pn.decorate(f, 3, 4, 5)()</span>
+<span class="sd">    (0, 1, 3, 4, 5)</span>
+<span class="sd">    &gt;&gt;&gt; pn.decorate(lambda x: x * .5, 3, 4, 5)(1.)</span>
+<span class="sd">    (1., 3, 4, 5)</span>
+<span class="sd">    &gt;&gt;&gt; pn.decorate(lambda x: x, 1 2)(&#39;foo&#39;)</span>
+<span class="sd">    (&#39;foo&#39;, 1, 2)</span>
+<span class="sd">    &gt;&gt;&gt; pn.decorate(f, &#39;foo&#39;):</span>
+<span class="sd">    (0, 1, &#39;foo&#39;)</span>
+<span class="sd">    pn.decorate(f, 0, foo=&#39;bar&#39;).foo</span>
+<span class="sd">    &gt;&gt;&gt; &#39;bar&#39;</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    If `fn` returns multiple values, these will be returned in sequence</span>
+<span class="sd">    as the first values returned by `add_rets(fn, arg0, arg1, arg2)`. See example</span>
+<span class="sd">    above.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">_ret</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_ret</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_ret</span> <span class="o">+</span> <span class="n">args</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_ret</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">_ret</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">_wrapper</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">_wrapper</span>
+</div>
+<div class="viewcode-block" id="expand"><a class="viewcode-back" href="../../common.html#pynance.common.expand">[docs]</a><span class="k">def</span> <span class="nf">expand</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">inputtype</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrap a function applying to a single column to make a function</span>
+<span class="sd">    applying to a multi-dimensional dataframe or ndarray</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fn : function</span>
+<span class="sd">        Function that applies to a series or vector.</span>
+
+<span class="sd">    col : str or int</span>
+<span class="sd">        Index of column to which to apply `fn`.</span>
+
+<span class="sd">    inputtype : class or type</span>
+<span class="sd">        Type of input to be expected by the wrapped function.</span>
+<span class="sd">        Normally pd.DataFrame or np.ndarray. Defaults to pd.DataFrame.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wrapped : function</span>
+<span class="sd">        Function that takes an input of type `inputtype` and applies</span>
+<span class="sd">        `fn` to the specified `col`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">inputtype</span> <span class="o">==</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">_wrapper</span>
+        <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">col</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_wrapper</span>
+    <span class="k">elif</span> <span class="n">inputtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">_wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="n">col</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_wrapper</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;invalid input type&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="has_na"><a class="viewcode-back" href="../../common.html#pynance.common.has_na">[docs]</a><span class="k">def</span> <span class="nf">has_na</span><span class="p">(</span><span class="n">eqdata</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return false if `eqdata` contains no missing values.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame or ndarray</span>
+<span class="sd">        Data to check for missing values (NaN, None)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    answer : bool</span>
+<span class="sd">        False iff `eqdata` contains no missing values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">_values</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_values</span> <span class="o">=</span> <span class="n">eqdata</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">_values</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">_values</span><span class="p">)])</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

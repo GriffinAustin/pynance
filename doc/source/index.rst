@@ -82,3 +82,4 @@ Index
 Prior Versions
 --------------
 * `0.2.0 <http://pynance.net/0.2.0/index.html>`_
+* `0.3.0 <http://pynance.net/0.3.0/index.html>`_

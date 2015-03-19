@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pynance.opt.core &mdash; PyNance 0.3.0 documentation</title>
+    <title>pynance.opt.core &mdash; PyNance 0.3.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="PyNance 0.3.0 documentation" href="../../../index.html" />
+    <link rel="top" title="PyNance 0.3.1 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>
@@ -178,7 +178,36 @@
 <span class="sd">        -------</span>
 <span class="sd">        qt : :class:`datetime.datetime`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
+</div>
+    <span class="k">def</span> <span class="nf">tolist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the array as a list of rows.</span>
+
+<span class="sd">        Each row is a `dict` of values. Allows direct entry</span>
+<span class="sd">        into `mongodb`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        quotes : list</span>
+<span class="sd">            A list in which each entry is a dictionary representing</span>
+<span class="sd">            a single options quote.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_todict</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="p">:])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+</div>
+<span class="k">def</span> <span class="nf">_todict</span><span class="p">(</span><span class="n">rowindex</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+    <span class="n">_indexkeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Strike&#39;</span><span class="p">,</span> <span class="s">&#39;Expiry&#39;</span><span class="p">,</span> <span class="s">&#39;Opt_Type&#39;</span><span class="p">,</span> <span class="s">&#39;Opt_Symbol&#39;</span><span class="p">,)</span>
+    <span class="n">_datakeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Last&#39;</span><span class="p">,</span> <span class="s">&#39;Bid&#39;</span><span class="p">,</span> <span class="s">&#39;Ask&#39;</span><span class="p">,</span> <span class="s">&#39;Vol&#39;</span><span class="p">,</span> <span class="s">&#39;Open_Int&#39;</span><span class="p">,</span> <span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">,)</span>
+    <span class="n">_datetimekeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Expiry&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">,)</span>
+    <span class="n">_ret</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">_indexkeys</span><span class="p">)):</span>
+        <span class="n">_ret</span><span class="p">[</span><span class="n">_indexkeys</span><span class="p">[</span><span class="n">_i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rowindex</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_key</span> <span class="ow">in</span> <span class="n">_datakeys</span><span class="p">:</span>
+        <span class="n">_ret</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span>
+    <span class="c"># convert dates to standard datetime.datetime</span>
+    <span class="k">for</span> <span class="n">_key</span> <span class="ow">in</span> <span class="n">_datetimekeys</span><span class="p">:</span>
+        <span class="n">_ret</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ret</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_ret</span>
 </pre></div>
 
           </div>
@@ -195,7 +224,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>

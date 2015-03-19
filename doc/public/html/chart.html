@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Charts (pynance.chart) &mdash; PyNance 0.3.0 documentation</title>
+    <title>Charts (pynance.chart) &mdash; PyNance 0.3.1 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.3.0',
+        VERSION:     '0.3.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyNance 0.3.0 documentation" href="index.html" />
+    <link rel="top" title="PyNance 0.3.1 documentation" href="index.html" />
     <link rel="next" title="Common - generic functions (pynance.common)" href="common.html" />
     <link rel="prev" title="PyNance" href="index.html" /> 
   </head>
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="index.html" title="PyNance"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -95,10 +95,10 @@ for greater ease of use.</p>
 <dl class="function">
 <dt id="pynance.chart.adj_close">
 <code class="descclassname">pynance.chart.</code><code class="descname">adj_close</code><span class="sig-paren">(</span><em>df</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/chart.html#adj_close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.chart.adj_close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show and optionally save adj_close chart of a DataFrame as retrieved using <code class="xref py py-func docutils literal"><span class="pre">pynance.data.get()</span></code>.</p>
+<dd><p>Show and optionally save adj_close chart of a DataFrame as retrieved using <a class="reference internal" href="data.retrieve.html#pynance.data.retrieve.get" title="pynance.data.retrieve.get"><code class="xref py py-func docutils literal"><span class="pre">get()</span></code></a>.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#pynance.chart.candlestick" title="pynance.chart.candlestick"><code class="xref py py-func docutils literal"><span class="pre">pynance.chart.candlestick()</span></code></a></p>
+<p class="last"><a class="reference internal" href="#pynance.chart.candlestick" title="pynance.chart.candlestick"><code class="xref py py-func docutils literal"><span class="pre">candlestick()</span></code></a></p>
 </div>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pn</span><span class="o">.</span><span class="n">chart</span><span class="o">.</span><span class="n">adj_close</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&#39;GE&#39;</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s">&#39;foo.png&#39;</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">evdf</span><span class="p">,</span> <span class="n">eventcolors</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">],</span> 
@@ -111,7 +111,7 @@ for greater ease of use.</p>
 <dt id="pynance.chart.candlestick">
 <code class="descclassname">pynance.chart.</code><code class="descname">candlestick</code><span class="sig-paren">(</span><em>df</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/chart.html#candlestick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.chart.candlestick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show and optionally save candlestick chart of a DataFrame as retrieved using
-<code class="xref py py-func docutils literal"><span class="pre">pynance.data.get()</span></code>.</p>
+<a class="reference internal" href="data.retrieve.html#pynance.data.retrieve.get" title="pynance.data.retrieve.get"><code class="xref py py-func docutils literal"><span class="pre">get()</span></code></a>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -165,10 +165,10 @@ must have same index as <cite>df</cite>.</p>
 <dl class="function">
 <dt id="pynance.chart.close">
 <code class="descclassname">pynance.chart.</code><code class="descname">close</code><span class="sig-paren">(</span><em>df</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/chart.html#close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.chart.close" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show and optionally save close chart of a DataFrame as retrieved using <code class="xref py py-func docutils literal"><span class="pre">pynance.data.get()</span></code>.</p>
+<dd><p>Show and optionally save close chart of a DataFrame as retrieved using <a class="reference internal" href="data.retrieve.html#pynance.data.retrieve.get" title="pynance.data.retrieve.get"><code class="xref py py-func docutils literal"><span class="pre">get()</span></code></a>.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#pynance.chart.candlestick" title="pynance.chart.candlestick"><code class="xref py py-func docutils literal"><span class="pre">pynance.chart.candlestick()</span></code></a></p>
+<p class="last"><a class="reference internal" href="#pynance.chart.candlestick" title="pynance.chart.candlestick"><code class="xref py py-func docutils literal"><span class="pre">candlestick()</span></code></a></p>
 </div>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pn</span><span class="o">.</span><span class="n">chart</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&#39;GE&#39;</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s">&#39;foo.png&#39;</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="n">evdf</span><span class="p">,</span> <span class="n">eventcolors</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="s">&#39;g&#39;</span><span class="p">],</span> 
@@ -200,7 +200,7 @@ must have same index as <cite>df</cite>.</p>
         <li class="right" >
           <a href="index.html" title="PyNance"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
 

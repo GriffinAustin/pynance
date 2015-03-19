@@ -4,6 +4,18 @@
 # https://codeandchaos.wordpress.com/2012/07/30/sphinx-autodoc-tutorial-for-dummies/
 
 # You can set these variables from the command line.
+
+# To create documentation for a new version:
+# 1. Move current *public* html to an archive directory:
+#    $ make archhtml ARCHDIR="0.3.0"
+#    ARCHDIR shoud take the value of the version *being replaced*,
+#    that is, the version just prior to the one being created.
+# 2. Change version number in `pynance/doc/source/conf.py`
+# 3. Build new documentation:
+#    $ make html
+# 4. Write new documentation to public directory:
+#    $ make pubhtml
+# 5. Commit change.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
