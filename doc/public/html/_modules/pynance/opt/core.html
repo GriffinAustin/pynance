@@ -110,6 +110,8 @@
 
 <span class="sd">    .. automethod:: quotetime</span>
 
+<span class="sd">    .. automethod:: tolist</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    Just retrieve data (no info message)::</span>
@@ -180,7 +182,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
 </div>
-    <span class="k">def</span> <span class="nf">tolist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Options.tolist"><a class="viewcode-back" href="../../../opt.core.html#pynance.opt.core.Options.tolist">[docs]</a>    <span class="k">def</span> <span class="nf">tolist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the array as a list of rows.</span>
 
@@ -194,7 +196,7 @@
 <span class="sd">            a single options quote.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">_todict</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="p">:])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
-</div>
+</div></div>
 <span class="k">def</span> <span class="nf">_todict</span><span class="p">(</span><span class="n">rowindex</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
     <span class="n">_indexkeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Strike&#39;</span><span class="p">,</span> <span class="s">&#39;Expiry&#39;</span><span class="p">,</span> <span class="s">&#39;Opt_Type&#39;</span><span class="p">,</span> <span class="s">&#39;Opt_Symbol&#39;</span><span class="p">,)</span>
     <span class="n">_datakeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Last&#39;</span><span class="p">,</span> <span class="s">&#39;Bid&#39;</span><span class="p">,</span> <span class="s">&#39;Ask&#39;</span><span class="p">,</span> <span class="s">&#39;Vol&#39;</span><span class="p">,</span> <span class="s">&#39;Open_Int&#39;</span><span class="p">,</span> <span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">,)</span>

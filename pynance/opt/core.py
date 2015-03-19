@@ -44,6 +44,8 @@ class Options(object):
 
     .. automethod:: quotetime
 
+    .. automethod:: tolist
+
     Examples
     --------
     Just retrieve data (no info message)::
