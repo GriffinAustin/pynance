@@ -120,8 +120,9 @@ class Options(object):
         """
         Return the array as a list of rows.
 
-        Each row is a `dict` of values. Allows direct entry
-        into `mongodb`.
+        Each row is a `dict` of values. Facilitates inserting data into a database.
+
+        .. versionadded:: 0.3.1
 
         Returns
         -------

@@ -19,14 +19,29 @@ data from stock and derivatives markets.
 
 Installation
 ------------
+PyNance depends on several powerful libraries that can be tricky to install, specifically
+`NumPy <http://www.numpy.org/>`_, `Pandas <http://pandas.pydata.org/>`_, and `matplotlib
+<http://matplotlib.org/index.html>`_. Unless you have already installed these libraries,
+it is recommended to install the following individually using `pip`, as you will likely need to 
+debug one or more of these installations::
 
-For Python 2.7.x::
+    pip install numpy
+    pip install pandas==0.5.1
+    pip install matplotlib
+    pip install lxml
+    pip install pynance
+
+Or for Python 3.x.x use `pip3` instead of `pip`.
+
+If you already have at least NumPy, Pandas and matplotlib installed or just prefer
+installing in one big step::
 
     pip install pynance
 
-For Python 3.x.x::
-
-    pip3 install pynance
+Notes
+^^^^^
+Until further notice, please do not use a version of Pandas more recent than 0.5.1.
+With Pandas 0.5.2, a bug was introduced making options quotes for some equities inaccessible.
 
 Basics
 ---------------
@@ -83,3 +98,4 @@ Prior Versions
 --------------
 * `0.2.0 <http://pynance.net/0.2.0/index.html>`_
 * `0.3.0 <http://pynance.net/0.3.0/index.html>`_
+* `0.3.1 <http://pynance.net/0.3.1/index.html>`_

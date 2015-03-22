@@ -25,7 +25,7 @@ from setuptools import setup, find_packages
 
 MAJOR   = 0
 MINOR   = 3
-MICRO   = 1
+MICRO   = 2
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -58,17 +58,12 @@ KEYWORDS = [
 
 DEPENDENCIES = [
         "numpy",
-        "pandas",
+        "pandas<=0.5.1",
+        "matplotlib",
+        "lxml", 
+        "html5lib",
+        "beautifulsoup4",
         ]
-
-SOFT_DEPENDENCIES = {
-        "charts": [
-            "matplotlib",],
-        "options": [
-            "lxml", 
-            "html5lib",
-            "beautifulsoup4",],
-        }
 
 setup(
         name='pynance',
@@ -81,6 +76,5 @@ setup(
         download_url=('https://github.com/aisthesis/pynance/tarball/' + VERSION),
         keywords=' '.join(KEYWORDS),
         classifiers=CLASSIFIERS,
-        install_requires=DEPENDENCIES,
-        extras_require=SOFT_DEPENDENCIES
+        install_requires=DEPENDENCIES
         )
