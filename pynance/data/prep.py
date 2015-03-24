@@ -118,51 +118,48 @@ def normalize(centered_data, out=None):
 
 def transform(data_frame, **kwargs):
     """
-    Return a transformed DataFrame
+    Return a transformed DataFrame.
 
-    Transform data_frame along the given axis. By default, each row
-    will be normalized (axis=0)
+    Transform data_frame along the given axis. By default, each row will be normalized (axis=0).
 
     Parameters
     -----------
     data_frame : DataFrame
-        data to be normalized
-
-    axis : int in {0, 1}, default: 0
-        0 to normalize each row, 1 to normalize each column
-    method : str
-        valid methods are:
-
+        Data to be normalized.
+    axis : int, optional
+        0 (default) to normalize each row, 1 to normalize each column.
+    method : str, optional
+        Valid methods are:
+        
         -  "vector" : Default for normalization by row (axis=0).
            Normalize along axis as a vector with norm `norm`
         -  "last" : Linear normalization setting last value along the axis to `norm`
         -  "first" : Default for normalization of columns (axis=1).
            Linear normalization setting first value along the given axis to `norm`
         -  "mean" : Normalize so that the mean of each vector along the given axis is `norm`
-
-    norm : float, default 1.0
-        Target value of normalization.
-
-    labels : DataFrame
-        labels may be passed as keyword argument, in which
-        case the label values will also be normalized and returned
+    norm : float, optional
+        Target value of normalization, defaults to 1.0.
+    labels : DataFrame, optional
+        Labels may be passed as keyword argument, in which
+        case the label values will also be normalized and returned.
 
     Returns
     -----------
-    out : DataFrame or tuple of 2 DataFrames
-    
-    Normalized data_frame if no labels are provided. Otherwise, a tuple
-    containing first normalized data_frame, then normalized labels.
+    df : DataFrame
+        Normalized data.
+    labels : DataFrame, optional
+        Normalized labels, if provided as input.
 
     Notes
     -----------
     If labels are real-valued, they should also be normalized.
 
-    .. Having row_norms as a numpy array should be benchmarked against 
-       using a DataFrame:
-       http://stackoverflow.com/questions/12525722/normalize-data-in-pandas
-       Note: This isn't a bottleneck. Using a feature set with 13k rows and 256
-       data_frame ('ge' from 1962 until now), the normalization was immediate.
+    ..
+        Having row_norms as a numpy array should be benchmarked against 
+        using a DataFrame:
+        http://stackoverflow.com/questions/12525722/normalize-data-in-pandas
+        Note: This isn't a bottleneck. Using a feature set with 13k rows and 256
+        data_frame ('ge' from 1962 until now), the normalization was immediate.
     """
     norm = kwargs.get('norm', 1.0)
     axis = kwargs.get('axis', 0)

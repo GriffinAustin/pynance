@@ -47,7 +47,7 @@ def fromcols(selection, n_sessions, eqdata, **kwargs):
 
     Parameters
     ----------
-    selection : list or tuple {str}
+    selection : list or tuple of str
         Columns to be used as features.
 
     n_sessions : int
@@ -89,7 +89,7 @@ def fromfuncs(funcs, n_sessions, eqdata, **kwargs):
 
     Parameters
     ----------
-    funcs : list {function}
+    funcs : list of function
         Functions to apply to eqdata. Each function is expected
         to output a dataframe with index identical to a slice of `eqdata`.
         The slice must include at least `eqdata.index[skipatstart + n_sessions - 1:]`.
