@@ -24,8 +24,8 @@ To upload a new version to PyPI:
 from setuptools import setup, find_packages
 
 MAJOR   = 0
-MINOR   = 3
-MICRO   = 2
+MINOR   = 4
+MICRO   = 0
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -58,7 +58,8 @@ KEYWORDS = [
 
 DEPENDENCIES = [
         "numpy",
-        "pandas<=0.15.1",
+        "pandas",
+        "pandas-datareader>=0.1.1",
         "matplotlib",
         "lxml", 
         "html5lib",

@@ -10,7 +10,7 @@ Options - remote retrieval (:mod:`pynance.opt.retrieve`)
 
 from __future__ import absolute_import
 
-import pandas as pd
+import pandas_datareader as pdr
 
 from .core import Options
 
@@ -52,11 +52,11 @@ def get(equity, showinfo=True):
         Stock: 15.93
         Quote time: 2015-03-07 16:00
     """
-    _optmeta = pd.io.data.Options(equity, 'yahoo')
+    _optmeta = pdr.data.Options(equity, 'yahoo')
     _optdata = None
     try:
         _optdata = _optmeta.get_all_data()
-    except (AttributeError, ValueError, pd.io.data.RemoteDataError):
-        raise pd.io.data.RemoteDataError(
+    except (AttributeError, ValueError, pdr.data.RemoteDataError):
+        raise pdr.data.RemoteDataError(
                 "No options data available for '{}'".format(equity))
     return Options(_optdata)
