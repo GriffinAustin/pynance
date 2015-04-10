@@ -58,7 +58,7 @@ KEYWORDS = [
 
 DEPENDENCIES = [
         "numpy",
-        "pandas<=0.5.1",
+        "pandas<=0.15.1",
         "matplotlib",
         "lxml", 
         "html5lib",

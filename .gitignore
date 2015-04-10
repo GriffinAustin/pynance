@@ -10,3 +10,6 @@ pynance.egg-info/
 
 # documentation build
 doc/build/
+
+# development environment
+.env
