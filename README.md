@@ -92,3 +92,17 @@ its dependencies aren't.
 >>> import pynance
 >>>
 ```
+
+Documentation
+---
+To build the documentation using Sphinx outside of a virtual Python environment,
+go to `./doc` and type `make html`. If you are using a virtual environment for any
+dependencies, you will need to add `sphinx` and `numpydoc` to the virtual
+environment before building the documentation. Explanation 
+[here](http://stackoverflow.com/questions/4122040/how-to-make-sphinx-look-for-modules-in-virtualenv-while-building-html).
+In other words, from within your virtual environment:
+
+    $ pip install sphinx
+    $ pip install numpydoc
+
+Then build the documentation using `make html`.

@@ -26,7 +26,8 @@ it is recommended to install the following individually using `pip`, as you will
 debug one or more of these installations::
 
     pip install numpy
-    pip install pandas==0.5.1
+    pip install pandas
+    pip install pandas-datareader>=0.1.1
     pip install matplotlib
     pip install lxml
     pip install pynance
@@ -37,11 +38,6 @@ If you already have at least NumPy, Pandas and matplotlib installed or just pref
 installing in one big step::
 
     pip install pynance
-
-Notes
-^^^^^
-Until further notice, please do not use a version of Pandas more recent than 0.5.1.
-With Pandas 0.5.2, a bug was introduced making options quotes for some equities inaccessible.
 
 Basics
 ---------------
