@@ -8,6 +8,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
+from pytz import timezone
 
 import pynance as pn
 
@@ -27,7 +28,7 @@ class TestData(unittest.TestCase):
         _optdata = pd.DataFrame(index=_index, columns=_columns)
         _n_rows = _optdata.shape[0]
         _optdata.loc[:, 'Last'] = np.arange(float(_n_rows))
-        _optdata.loc[:, 'Quote_Time'] = np.datetime64(dt.datetime(2015, 3, 1))
+        _optdata.loc[:, 'Quote_Time'] = np.datetime64(dt.datetime(2015, 3, 1, 16, tzinfo=timezone('US/Eastern')))
         _optdata.loc[:, 'Underlying_Price'] = 10.1
         _optdata.loc[:, 'Underlying'] = _optdata.loc[:, 'Root'] = 'GE'
         _optdata.loc[:, 'Chg'] = -.05
@@ -62,7 +63,8 @@ class TestData(unittest.TestCase):
         self.assertEqual(_df.loc['Vol', 'Value'], 200)
         self.assertEqual(_df.loc['Open_Int', 'Value'], 400)
         self.assertAlmostEqual(_df.loc['Underlying_Price', 'Value'], 10.1)
-        self.assertEqual(_df.loc['Quote_Time', 'Value'], np.datetime64(dt.datetime(2015, 3, 1)))
+        # Cf. https://github.com/numpy/numpy/issues/5761
+        # self.assertEqual(_df.loc['Quote_Time', 'Value'], np.datetime64(dt.datetime(2015, 3, 1, 16, tzinfo=timezone('US/Eastern'))))
         # call out of the money
         _df = self.opts.price.metrics('call', 12., '2015-06-01')
         self.assertAlmostEqual(_df.loc['Opt_Price', 'Value'], .8)
@@ -90,7 +92,7 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_opt.loc[10., 'Time_Val'], .9)
         self.assertAlmostEqual(_opt.loc[12., 'Time_Val'], .7)
         self.assertAlmostEqual(_eq, 10.1)
-        self.assertEqual(_qt, dt.datetime(2015, 3, 1))
+        self.assertEqual(_qt, dt.datetime(2015, 3, 1, 16, tzinfo=timezone('US/Eastern')))
         # put
         _opt, _, _ = self.opts.price.strikes('put', '2015-06-01')
         # only test price and time val for now
@@ -123,7 +125,7 @@ class TestData(unittest.TestCase):
         self.assertAlmostEqual(_opt.loc['2015-06-01', 'Time_Val'], 1.)
         self.assertAlmostEqual(_opt.loc['2015-07-01', 'Time_Val'], 1.1)
         self.assertAlmostEqual(_eq, 10.1)
-        self.assertEqual(_qt, dt.datetime(2015, 3, 1))
+        self.assertEqual(_qt, dt.datetime(2015, 3, 1, 16, tzinfo=timezone('US/Eastern')))
         # exceptions
         self.assertRaises(KeyError, self.opts.price.exps, 'call', 10.5)
 
