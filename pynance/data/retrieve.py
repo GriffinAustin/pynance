@@ -83,6 +83,7 @@ def _linestodict(lines):
     return _equities
 
 def _getrawdata():
+    # http://quant.stackexchange.com/questions/1640/where-to-download-list-of-all-common-stocks-traded-on-nyse-nasdaq-and-amex
     _nasdaqio = io.BytesIO()
     _otherio = io.BytesIO()
     _host = 'ftp.nasdaqtrader.com'
