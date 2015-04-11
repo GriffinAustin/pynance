@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pynance.opt.retrieve &mdash; PyNance 0.3.1 documentation</title>
+    <title>pynance.opt.retrieve &mdash; PyNance 0.4.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.3.1',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="PyNance 0.3.1 documentation" href="../../../index.html" />
+    <link rel="top" title="PyNance 0.4.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>
@@ -76,7 +76,7 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pandas_datareader</span> <span class="kn">as</span> <span class="nn">pdr</span>
 
 <span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="n">Options</span>
 
@@ -118,13 +118,13 @@
 <span class="sd">        Stock: 15.93</span>
 <span class="sd">        Quote time: 2015-03-07 16:00</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_optmeta</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Options</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="s">&#39;yahoo&#39;</span><span class="p">)</span>
+    <span class="n">_optmeta</span> <span class="o">=</span> <span class="n">pdr</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Options</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="s">&#39;yahoo&#39;</span><span class="p">)</span>
     <span class="n">_optdata</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">_optdata</span> <span class="o">=</span> <span class="n">_optmeta</span><span class="o">.</span><span class="n">get_all_data</span><span class="p">()</span>
-    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">RemoteDataError</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">pd</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">RemoteDataError</span><span class="p">(</span>
-                <span class="s">&quot;No options data available for {!r}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">equity</span><span class="p">))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">pdr</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">RemoteDataError</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">pdr</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">RemoteDataError</span><span class="p">(</span>
+                <span class="s">&quot;No options data available for &#39;{}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">equity</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">Options</span><span class="p">(</span><span class="n">_optdata</span><span class="p">)</span></div>
 </pre></div>
 
@@ -142,14 +142,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015, Marshall Farrier.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.opt.core &mdash; PyNance 0.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.3.1 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.opt.core</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2015 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Options - options class (:mod:`pynance.opt.core`)</span>
+<span class="sd">=========================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.opt.core</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">from</span> <span class="nn">.price</span> <span class="kn">import</span> <span class="n">Price</span>
+<span class="kn">from</span> <span class="nn">.spread.core</span> <span class="kn">import</span> <span class="n">Spread</span>
+
+<div class="viewcode-block" id="Options"><a class="viewcode-back" href="../../../opt.core.html#pynance.opt.core.Options">[docs]</a><span class="k">class</span> <span class="nc">Options</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Options data along with methods for easy access to desired information.</span>
+
+<span class="sd">    .. versionadded:: 0.3.0</span>
+
+<span class="sd">    Objects of this class are not intended for direct instantiation</span>
+<span class="sd">    but are created by calling :func:`~pynance.opt.retrieve.get` </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : :class:`pandas.DataFrame`</span>
+<span class="sd">        Dataframe containing the options data.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : :class:`pandas.DataFrame`</span>
+<span class="sd">        Options data.</span>
+<span class="sd">    price : :class:`~pynance.opt.price.Price`</span>
+<span class="sd">        Wrapper containing methods for determining price.</span>
+<span class="sd">    spread : :class:`~pynance.opt.spread.core.Spread`</span>
+<span class="sd">        Wrapper containing methods for evaluating spreads.</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    .. automethod:: exps</span>
+
+<span class="sd">    .. automethod:: info</span>
+
+<span class="sd">    .. automethod:: quotetime</span>
+
+<span class="sd">    .. automethod:: tolist</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Just retrieve data (no info message)::</span>
+
+<span class="sd">    &gt;&gt;&gt; geopt = pn.opt.get(&#39;ge&#39;)</span>
+
+<span class="sd">    or retrieve data with info::</span>
+<span class="sd">    </span>
+<span class="sd">        &gt;&gt;&gt; fopt, fexp = pn.opt.get(&#39;f&#39;).info()</span>
+<span class="sd">        Expirations:</span>
+<span class="sd">        ...</span>
+<span class="sd">        Stock: 16.25</span>
+<span class="sd">        Quote time: 2015-03-01 16:00</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">df</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">Price</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spread</span> <span class="o">=</span> <span class="n">Spread</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Options.info"><a class="viewcode-back" href="../../../opt.core.html#pynance.opt.core.Options.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Show expiration dates, equity price, quote time.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : :class:`~pynance.opt.core.Options`</span>
+<span class="sd">            Returns a reference to the calling object to allow</span>
+<span class="sd">            chaining.</span>
+
+<span class="sd">        expiries : :class:`pandas.tseries.index.DatetimeIndex`</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; fopt, fexp = pn.opt.get(&#39;f&#39;).info()</span>
+<span class="sd">        Expirations:</span>
+<span class="sd">        ...</span>
+<span class="sd">        Stock: 16.25</span>
+<span class="sd">        Quote time: 2015-03-01 16:00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Expirations:&quot;</span><span class="p">)</span>
+        <span class="n">_i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_datetime</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_pydatetime</span><span class="p">():</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&quot;{:2d} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_i</span><span class="p">,</span> <span class="n">_datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s">&#39;</span><span class="p">)))</span>
+            <span class="n">_i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Stock: {:.2f}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Underlying_Price&#39;</span><span class="p">]))</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Quote time: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quotetime</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&#39;%Y-%m-</span><span class="si">%d</span><span class="s"> %H:%M%z&#39;</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exps</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Options.exps"><a class="viewcode-back" href="../../../opt.core.html#pynance.opt.core.Options.exps">[docs]</a>    <span class="k">def</span> <span class="nf">exps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Index containing all expiration dates.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------------</span>
+<span class="sd">        expdates : :class:`pandas.tseries.index.DatetimeIndex`</span>
+<span class="sd">            Index of all active expiration dates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="Options.quotetime"><a class="viewcode-back" href="../../../opt.core.html#pynance.opt.core.Options.quotetime">[docs]</a>    <span class="k">def</span> <span class="nf">quotetime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Time of quotes</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        qt : :class:`datetime.datetime`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="Options.tolist"><a class="viewcode-back" href="../../../opt.core.html#pynance.opt.core.Options.tolist">[docs]</a>    <span class="k">def</span> <span class="nf">tolist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the array as a list of rows.</span>
+
+<span class="sd">        Each row is a `dict` of values. Allows direct entry</span>
+<span class="sd">        into `mongodb`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        quotes : list</span>
+<span class="sd">            A list in which each entry is a dictionary representing</span>
+<span class="sd">            a single options quote.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">_todict</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="p">:])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+</div></div>
+<span class="k">def</span> <span class="nf">_todict</span><span class="p">(</span><span class="n">rowindex</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span>
+    <span class="n">_indexkeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Strike&#39;</span><span class="p">,</span> <span class="s">&#39;Expiry&#39;</span><span class="p">,</span> <span class="s">&#39;Opt_Type&#39;</span><span class="p">,</span> <span class="s">&#39;Opt_Symbol&#39;</span><span class="p">,)</span>
+    <span class="n">_datakeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Last&#39;</span><span class="p">,</span> <span class="s">&#39;Bid&#39;</span><span class="p">,</span> <span class="s">&#39;Ask&#39;</span><span class="p">,</span> <span class="s">&#39;Vol&#39;</span><span class="p">,</span> <span class="s">&#39;Open_Int&#39;</span><span class="p">,</span> <span class="s">&#39;Underlying&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">,)</span>
+    <span class="n">_datetimekeys</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;Expiry&#39;</span><span class="p">,</span> <span class="s">&#39;Quote_Time&#39;</span><span class="p">,)</span>
+    <span class="n">_ret</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">_indexkeys</span><span class="p">)):</span>
+        <span class="n">_ret</span><span class="p">[</span><span class="n">_indexkeys</span><span class="p">[</span><span class="n">_i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rowindex</span><span class="p">[</span><span class="n">_i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">_key</span> <span class="ow">in</span> <span class="n">_datakeys</span><span class="p">:</span>
+        <span class="n">_ret</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span>
+    <span class="c"># convert dates to standard datetime.datetime</span>
+    <span class="k">for</span> <span class="n">_key</span> <span class="ow">in</span> <span class="n">_datetimekeys</span><span class="p">:</span>
+        <span class="n">_ret</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ret</span><span class="p">[</span><span class="n">_key</span><span class="p">]</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_ret</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

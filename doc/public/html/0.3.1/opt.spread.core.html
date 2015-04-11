@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Options - spreads (pynance.opt.spread.core) &mdash; PyNance 0.3.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.3.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.3.1 documentation" href="index.html" />
+    <link rel="up" title="Options spreads (pynance.opt.spread)" href="opt.spread.html" />
+    <link rel="next" title="Options - diagonal spreads (pynance.opt.spread.diag)" href="opt.spread.diag.html" />
+    <link rel="prev" title="Options spreads (pynance.opt.spread)" href="opt.spread.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.diag.html" title="Options - diagonal spreads (pynance.opt.spread.diag)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.html" title="Options spreads (pynance.opt.spread)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="opt.html" >Options (<code class="docutils literal"><span class="pre">pynance.opt</span></code>)</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="opt.spread.html" accesskey="U">Options spreads (<code class="docutils literal"><span class="pre">pynance.opt.spread</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="opt.spread.html"
+                        title="previous chapter">Options spreads (<code class="docutils literal"><span class="pre">pynance.opt.spread</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="opt.spread.diag.html"
+                        title="next chapter">Options - diagonal spreads (<code class="docutils literal"><span class="pre">pynance.opt.spread.diag</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/opt.spread.core.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.opt.spread.core"></span><div class="section" id="options-spreads-pynance-opt-spread-core">
+<h1>Options - spreads (<a class="reference internal" href="#module-pynance.opt.spread.core" title="pynance.opt.spread.core"><code class="xref py py-mod docutils literal"><span class="pre">pynance.opt.spread.core</span></code></a>)<a class="headerlink" href="#options-spreads-pynance-opt-spread-core" title="Permalink to this headline">¶</a></h1>
+</div>
+<dl class="class">
+<dt id="pynance.opt.spread.core.Spread">
+<em class="property">class </em><code class="descclassname">pynance.opt.spread.core.</code><code class="descname">Spread</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/spread/core.html#Spread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.spread.core.Spread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper class for <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code> for retrieving
+metrics on options spreads.</p>
+<p>Objects of this class are not intended for direct instantiation
+but are created as attributes of objects of type <a class="reference internal" href="opt.core.html#pynance.opt.core.Options" title="pynance.opt.core.Options"><code class="xref py py-class docutils literal"><span class="pre">Options</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.3.0.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>df</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></p>
+<blockquote class="last">
+<div><p>Options data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="4%" />
+<col width="96%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>data</td>
+<td>(<code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code>)</td>
+</tr>
+<tr class="row-even"><td>diag</td>
+<td>(<a class="reference internal" href="opt.spread.diag.html#pynance.opt.spread.diag.Diag" title="pynance.opt.spread.diag.Diag"><code class="xref py py-class docutils literal"><span class="pre">Diag</span></code></a>) Wrapper for retrieving metrics on diagonal spreads.</td>
+</tr>
+<tr class="row-odd"><td>vert</td>
+<td>(<a class="reference internal" href="opt.spread.vert.html#pynance.opt.spread.vert.Vert" title="pynance.opt.spread.vert.Vert"><code class="xref py py-class docutils literal"><span class="pre">Vert</span></code></a>) Wrapper for retrieving metrics on vertical spreads.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="66%" />
+<col width="34%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><dl class="first last method">
+<dt id="pynance.opt.spread.core.Spread.cal">
+<code class="descname">cal</code><span class="sig-paren">(</span><em>opttype</em>, <em>strike</em>, <em>exp1</em>, <em>exp2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/spread/core.html#Spread.cal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.spread.core.Spread.cal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metrics for evaluating a calendar spread.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>opttype</strong> : str (&#8216;call&#8217; or &#8216;put&#8217;)</p>
+<blockquote>
+<div><p>Type of option on which to collect data.</p>
+</div></blockquote>
+<p><strong>strike</strong> : numeric</p>
+<blockquote>
+<div><p>Strike price.</p>
+</div></blockquote>
+<p><strong>exp1</strong> : date or date str (e.g. &#8216;2015-01-01&#8217;)</p>
+<blockquote>
+<div><p>Earlier expiration date.</p>
+</div></blockquote>
+<p><strong>exp2</strong> : date or date str (e.g. &#8216;2015-01-01&#8217;)</p>
+<blockquote>
+<div><p>Later expiration date.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>metrics</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>Metrics for evaluating spread.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.diag.html" title="Options - diagonal spreads (pynance.opt.spread.diag)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.html" title="Options spreads (pynance.opt.spread)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.3.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="opt.html" >Options (<code class="docutils literal"><span class="pre">pynance.opt</span></code>)</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="opt.spread.html" >Options spreads (<code class="docutils literal"><span class="pre">pynance.opt.spread</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

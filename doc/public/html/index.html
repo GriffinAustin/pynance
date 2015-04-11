@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>PyNance &mdash; PyNance 0.3.1 documentation</title>
+    <title>PyNance &mdash; PyNance 0.4.0 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.3.1',
+        VERSION:     '0.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyNance 0.3.1 documentation" href="#" />
+    <link rel="top" title="PyNance 0.4.0 documentation" href="#" />
     <link rel="next" title="Charts (pynance.chart)" href="chart.html" /> 
   </head>
   <body role="document">
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="chart.html" title="Charts (pynance.chart)"
              accesskey="N">next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PyNance 0.3.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">PyNance 0.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -94,9 +94,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">0.3.1</td>
+<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">0.4.0</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">March 18, 2015</td>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">April 11, 2015</td>
 </tr>
 </tbody>
 </table>
@@ -104,12 +104,22 @@
 data from stock and derivatives markets.</p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>For Python 2.7.x:</p>
-<div class="highlight-python"><div class="highlight"><pre>pip install pynance
+<p>PyNance depends on several powerful libraries that can be tricky to install, specifically
+<a class="reference external" href="http://www.numpy.org/">NumPy</a>, <a class="reference external" href="http://pandas.pydata.org/">Pandas</a>, and <a class="reference external" href="http://matplotlib.org/index.html">matplotlib</a>. Unless you have already installed these libraries,
+it is recommended to install the following individually using <cite>pip</cite>, as you will likely need to
+debug one or more of these installations:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install numpy
+pip install pandas
+pip install pandas-datareader&gt;=0.1.1
+pip install matplotlib
+pip install lxml
+pip install pynance
 </pre></div>
 </div>
-<p>For Python 3.x.x:</p>
-<div class="highlight-python"><div class="highlight"><pre>pip3 install pynance
+<p>Or for Python 3.x.x use <cite>pip3</cite> instead of <cite>pip</cite>.</p>
+<p>If you already have at least NumPy, Pandas and matplotlib installed or just prefer
+installing in one big step:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install pynance
 </pre></div>
 </div>
 </div>
@@ -183,6 +193,7 @@ the <a class="reference external" href="http://scipy.org/bug-report.html#guideli
 <ul class="simple">
 <li><a class="reference external" href="http://pynance.net/0.2.0/index.html">0.2.0</a></li>
 <li><a class="reference external" href="http://pynance.net/0.3.0/index.html">0.3.0</a></li>
+<li><a class="reference external" href="http://pynance.net/0.3.1/index.html">0.3.1</a></li>
 </ul>
 </div>
 </div>
@@ -205,13 +216,13 @@ the <a class="reference external" href="http://scipy.org/bug-report.html#guideli
         <li class="right" >
           <a href="chart.html" title="Charts (pynance.chart)"
              >next</a> |</li>
-        <li class="nav-item nav-item-0"><a href="#">PyNance 0.3.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="#">PyNance 0.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015, Marshall Farrier.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
