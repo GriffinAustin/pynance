@@ -9,7 +9,7 @@ To upload a new version to PyPI:
 4. Commit all changes. 
 5. Create a tag for new version in git:
     % git tag 0.0.1 -m "Fixed some problems"
-    % git tag # to verify that new tag is in list
+    % git tag -n # to verify that new tag is in list
     % git push --tags
 
 6. Register and upload to PyPI Test:
@@ -19,6 +19,8 @@ To upload a new version to PyPI:
 7. Register and upload to PyPI Live:
 % python setup.py register -r pypi
 % python setup.py sdist upload -r pypi
+
+8. Upload documentation to website.
 """
 
 from setuptools import setup, find_packages
