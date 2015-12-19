@@ -14,7 +14,7 @@ Technical analysis (:mod:`pynance.tech`)
 
 from __future__ import absolute_import
 
-_all__ = ["movave", "simple"]
+__all__ = ["movave", "simple"]
 
 # import directly into tech module
 from . import movave
