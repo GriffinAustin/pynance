@@ -8,6 +8,8 @@ Linear regression (:mod:`pynance.learn.linreg`)
 .. currentmodule:: pynance.learn.linreg
 """
 
+import numpy as np
+
 def run(features, labels, lamb=0., constfeat=True):
     """
     Run linear regression on the given data.
@@ -36,7 +38,7 @@ def run(features, labels, lamb=0., constfeat=True):
     """
     feat = features.values
     lab = labels.values
-    n_col = (feat.shape[1] if len(feat.shape > 1) else 1)
+    n_col = (feat.shape[1] if len(feat.shape) > 1 else 1)
     reg_matrix = lamb * np.identity(n_col, dtype='float64')
     if constfeat:
         reg_matrix[0, 0] = 0.
