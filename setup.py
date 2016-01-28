@@ -62,12 +62,13 @@ DEPENDENCIES = [
         "numpy",
         "pandas",
         "pandas-datareader>=0.1.1",
-        "matplotlib",
-        "lxml", 
-        "html5lib",
-        "beautifulsoup4",
+        "matplotlib"
         ]
 
+TEST_DEPENDENCIES = [
+        "nose",
+        "pytz"
+        ]
 setup(
         name='pynance',
         packages=find_packages(),
@@ -79,5 +80,6 @@ setup(
         download_url=('https://github.com/aisthesis/pynance/tarball/' + VERSION),
         keywords=' '.join(KEYWORDS),
         classifiers=CLASSIFIERS,
-        install_requires=DEPENDENCIES
+        install_requires=DEPENDENCIES,
+        tests_require=TEST_DEPENDENCIES
         )
