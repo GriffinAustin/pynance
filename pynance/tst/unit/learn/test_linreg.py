@@ -23,7 +23,7 @@ class TestData(unittest.TestCase):
         features, labels = get_yule_data()
         model = pn.learn.linreg.run(features, labels)
         expected_model = [12.88, .75, .06, -.31]
-        for actual, expected in zip(model, expected_model):
+        for actual, expected in zip(model.flatten().tolist(), expected_model):
             self.assertAlmostEqual(actual, expected, places=2)
 
 def get_yule_data():
