@@ -26,6 +26,19 @@ class TestData(unittest.TestCase):
         for actual, expected in zip(model.flatten().tolist(), expected_model):
             self.assertAlmostEqual(actual, expected, places=2)
 
+    def test_beats_yule(self):
+        # Yule's values are slightly different
+        features, labels = get_yule_data()
+        models = {}
+        predicted = {}
+        errors = {}
+        models['ours'] = pn.learn.linreg.run(features, labels)
+        models['yule'] = np.array([13.19, 0.755, -.022, -.322]).reshape((4, 1))
+        for key in models:
+            predicted[key] = pn.learn.linreg.predict(features, models[key])
+            errors[key] = pn.learn.mse(predicted[key], labels)
+        self.assertLessEqual(errors['ours'][0, 0], errors['yule'][0, 0])
+
 def get_yule_data():
     data = adj_yule(load_yule())
     features = pd.DataFrame(data=data.values.copy(), 

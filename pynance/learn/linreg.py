@@ -43,3 +43,22 @@ def run(features, labels, lamb=0., constfeat=True):
     if constfeat:
         reg_matrix[0, 0] = 0.
     return np.linalg.lstsq(feat.T.dot(feat) + reg_matrix, feat.T.dot(lab))[0]
+
+def predict(features, model):
+    """
+    Generate predictions from features and model.
+
+    Parameters
+    ----------
+    features : DataFrame
+        Features from which to generate predictions
+
+    model : ndarray
+        Regression model.
+
+    Returns
+    -------
+    predicted : ndarray
+        Predictions generated from features using model.
+    """
+    return features.values.dot(model)
