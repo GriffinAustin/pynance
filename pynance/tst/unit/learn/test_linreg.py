@@ -39,6 +39,13 @@ class TestData(unittest.TestCase):
             errors[key] = pn.learn.mse(predicted[key], labels)
         self.assertLessEqual(errors['ours'][0, 0], errors['yule'][0, 0])
 
+    def test_run_reg(self):
+        features = {}
+        labels = {}
+        keys = ('in', 'out')
+        for key in keys:
+            features[key], labels[key] = get_caltech_data(key + '.data')
+
 def get_yule_data():
     data = adj_yule(load_yule())
     features = pd.DataFrame(data=data.values.copy(), 
@@ -56,6 +63,21 @@ def load_yule():
     data = pd.read_table(infile, sep=' ', index_col=False, header=None,
             names=['Paup', 'Out', 'Old', 'Pop'], dtype=np.float64)
     return data
+
+def get_caltech_data(fname):
+    raw_data = load_caltech(fname)
+    features = pd.DataFrame(data=np.ones((raw_data.shape[0], 8)))
+    features.iloc[:, 1:3] = raw_data[:, :2]
+    features.iloc[:, 3:5] = raw_data[:, :2] * raw_data[:, :2]
+    features.iloc[:, 5] = raw_data[:, 0] * raw_data[:, 1]
+    features.iloc[:, 6] = np.absolute(raw_data[:, 0] - raw_data[:, 1])
+    features.iloc[:, 7] = np.absolute(raw_data[:, 0] + raw_data[:, 1])
+    return features, pd.DataFrame(data=raw_data[:, -1])
+
+def load_caltech(fname):
+    path = os.path.dirname(os.path.realpath(__file__))
+    infile = os.path.join(path, fname)
+    return np.loadtxt(infile) 
 
 if __name__ == '__main__':
     unittest.main()
