@@ -21,7 +21,7 @@ class TestData(unittest.TestCase):
 
     def test_run_noreg(self):
         features, labels = get_yule_data()
-        model = pn.learn.linreg.run(features, labels)
+        model = pn.learn.linreg.run(features.values, labels.values)
         expected_model = [12.88, .75, .06, -.31]
         for actual, expected in zip(model.flatten().tolist(), expected_model):
             self.assertAlmostEqual(actual, expected, places=2)
@@ -32,7 +32,7 @@ class TestData(unittest.TestCase):
         models = {}
         predicted = {}
         errors = {}
-        models['ours'] = pn.learn.linreg.run(features, labels)
+        models['ours'] = pn.learn.linreg.run(features.values, labels.values)
         models['yule'] = np.array([13.19, 0.755, -.022, -.322]).reshape((4, 1))
         for key in models:
             predicted[key] = pn.learn.linreg.predict(features, models[key])
@@ -59,7 +59,7 @@ def adj_yule(df):
 
 def load_yule():
     path = os.path.dirname(os.path.realpath(__file__))
-    infile = os.path.join(path, 'yule.dat')
+    infile = os.path.join(path, 'yule.data')
     data = pd.read_table(infile, sep=' ', index_col=False, header=None,
             names=['Paup', 'Out', 'Old', 'Pop'], dtype=np.float64)
     return data
