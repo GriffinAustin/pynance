@@ -53,6 +53,7 @@ class TestData(unittest.TestCase):
                 best_error = err
         self.assertAlmostEqual(reguls[best_i], 3., msg='not best lambda')
         # Ng gets a test error of 3.8599 but calculates it differently
+        # Ridge regression from sklearn gives the expected result
         self.assertAlmostEqual(get_ng_error(features, labels, reguls[best_i], 'test').flatten()[0],
                 7.14405231, msg='incorrect error on test data')
 

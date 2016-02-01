@@ -14,6 +14,13 @@ def run(features, labels, regularization=0., constfeat=True):
     """
     Run linear regression on the given data.
 
+    If a regularization parameter is provided, this function
+    is a simplification and specialization of ridge
+    regression, as implemented in `scikit-learn
+    <http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge>`_.
+    Setting `solver` to `'svd'` in :class:`sklearn.linear_model.Ridge` and equating
+    our `regularization` with their `alpha` will yield the same results.
+
     Parameters
     ----------
     features : ndarray
