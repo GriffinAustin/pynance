@@ -40,11 +40,22 @@ class TestData(unittest.TestCase):
         self.assertLessEqual(errors['ours'][0, 0], errors['yule'][0, 0])
 
     def test_run_reg(self):
-        features = {}
-        labels = {}
-        keys = ('in', 'out')
-        for key in keys:
-            features[key], labels[key] = get_caltech_data(key + '.data')
+        hitters_data = load_hitters()
+        features = hitters_data[:, :-2]
+        labels = hitters_data[:, -2]
+        selector = np.array(hitters_data[:, -1] >= .5, dtype=bool)
+        """
+        print(features[:4, :])
+        print(labels[:8])
+        print(selector[:8])
+        """
+        reguls = [11498., 705., 50.]
+        for i in range(len(reguls)):
+            model = pn.learn.linreg.run(features, labels, regul=reguls[i])
+            print('regularization parameter: {}'.format(reguls[i]))
+            print(model)
+            nonconst_coeffs = model[1:]
+            print('sum of squares: {}'.format((nonconst_coeffs * nonconst_coeffs).sum()))
 
 def get_yule_data():
     data = adj_yule(load_yule())
@@ -64,20 +75,10 @@ def load_yule():
             names=['Paup', 'Out', 'Old', 'Pop'], dtype=np.float64)
     return data
 
-def get_caltech_data(fname):
-    raw_data = load_caltech(fname)
-    features = pd.DataFrame(data=np.ones((raw_data.shape[0], 8)))
-    features.iloc[:, 1:3] = raw_data[:, :2]
-    features.iloc[:, 3:5] = raw_data[:, :2] * raw_data[:, :2]
-    features.iloc[:, 5] = raw_data[:, 0] * raw_data[:, 1]
-    features.iloc[:, 6] = np.absolute(raw_data[:, 0] - raw_data[:, 1])
-    features.iloc[:, 7] = np.absolute(raw_data[:, 0] + raw_data[:, 1])
-    return features, pd.DataFrame(data=raw_data[:, -1])
-
-def load_caltech(fname):
+def load_hitters():
     path = os.path.dirname(os.path.realpath(__file__))
-    infile = os.path.join(path, fname)
-    return np.loadtxt(infile) 
+    infile = os.path.join(path, 'hitters.data')
+    return np.loadtxt(infile)
 
 if __name__ == '__main__':
     unittest.main()
