@@ -75,7 +75,7 @@ def load_yule():
     return data
 
 def get_ng_error(features, labels, regul, key):
-    model = pn.learn.linreg.run(features['train'], labels['train'], regul=regul)
+    model = pn.learn.linreg.run(features['train'], labels['train'], regularization=regul)
     predicted = pn.learn.linreg.predict(features[key], model)
     return pn.learn.mse(predicted, labels[key])
 

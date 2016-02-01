@@ -10,7 +10,7 @@ Linear regression (:mod:`pynance.learn.linreg`)
 
 import numpy as np
 
-def run(features, labels, regul=0., constfeat=True):
+def run(features, labels, regularization=0., constfeat=True):
     """
     Run linear regression on the given data.
 
@@ -23,7 +23,7 @@ def run(features, labels, regul=0., constfeat=True):
         Labels for the given features. Multiple columns
         of labels are allowed.
 
-    regul : float, optional
+    regularization : float, optional
         Regularization parameter. Defaults to 0.
 
     constfeat : bool, optional
@@ -37,7 +37,7 @@ def run(features, labels, regul=0., constfeat=True):
         Regression model for the given data.
     """
     n_col = (features.shape[1] if len(features.shape) > 1 else 1)
-    reg_matrix = regul * np.identity(n_col, dtype='float64')
+    reg_matrix = regularization * np.identity(n_col, dtype='float64')
     if constfeat:
         reg_matrix[0, 0] = 0.
     return np.linalg.lstsq(features.T.dot(features) + reg_matrix, features.T.dot(labels))[0]
