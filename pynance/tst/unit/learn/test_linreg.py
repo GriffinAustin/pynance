@@ -40,22 +40,21 @@ class TestData(unittest.TestCase):
         self.assertLessEqual(errors['ours'][0, 0], errors['yule'][0, 0])
 
     def test_run_reg(self):
-        hitters_data = load_hitters()
-        features = hitters_data[:, :-2]
-        labels = hitters_data[:, -2]
-        selector = np.array(hitters_data[:, -1] >= .5, dtype=bool)
-        """
-        print(features[:4, :])
-        print(labels[:8])
-        print(selector[:8])
-        """
-        reguls = [11498., 705., 50.]
+        # Use data from https://www.coursera.org/learn/machine-learning
+        features = get_ng_features()
+        labels = get_ng_labels()
+        reguls = (0., .001, .003, .01, .03, .1, .3, 1., 3., 10.)
+        best_i = -1
+        best_error = -1.
         for i in range(len(reguls)):
-            model = pn.learn.linreg.run(features, labels, regul=reguls[i])
-            print('regularization parameter: {}'.format(reguls[i]))
-            print(model)
-            nonconst_coeffs = model[1:]
-            print('sum of squares: {}'.format((nonconst_coeffs * nonconst_coeffs).sum()))
+            err = get_ng_error(features, labels, reguls[i], 'xval')
+            if best_i < 0 or err < best_error:
+                best_i = i
+                best_error = err
+        self.assertAlmostEqual(reguls[best_i], 3., msg='not best lambda')
+        # Ng gets a test error of 3.8599 but calculates it differently
+        self.assertAlmostEqual(get_ng_error(features, labels, reguls[best_i], 'test').flatten()[0],
+                7.14405231, msg='incorrect error on test data')
 
 def get_yule_data():
     data = adj_yule(load_yule())
@@ -75,10 +74,43 @@ def load_yule():
             names=['Paup', 'Out', 'Old', 'Pop'], dtype=np.float64)
     return data
 
-def load_hitters():
+def get_ng_error(features, labels, regul, key):
+    model = pn.learn.linreg.run(features['train'], labels['train'], regul=regul)
+    predicted = pn.learn.linreg.predict(features[key], model)
+    return pn.learn.mse(predicted, labels[key])
+
+def get_ng_labels():
+    files = {'train': 'y.data', 'xval': 'yval.data', 'test': 'ytest.data'}
+    labels = {}
+    for key in files:
+        labels[key] = load_ng_data(files[key])
+    return labels
+
+def get_ng_features():
+    degree = 8
+    files = {'train': 'x.data', 'xval': 'xval.data', 'test': 'xtest.data'}
+    features = {}
+    for key in files:
+        linfeat = load_ng_data(files[key])
+        features[key] = get_polyfeat(linfeat, degree)
+    # center and normalize
+    _, means = pn.data.center(features['train'][:, 1:], out=features['train'][:, 1:])
+    _, sd_adj = pn.data.normalize(features['train'][:, 1:], out=features['train'][:, 1:])
+    for key in ('xval', 'test'):
+        features[key][:, 1:] -= means
+        features[key][:, 1:] *= 1. / sd_adj
+    return features
+
+def load_ng_data(fname):
     path = os.path.dirname(os.path.realpath(__file__))
-    infile = os.path.join(path, 'hitters.data')
+    infile = os.path.join(path, fname)
     return np.loadtxt(infile)
+
+def get_polyfeat(linfeat, degree):
+    polyfeat = np.ones((linfeat.shape[0], degree + 1))
+    for i in range(degree):
+        polyfeat[:, i + 1] = polyfeat[:, i] * linfeat
+    return polyfeat
 
 if __name__ == '__main__':
     unittest.main()
