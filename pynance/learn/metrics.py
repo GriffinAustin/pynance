@@ -31,8 +31,7 @@ def mse(predicted, actual):
         values.
     """
     diff = predicted - actual
-    ncols = (diff.shape[1] if len(diff.shape) > 1 else 1) 
-    return np.average(diff * diff, axis=0).reshape(1, ncols)
+    return np.average(diff * diff, axis=0)
 
 def stderr(predicted, actual):
     """

@@ -9,7 +9,6 @@ license http://opensource.org/licenses/MIT
 """
 
 import os
-import sys
 import unittest
 
 import numpy as np
@@ -18,6 +17,13 @@ import pandas as pd
 import pynance as pn
 
 class TestData(unittest.TestCase):
+
+    def ndarr_almost_eq(self, a, b, msg=None):
+        if not np.allclose(a, b):
+            print('ndarrays not equal:')
+            print(a)
+            print(b)
+            raise self.failureException(msg)
 
     def test_run_noreg(self):
         features, labels = get_yule_data()
@@ -37,7 +43,7 @@ class TestData(unittest.TestCase):
         for key in models:
             predicted[key] = pn.learn.linreg.predict(features, models[key])
             errors[key] = pn.learn.mse(predicted[key], labels)
-        self.assertLessEqual(errors['ours'][0, 0], errors['yule'][0, 0])
+        self.assertLessEqual(errors['ours'][0], errors['yule'][0])
 
     def test_run_reg(self):
         # Use data from https://www.coursera.org/learn/machine-learning
@@ -56,6 +62,31 @@ class TestData(unittest.TestCase):
         # Ridge regression from sklearn gives the expected result
         self.assertAlmostEqual(get_ng_error(features, labels, reguls[best_i], 'test').flatten()[0],
                 7.14405231, msg='incorrect error on test data')
+
+    def test_predict(self):
+        self.addTypeEqualityFunc(np.ndarray, self.ndarr_almost_eq)
+        features = np.array([
+                [1., 0., 1.],
+                [1., 0., .5],
+                [1., 2., 0.],
+                [1., 1., 0.],
+                [1., 1., 1.]])
+        model1 = np.array([0., 1., 2.])
+        expected1 = np.array([2., 1., 2., 1., 3.])
+        self.assertEqual(pn.learn.linreg.predict(features, model1), expected1,
+                'incorrect predictions from weight vector')
+        model2 = np.array([
+                [0., 1.],
+                [1., 2.],
+                [2., 4.]])
+        expected2 = np.array([
+                [2., 5.],
+                [1., 3.],
+                [2., 5.],
+                [1., 3.],
+                [3., 7.]])
+        self.assertEqual(pn.learn.linreg.predict(features, model2), expected2,
+                'incorrect predictions from weight matrix')
 
 def get_yule_data():
     data = adj_yule(load_yule())
