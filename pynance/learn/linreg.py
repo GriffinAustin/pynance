@@ -47,6 +47,7 @@ def run(features, labels, regularization=0., constfeat=True):
     reg_matrix = regularization * np.identity(n_col, dtype='float64')
     if constfeat:
         reg_matrix[0, 0] = 0.
+    # http://stackoverflow.com/questions/27476933/numpy-linear-regression-with-regularization
     return np.linalg.lstsq(features.T.dot(features) + reg_matrix, features.T.dot(labels))[0]
 
 def predict(features, model):
