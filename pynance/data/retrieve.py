@@ -10,24 +10,29 @@ Data - remote retrieval (:mod:`pynance.data.retrieve`)
 Wraps `Pandas Remote Data Access 
 <http://pandas.pydata.org/pandas-docs/stable/remote_data.html>`_.
 """
-
+from datetime import datetime
 from ftplib import FTP
 from functools import partial
 import io
 
 import pandas_datareader.data as web
 
-def get(equity, start, end):
+def get(equity, *args, **kwargs):
     """ 
-    Get DataFrame for an individual equity from Yahoo!  
-    
+    get(equity, start=None, end=None)
+
+    Get DataFrame for an individual equity from Yahoo!
+
+    .. changed:: 0.5.0 - changed to variadic parameters
+
     Examples
     --------
     >>> import pynance as pn
     >>> aapl = pn.data.get('aapl', '2014-03-01', '2015-03-01')
     >>> goog = pn.data.get('goog', '2014', '2015')
+    >>> tsla = pn.data.get('tsla')
     """
-    return web.DataReader(equity, 'yahoo', start, end)
+    return web.DataReader(equity, 'yahoo', *args, **kwargs)
 
 def equities(country='US'):
     """
