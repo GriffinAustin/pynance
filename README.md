@@ -11,11 +11,11 @@ Detailed documentation at [PyNance website](http://pynance.net/).
 Dependencies
 ---
 Tested on:
-* [Python](https://www.python.org/) 2.7.8, 3.4.2
-* [matplotlib](http://matplotlib.org/index.html) 1.4.2, 1.4.3
-* [NumPy](http://www.numpy.org/) 1.9.0, 1.9.2
-* [Pandas](http://pandas.pydata.org/) 0.14.1, 0.15.1, 0.16.0
-* [pandas-datareader](https://github.com/pydata/pandas-datareader) 0.1.1
+* [Python](https://www.python.org/) 2.7.8, 2.7.11, 3.4.2, 3.5.1
+* [matplotlib](http://matplotlib.org/index.html) 1.4.2, 1.4.3, 1.5.1
+* [NumPy](http://www.numpy.org/) 1.9.0, 1.9.2, 1.10.4
+* [Pandas](http://pandas.pydata.org/) 0.14.1, 0.15.1, 0.16.0, 0.17.1
+* [pandas-datareader](https://github.com/pydata/pandas-datareader) 0.1.1, 0.2.1
 
 PyNance will also work with other versions of Python
 and Python packages. To verify that it works with yours,
@@ -40,3 +40,10 @@ In other words, from within your virtual environment:
     $ pip install numpydoc
 
 Then build the documentation using `make html`.
+
+Development environment
+---
+To set up your virtual environment for development:
+
+    $ mkvirtualenv -p /usr/local/bin/python pn-dev
+    $ python setup.py develop

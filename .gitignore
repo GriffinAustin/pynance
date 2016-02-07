@@ -13,3 +13,5 @@ doc/build/
 
 # development environment
 .env
+.idea
+build/
