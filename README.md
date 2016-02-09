@@ -47,3 +47,21 @@ To set up your virtual environment for development:
 
     $ mkvirtualenv -p /usr/local/bin/python pn-dev
     $ python setup.py develop
+
+Release a new version
+---
+When branch `master` has all desired substantive changes, it is
+time to release the next version. This involves:
+
+- reorganizing the documentation
+- actually creating the new version and pushing it to Pypi
+
+### Reorganize the documentation
+As example, let's say the version being replaced is version `0.3.0`, and the
+version replacing it is version `0.4.0`.
+
+1. Add a link to version `0.3.0` in `./doc/source/index.rst` under 'Prior Versions'
+1. Push the new documentation to [pynance.net](http://pynance.net/)
+
+### Create the new version
+Overview [here](http://peterdowns.com/posts/first-time-with-pypi.html)
