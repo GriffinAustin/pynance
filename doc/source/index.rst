@@ -25,11 +25,10 @@ PyNance depends on several powerful libraries that can be tricky to install, spe
 it is recommended to install the following individually using `pip`, as you will likely need to 
 debug one or more of these installations::
 
+    pip install matplotlib
     pip install numpy
     pip install pandas
-    pip install pandas-datareader>=0.1.1
-    pip install matplotlib
-    pip install lxml
+    pip install pandas-datareader
     pip install pynance
 
 Or for Python 3.x.x use `pip3` instead of `pip`.
