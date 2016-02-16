@@ -95,3 +95,4 @@ Prior Versions
 * `0.2.0 <http://pynance.net/0.2.0/index.html>`_
 * `0.3.0 <http://pynance.net/0.3.0/index.html>`_
 * `0.3.1 <http://pynance.net/0.3.1/index.html>`_
+* `0.4.0 <http://pynance.net/0.4.0/index.html>`_
