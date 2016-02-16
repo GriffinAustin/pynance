@@ -50,18 +50,48 @@ To set up your virtual environment for development:
 
 Release a new version
 ---
-When branch `master` has all desired substantive changes, it is
+When branch `develop` has all desired substantive changes, it is
 time to release the next version. This involves:
 
-- reorganizing the documentation
-- actually creating the new version and pushing it to Pypi
-
-### Reorganize the documentation
-As example, let's say the version being replaced is version `0.3.0`, and the
-version replacing it is version `0.4.0`.
-
-1. Add a link to version `0.3.0` in `./doc/source/index.rst` under 'Prior Versions'
-1. Push the new documentation to [pynance.net](http://pynance.net/)
+- create the new version and push it to Pypi
+- reorganize the documentation in the `develop` branch
 
 ### Create the new version
-Overview [here](http://peterdowns.com/posts/first-time-with-pypi.html)
+Overview [here](http://peterdowns.com/posts/first-time-with-pypi.html).
+
+In branch `develop` verify that all desired changes have been merged and that 
+the documentation is up to date. Then:
+
+1. Change the release version in `.setup.py` and in `./doc/source/conf.py` to the numbers desired for the
+   version you are about to publish.
+1. Build the documentation:
+
+        $ cd ./doc
+        $ make html
+1. Merge to master.
+1. Tag the release in GitHub.
+1. Publish to PyPi.
+1. Push the documentation to [pynance.net](http://pynance.net/):
+
+Branches `develop` and `master` should now be the same. In preparation for the next
+release (in the more distant future), you should now re-organize the 
+documentation so that what was just committed
+is archived and new documentation can be generated, as described in the following section.
+
+### Reorganize the documentation
+As example, let's say the version just committed is version `3.1.4`.
+
+1. Move current *public* html to an archive directory:
+
+        $ cd ./doc
+        $ make archhtml ARCHDIR="3.1.4"
+1. Add a link to version `3.1.4` in `./doc/source/index.rst` under 'Prior Versions'
+1. Change version number in `./doc/source/conf.py` to `3.1.5`.
+1. Rebuild current documentation:
+
+        $ make html
+1. Write new documentation to public directory:
+    
+        $ make pubhtml
+1. Commit changes.
+
