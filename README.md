@@ -56,6 +56,13 @@ time to release the next version. This involves:
 - create the new version and push it to Pypi
 - reorganize the documentation in the `develop` branch
 
+### Note on building the documentation
+A note applying to both steps: The environment in which you
+build the documentation must include the external dependencies
+(`numpy`, `pandas`, etc.) mentioned above. Sphinx actually checks
+for the presence of dependencies and will fail to build the
+documentation if they are missing.
+
 ### Create the new version
 Overview [here](http://peterdowns.com/posts/first-time-with-pypi.html).
 
