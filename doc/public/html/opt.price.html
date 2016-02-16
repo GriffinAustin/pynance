@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Options - price (pynance.opt.price) &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="index.html" />
+    <link rel="up" title="Options (pynance.opt)" href="opt.html" />
+    <link rel="next" title="Options - remote retrieval (pynance.opt.retrieve)" href="opt.retrieve.html" />
+    <link rel="prev" title="Options - covered calls (pynance.opt.covcall)" href="opt.covcall.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="opt.retrieve.html" title="Options - remote retrieval (pynance.opt.retrieve)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="opt.covcall.html" title="Options - covered calls (pynance.opt.covcall)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="opt.html" accesskey="U">Options (<code class="docutils literal"><span class="pre">pynance.opt</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="opt.covcall.html"
+                        title="previous chapter">Options - covered calls (<code class="docutils literal"><span class="pre">pynance.opt.covcall</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="opt.retrieve.html"
+                        title="next chapter">Options - remote retrieval (<code class="docutils literal"><span class="pre">pynance.opt.retrieve</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/opt.price.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.opt.price"></span><div class="section" id="options-price-pynance-opt-price">
+<h1>Options - price (<a class="reference internal" href="#module-pynance.opt.price" title="pynance.opt.price"><code class="xref py py-mod docutils literal"><span class="pre">pynance.opt.price</span></code></a>)<a class="headerlink" href="#options-price-pynance-opt-price" title="Permalink to this headline">¶</a></h1>
+</div>
+<dl class="class">
+<dt id="pynance.opt.price.Price">
+<em class="property">class </em><code class="descclassname">pynance.opt.price.</code><code class="descname">Price</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/price.html#Price"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.price.Price" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper class for <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code> for retrieving
+options prices.</p>
+<p>Objects of this class are not intended for direct instantiation
+but are created as attributes of objects of type <a class="reference internal" href="opt.core.html#pynance.opt.core.Options" title="pynance.opt.core.Options"><code class="xref py py-class docutils literal"><span class="pre">Options</span></code></a>.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.3.0.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>df</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></p>
+<blockquote class="last">
+<div><p>Options data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>data</td>
+<td>(<code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code>) Options data.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="70%" />
+<col width="30%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><dl class="first last method">
+<dt id="pynance.opt.price.Price.exps">
+<code class="descname">exps</code><span class="sig-paren">(</span><em>opttype</em>, <em>strike</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/price.html#Price.exps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.price.Price.exps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prices for given strike on all available dates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>opttype</strong> : str (&#8216;call&#8217; or &#8216;put&#8217;)</p>
+<p><strong>strike</strong> : numeric</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></p>
+<p><strong>eq</strong> : float</p>
+<blockquote>
+<div><p>Price of underlying.</p>
+</div></blockquote>
+<p><strong>qt</strong> : <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.datetime" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></a></p>
+<blockquote class="last">
+<div><p>Time of quote.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pynance.opt.price.Price.strikes" title="pynance.opt.price.Price.strikes"><code class="xref py py-meth docutils literal"><span class="pre">strikes()</span></code></a></p>
+</div>
+</dd></dl>
+
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><dl class="first last method">
+<dt id="pynance.opt.price.Price.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>opttype</em>, <em>strike</em>, <em>expiry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/price.html#Price.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.price.Price.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Price as midpoint between bid and ask.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>opttype</strong> : str</p>
+<blockquote>
+<div><p>&#8216;call&#8217; or &#8216;put&#8217;.</p>
+</div></blockquote>
+<p><strong>strike</strong> : numeric</p>
+<blockquote>
+<div><p>Strike price.</p>
+</div></blockquote>
+<p><strong>expiry</strong> : date-like</p>
+<blockquote>
+<div><p>Expiration date. Can be a <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.datetime" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></a> or
+a string that <code class="xref py py-mod docutils literal"><span class="pre">pandas</span></code> can interpret as such, e.g.
+&#8216;2015-01-01&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>out</strong> : float</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">geopts</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ge&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">geopts</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;call&#39;</span><span class="p">,</span> <span class="mf">26.</span><span class="p">,</span> <span class="s1">&#39;2015-09-18&#39;</span><span class="p">)</span>
+<span class="go">0.94</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><dl class="first last method">
+<dt id="pynance.opt.price.Price.metrics">
+<code class="descname">metrics</code><span class="sig-paren">(</span><em>opttype</em>, <em>strike</em>, <em>expiry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/price.html#Price.metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.price.Price.metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basic metrics for a specific option.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>opttype</strong> : str (&#8216;call&#8217; or &#8216;put&#8217;)</p>
+<p><strong>strike</strong> : numeric</p>
+<blockquote>
+<div><p>Strike price.</p>
+</div></blockquote>
+<p><strong>expiry</strong> : date-like</p>
+<blockquote>
+<div><p>Expiration date. Can be a <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.datetime" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></a> or
+a string that <code class="xref py py-mod docutils literal"><span class="pre">pandas</span></code> can interpret as such, e.g.
+&#8216;2015-01-01&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>out</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><dl class="first last method">
+<dt id="pynance.opt.price.Price.strikes">
+<code class="descname">strikes</code><span class="sig-paren">(</span><em>opttype</em>, <em>expiry</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/price.html#Price.strikes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.price.Price.strikes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve option prices for all strikes of a given type with a given expiration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>opttype</strong> : str (&#8216;call&#8217; or &#8216;put&#8217;)</p>
+<p><strong>expiry</strong> : date-like</p>
+<blockquote>
+<div><p>Expiration date. Can be a <a class="reference external" href="http://docs.python.org/library/datetime.html#datetime.datetime" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></a> or
+a string that <code class="xref py py-mod docutils literal"><span class="pre">pandas</span></code> can interpret as such, e.g.
+&#8216;2015-01-01&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></p>
+<p><strong>eq</strong> : float</p>
+<blockquote>
+<div><p>Price of underlying.</p>
+</div></blockquote>
+<p><strong>qt</strong> : datetime.datetime</p>
+<blockquote class="last">
+<div><p>Time of quote.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pynance.opt.price.Price.exps" title="pynance.opt.price.Price.exps"><code class="xref py py-meth docutils literal"><span class="pre">exps()</span></code></a></p>
+</div>
+</dd></dl>
+
+</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="opt.retrieve.html" title="Options - remote retrieval (pynance.opt.retrieve)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="opt.covcall.html" title="Options - covered calls (pynance.opt.covcall)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="opt.html" >Options (<code class="docutils literal"><span class="pre">pynance.opt</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

@@ -14,6 +14,8 @@ def run(features, labels, regularization=0., constfeat=True):
     """
     Run linear regression on the given data.
 
+    .. versionadded:: 0.5.0
+
     If a regularization parameter is provided, this function
     is a simplification and specialization of ridge
     regression, as implemented in `scikit-learn
@@ -53,6 +55,8 @@ def run(features, labels, regularization=0., constfeat=True):
 def predict(features, model):
     """
     Generate predictions from features and model.
+
+    .. versionadded:: 0.5.0
 
     Parameters
     ----------

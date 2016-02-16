@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.tech.movave &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.tech.movave</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2014- Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Technical analysis - moving averages (:mod:`pynance.tech.movave`)</span>
+<span class="sd">==================================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.tech.movave</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">simple</span>
+
+<div class="viewcode-block" id="sma"><a class="viewcode-back" href="../../../tech.movave.html#pynance.tech.movave.sma">[docs]</a><span class="k">def</span> <span class="nf">sma</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    simple moving average </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">    window : int, optional</span>
+<span class="sd">        Lookback period for sma. Defaults to 20.</span>
+<span class="sd">    outputcol : str, optional</span>
+<span class="sd">        Column to use for output. Defaults to &#39;SMA&#39;.</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column of eqdata on which to calculate sma. If</span>
+<span class="sd">        `eqdata` has only 1 column, `selection` is ignored,</span>
+<span class="sd">        and sma is calculated on that column. Defaults</span>
+<span class="sd">        to &#39;Adj Close&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">_selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;Adj Close&#39;</span><span class="p">)</span>
+        <span class="n">_eqdata</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_selection</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_eqdata</span> <span class="o">=</span> <span class="n">eqdata</span>
+    <span class="n">_window</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;window&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">_outputcol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputcol&#39;</span><span class="p">,</span> <span class="s1">&#39;SMA&#39;</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">_outputcol</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">ret</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_outputcol</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">rolling_mean</span><span class="p">(</span><span class="n">_eqdata</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">_window</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="ema"><a class="viewcode-back" href="../../../tech.movave.html#pynance.tech.movave.ema">[docs]</a><span class="k">def</span> <span class="nf">ema</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exponential moving average with the given span.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">        Must have exactly 1 column on which to calculate EMA</span>
+<span class="sd">    span : int, optional</span>
+<span class="sd">        Span for exponential moving average. Cf. `pandas.stats.moments.ewma </span>
+<span class="sd">        &lt;http://pandas.pydata.org/pandas-docs/stable/generated/pandas.stats.moments.ewma.html&gt;`_ and</span>
+<span class="sd">        `additional Pandas documentation </span>
+<span class="sd">        &lt;http://pandas.pydata.org/pandas-docs/stable/computation.html#exponentially-weighted-moment-functions&gt;`_.</span>
+<span class="sd">    outputcol : str, optional</span>
+<span class="sd">        Column to use for output. Defaults to &#39;EMA&#39;.</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column of eqdata on which to calculate ema. If</span>
+<span class="sd">        `eqdata` has only 1 column, `selection` is ignored,</span>
+<span class="sd">        and ema is calculated on that column. Defaults</span>
+<span class="sd">        to &#39;Adj Close&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    emadf : DataFrame</span>
+<span class="sd">        Exponential moving average using the given `span`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">_selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;Adj Close&#39;</span><span class="p">)</span>
+        <span class="n">_eqdata</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_selection</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_eqdata</span> <span class="o">=</span> <span class="n">eqdata</span>
+    <span class="n">_span</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">_col</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputcol&#39;</span><span class="p">,</span> <span class="s1">&#39;EMA&#39;</span><span class="p">)</span>
+    <span class="c1"># necessary because pd.ewma() outputs Series rather than DataFrame</span>
+    <span class="n">_emadf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">_col</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">_emadf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ewma</span><span class="p">(</span><span class="n">_eqdata</span><span class="p">,</span> <span class="n">span</span><span class="o">=</span><span class="n">_span</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_emadf</span></div>
+
+<div class="viewcode-block" id="ema_growth"><a class="viewcode-back" href="../../../tech.movave.html#pynance.tech.movave.ema_growth">[docs]</a><span class="k">def</span> <span class="nf">ema_growth</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Growth of exponential moving average.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">    span : int, optional</span>
+<span class="sd">        Span for exponential moving average. Defaults to 20.</span>
+<span class="sd">    outputcol : str, optional.</span>
+<span class="sd">        Column to use for output. Defaults to &#39;EMA Growth&#39;.</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column of eqdata on which to calculate ema growth. If</span>
+<span class="sd">        `eqdata` has only 1 column, `selection` is ignored,</span>
+<span class="sd">        and ema growth is calculated on that column. Defaults</span>
+<span class="sd">        to &#39;Adj Close&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    out : DataFrame</span>
+<span class="sd">        Growth of exponential moving average from one day to next</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_growth_outputcol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputcol&#39;</span><span class="p">,</span> <span class="s1">&#39;EMA Growth&#39;</span><span class="p">)</span>
+    <span class="n">_ema_outputcol</span> <span class="o">=</span> <span class="s1">&#39;EMA&#39;</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;outputcol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_ema_outputcol</span>
+    <span class="n">_emadf</span> <span class="o">=</span> <span class="n">ema</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">simple</span><span class="o">.</span><span class="n">growth</span><span class="p">(</span><span class="n">_emadf</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">_ema_outputcol</span><span class="p">,</span> <span class="n">outputcol</span><span class="o">=</span><span class="n">_growth_outputcol</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="volatility"><a class="viewcode-back" href="../../../tech.movave.html#pynance.tech.movave.volatility">[docs]</a><span class="k">def</span> <span class="nf">volatility</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Volatility (standard deviation) over the given window</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">    window : int, optional</span>
+<span class="sd">        Lookback period. Defaults to 20.</span>
+<span class="sd">    outputcol : str, optional</span>
+<span class="sd">        Name of column to be used in returned dataframe. Defaults to &#39;Risk&#39;.</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column of eqdata on which to calculate volatility. If</span>
+<span class="sd">        `eqdata` has only 1 column, `selection` is ignored,</span>
+<span class="sd">        and volatility is calculated on that column. Defaults</span>
+<span class="sd">        to &#39;Adj Close&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    risk : DataFrame</span>
+<span class="sd">        Moving volatility with the given lookback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">_selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;Adj Close&#39;</span><span class="p">)</span>
+        <span class="n">_eqdata</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_selection</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_eqdata</span> <span class="o">=</span> <span class="n">eqdata</span>
+    <span class="n">_window</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;window&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">_colname</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputcol&#39;</span><span class="p">,</span> <span class="s1">&#39;Risk&#39;</span><span class="p">)</span>
+    <span class="n">_risk</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">_colname</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">_risk</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">rolling_std</span><span class="p">(</span><span class="n">_eqdata</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">_window</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">_risk</span></div>
+
+<div class="viewcode-block" id="growth_volatility"><a class="viewcode-back" href="../../../tech.movave.html#pynance.tech.movave.growth_volatility">[docs]</a><span class="k">def</span> <span class="nf">growth_volatility</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the volatility of growth.</span>
+
+<span class="sd">    Note that, like :func:`pynance.tech.simple.growth` but in contrast to </span>
+<span class="sd">    :func:`volatility`, :func:`growth_volatility`</span>
+<span class="sd">    applies directly to a dataframe like that returned by </span>
+<span class="sd">    :func:`pynance.data.retrieve.get`, not necessarily to a single-column dataframe.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">        Data from which to extract growth volatility. An exception</span>
+<span class="sd">        will be raised if `eqdata` does not contain a column &#39;Adj Close&#39;</span>
+<span class="sd">        or an optional name specified by the `selection` parameter.</span>
+<span class="sd">    window : int, optional</span>
+<span class="sd">        Window on which to calculate volatility. Defaults to 20.</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column of eqdata on which to calculate volatility of growth. Defaults</span>
+<span class="sd">        to &#39;Adj Close&#39;</span>
+<span class="sd">    outputcol : str, optional</span>
+<span class="sd">        Column to use for output. Defaults to &#39;Growth Risk&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    out : DataFrame</span>
+<span class="sd">        Dataframe showing the volatility of growth over the specified `window`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_window</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;window&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">_selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;Adj Close&#39;</span><span class="p">)</span>
+    <span class="n">_outputcol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputcol&#39;</span><span class="p">,</span> <span class="s1">&#39;Growth Risk&#39;</span><span class="p">)</span>
+    <span class="n">_growthdata</span> <span class="o">=</span> <span class="n">simple</span><span class="o">.</span><span class="n">growth</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="n">selection</span><span class="o">=</span><span class="n">_selection</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">volatility</span><span class="p">(</span><span class="n">_growthdata</span><span class="p">,</span> <span class="n">outputcol</span><span class="o">=</span><span class="n">_outputcol</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">_window</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="bollinger"><a class="viewcode-back" href="../../../tech.movave.html#pynance.tech.movave.bollinger">[docs]</a><span class="k">def</span> <span class="nf">bollinger</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Bollinger bands</span>
+
+<span class="sd">    Returns bolldf, smadf where bolldf is a DataFrame containing</span>
+<span class="sd">    Bollinger bands with columns &#39;Upper&#39; and &#39;Lower&#39; and smadf contains</span>
+<span class="sd">    the simple moving average.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">        Must include a column specified in the `selection` parameter or, </span>
+<span class="sd">        if no `selection` parameter is given, a column &#39;Adj Close&#39;.</span>
+<span class="sd">    window : int, optional</span>
+<span class="sd">        Lookback period.</span>
+<span class="sd">    multiple : float, optional</span>
+<span class="sd">        Multiple of standard deviation above and below sma to use</span>
+<span class="sd">        in calculating band value. Defaults to 2.0.</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column of `eqdata` on which to calculate bollinger bands.</span>
+<span class="sd">        Defaults to &#39;Adj Close&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    bolldf : DataFrame</span>
+<span class="sd">        Dataframe containing columns &#39;Upper&#39; and &#39;Lower&#39; describing</span>
+<span class="sd">        the given multiple of standard deviations above and below</span>
+<span class="sd">        simple moving average for the lookback period.</span>
+<span class="sd">    smadf : DataFrame</span>
+<span class="sd">        Simple moving average given the specified lookback.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_window</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;window&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">_multiple</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;multiple&#39;</span><span class="p">,</span> <span class="mf">2.</span><span class="p">)</span>
+    <span class="n">_selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;Adj Close&#39;</span><span class="p">)</span>
+    <span class="c1"># ensures correct name for output column of sma()</span>
+    <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;outputcol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SMA&#39;</span>
+    <span class="n">_smadf</span> <span class="o">=</span> <span class="n">sma</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">_sigmas</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">rolling_std</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_selection</span><span class="p">],</span> <span class="n">window</span><span class="o">=</span><span class="n">_window</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">_diff</span> <span class="o">=</span> <span class="n">_multiple</span> <span class="o">*</span> <span class="n">_sigmas</span>
+    <span class="n">_bolldf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Upper&#39;</span><span class="p">,</span> <span class="s1">&#39;Lower&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">_bolldf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Upper&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_smadf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">_diff</span>
+    <span class="n">_bolldf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Lower&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_smadf</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="n">_diff</span>
+    <span class="k">return</span> <span class="n">_bolldf</span><span class="p">,</span> <span class="n">_smadf</span></div>
+
+<div class="viewcode-block" id="ratio_to_ave"><a class="viewcode-back" href="../../../tech.movave.html#pynance.tech.movave.ratio_to_ave">[docs]</a><span class="k">def</span> <span class="nf">ratio_to_ave</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return values expressed as ratios to the average over some number</span>
+<span class="sd">    of prior sessions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">        Must contain a column with name matching `selection`, or, if</span>
+<span class="sd">        `selection` is not specified, a column named &#39;Volume&#39;</span>
+<span class="sd">    window : int</span>
+<span class="sd">        Interval over which to calculate the average. Normally 252 (1 year)</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column to select for calculating ratio. Defaults to &#39;Volume&#39;</span>
+<span class="sd">    skipstartrows : int, optional</span>
+<span class="sd">        Rows to skip at beginning in addition to the `window` rows</span>
+<span class="sd">        that must be skipped to get the baseline volume. Defaults to 0.</span>
+<span class="sd">    skipendrows : int, optional</span>
+<span class="sd">        Rows to skip at end. Defaults to 0.</span>
+<span class="sd">    outputcol : str, optional</span>
+<span class="sd">        Name of column in output dataframe. Defaults to &#39;Ratio to Ave&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    out : DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;Volume&#39;</span><span class="p">)</span>
+    <span class="n">_skipstartrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;skipstartrows&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">_skipendrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;skipendrows&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">_outputcol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputcol&#39;</span><span class="p">,</span> <span class="s1">&#39;Ratio to Ave&#39;</span><span class="p">)</span>
+    <span class="n">_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">_eqdata</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">_selection</span><span class="p">]</span>
+
+    <span class="n">_sma</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">rolling_mean</span><span class="p">(</span><span class="n">_eqdata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="n">_skipendrows</span><span class="p">],</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">_outdata</span> <span class="o">=</span> <span class="n">_eqdata</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">window</span> <span class="o">+</span> <span class="n">_skipstartrows</span><span class="p">:</span><span class="n">_size</span> <span class="o">-</span> <span class="n">_skipendrows</span><span class="p">]</span> <span class="o">/</span>\
+            <span class="n">_sma</span><span class="p">[</span><span class="n">window</span> <span class="o">+</span> <span class="n">_skipstartrows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:]</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">window</span> <span class="o">+</span> <span class="n">_skipstartrows</span><span class="p">:</span><span class="n">_size</span> <span class="o">-</span> <span class="n">_skipendrows</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_outdata</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">_outputcol</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

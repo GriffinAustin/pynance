@@ -14,6 +14,8 @@ def mse(predicted, actual):
     """
     Mean squared error of predictions.
 
+    .. versionadded:: 0.5.0
+
     Parameters
     ----------
     predicted : ndarray
@@ -36,6 +38,8 @@ def mse(predicted, actual):
 def stderr(predicted, actual):
     """
     Standard error of predictions.
+
+    .. versionadded:: 0.5.0
 
     Parameters
     ----------
