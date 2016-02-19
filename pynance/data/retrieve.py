@@ -17,9 +17,13 @@ import io
 
 import pandas_datareader.data as web
 
-def get(equity, start, end):
+def get(equity, *args, **kwargs):
     """ 
     Get DataFrame for an individual equity from Yahoo!  
+    
+    .. versionchanged:: 0.5.0: Parameters changed to\
+    \*args and \*\*kwargs to insulate against datareader\
+    api changes in future.
     
     Examples
     --------
@@ -27,7 +31,7 @@ def get(equity, start, end):
     >>> aapl = pn.data.get('aapl', '2014-03-01', '2015-03-01')
     >>> goog = pn.data.get('goog', '2014', '2015')
     """
-    return web.DataReader(equity, 'yahoo', start, end)
+    return web.DataReader(equity, 'yahoo', *args, **kwargs)
 
 def equities(country='US'):
     """

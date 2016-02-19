@@ -11,7 +11,7 @@ license http://opensource.org/licenses/MIT
 import unittest
 import pandas as pd
 import pynance as pn
-
+import datetime
 
 class TestData(unittest.TestCase):
     def setUp(self):
@@ -38,6 +38,17 @@ class TestData(unittest.TestCase):
             for value, test_value in zip(session[:-1], test_session):
                 self.assertAlmostEqual(value, test_value)
 
+    def test_pynance_data_get_with_default_end_date(self):
+        current_date = datetime.datetime.today()
+        past_date = current_date - datetime.timedelta(days=5)
+        pynance_data = pn.data.get('GOOG', past_date.date().isoformat(), current_date.date().isoformat())
+        pynance_data_default_end_date = pn.data.get('GOOG', past_date.date().isoformat())
+ 
+        self.assertEqual(pynance_data.shape, pynance_data_default_end_date.shape)
+        for session, default_session in zip(pynance_data.values, pynance_data_default_end_date.values):
+            for value, test_value in zip(session, default_session):
+                self.assertEqual(value, test_value)
+ 
 
 if __name__ == '__main__':
-    unittest.main()
+    unit.main()
