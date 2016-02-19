@@ -17,17 +17,20 @@ import io
 
 import pandas_datareader.data as web
 
-def get(equity, start, end):
-    """ 
+def get(equity, *args, **kwargs):
+    """get(equity, start=None, end=None)
     Get DataFrame for an individual equity from Yahoo!  
+
+    .. versionchanged:: 0.5.0
+       Default `start` (2010-01-01) and `end` (current date).
     
     Examples
     --------
     >>> import pynance as pn
     >>> aapl = pn.data.get('aapl', '2014-03-01', '2015-03-01')
-    >>> goog = pn.data.get('goog', '2014', '2015')
+    >>> goog = pn.data.get('goog', '2014')
     """
-    return web.DataReader(equity, 'yahoo', start, end)
+    return web.DataReader(equity, 'yahoo', *args, **kwargs)
 
 def equities(country='US'):
     """

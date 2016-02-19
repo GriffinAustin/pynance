@@ -83,17 +83,20 @@
 
 <span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="kn">as</span> <span class="nn">web</span>
 
-<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../../data.retrieve.html#pynance.data.retrieve.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; </span>
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../../../data.retrieve.html#pynance.data.retrieve.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get(equity, start=None, end=None)</span>
 <span class="sd">    Get DataFrame for an individual equity from Yahoo!  </span>
+
+<span class="sd">    .. versionchanged:: 0.5.0</span>
+<span class="sd">       Default `start` (2010-01-01) and `end` (current date).</span>
 <span class="sd">    </span>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; import pynance as pn</span>
 <span class="sd">    &gt;&gt;&gt; aapl = pn.data.get(&#39;aapl&#39;, &#39;2014-03-01&#39;, &#39;2015-03-01&#39;)</span>
-<span class="sd">    &gt;&gt;&gt; goog = pn.data.get(&#39;goog&#39;, &#39;2014&#39;, &#39;2015&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; goog = pn.data.get(&#39;goog&#39;, &#39;2014&#39;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="s1">&#39;yahoo&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="equities"><a class="viewcode-back" href="../../../data.retrieve.html#pynance.data.retrieve.equities">[docs]</a><span class="k">def</span> <span class="nf">equities</span><span class="p">(</span><span class="n">country</span><span class="o">=</span><span class="s1">&#39;US&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

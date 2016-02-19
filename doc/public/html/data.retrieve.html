@@ -123,12 +123,15 @@ on which they are traded.</p>
 
 <dl class="function">
 <dt id="pynance.data.retrieve.get">
-<code class="descclassname">pynance.data.retrieve.</code><code class="descname">get</code><span class="sig-paren">(</span><em>equity</em>, <em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/data/retrieve.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.data.retrieve.get" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pynance.data.retrieve.</code><code class="descname">get</code><span class="sig-paren">(</span><em>equity</em>, <em>start=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/data/retrieve.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.data.retrieve.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get DataFrame for an individual equity from Yahoo!</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.5.0: </span>Default <cite>start</cite> (2010-01-01) and <cite>end</cite> (current date).</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pynance</span> <span class="kn">as</span> <span class="nn">pn</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">aapl</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;aapl&#39;</span><span class="p">,</span> <span class="s1">&#39;2014-03-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2015-03-01&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">goog</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;goog&#39;</span><span class="p">,</span> <span class="s1">&#39;2014&#39;</span><span class="p">,</span> <span class="s1">&#39;2015&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">goog</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;goog&#39;</span><span class="p">,</span> <span class="s1">&#39;2014&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
