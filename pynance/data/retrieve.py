@@ -21,7 +21,9 @@ def get(equity, *args, **kwargs):
     """ 
     Get DataFrame for an individual equity from Yahoo!  
     
-    .. versionchanged:: 0.5.0
+    .. versionchanged:: 0.5.0: Parameters changed to\
+    \*args and \*\*kwargs to insulate against datareader\
+    api changes in future.
     
     Examples
     --------
