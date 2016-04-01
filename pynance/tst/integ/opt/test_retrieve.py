@@ -1,17 +1,16 @@
 """
-Copyright (c) 2014 Marshall Farrier
+Copyright (c) 2016 Marshall Farrier
 license http://opensource.org/licenses/MIT
 
-@author: Arka Dasgupta
-@contact: arkadasgupta@gmail.com
-@since: 2016-01-17
-@summary: Integration Test for data retrieval from yahoo
+@author: Marshall Farrier
+@contact: marshalldfarrier@gmail.com
+@since: 2016-03-31
+@summary: Integration Test for options data retrieval from yahoo
 """
 
 import unittest
 
 import pynance as pn
-
 
 class TestRetrieve(unittest.TestCase):
 

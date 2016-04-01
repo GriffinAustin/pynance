@@ -1,5 +1,5 @@
 """
-.. Copyright (c) 2015 Marshall Farrier
+.. Copyright (c) 2015-2016 Marshall Farrier
    license http://opensource.org/licenses/MIT
 
 Options - remote retrieval (:mod:`pynance.opt.retrieve`)
