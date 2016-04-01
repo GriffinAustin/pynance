@@ -17,7 +17,7 @@ import pandas as pd
 
 import pynance as pn
 
-class TestData(unittest.TestCase):
+class TestCommon(unittest.TestCase):
 
     def setUp(self):
         session_dates = [

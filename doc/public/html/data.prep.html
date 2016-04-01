@@ -71,9 +71,6 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -118,11 +115,11 @@ If provided, it must have the same shape and type
 <p>To exclude a column (such as a constant feature, which is
 usually the first or last column of data) simply don&#8217;t
 include it in the input. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">centered_data</span><span class="p">,</span> <span class="n">means</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">centered_data</span><span class="p">,</span> <span class="n">means</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:])</span>
 </pre></div>
 </div>
 <p>To perform this operation in place:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">means</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">out</span><span class="o">=</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">means</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">center</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">out</span><span class="o">=</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -162,11 +159,11 @@ If provided, it must have the same shape and type
 <p>To exclude a column (such as a constant feature, which is
 usually the first or last column of data) simply don&#8217;t
 include it in the input. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">normalized_data</span><span class="p">,</span> <span class="n">sd_adj</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">normalized_data</span><span class="p">,</span> <span class="n">sd_adj</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:])</span>
 </pre></div>
 </div>
 <p>To perform this operation in place:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">sd_adj</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">out</span><span class="o">=</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:])</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span><span class="p">,</span> <span class="n">sd_adj</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">out</span><span class="o">=</span><span class="n">mydata</span><span class="o">.</span><span class="n">iloc</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -257,7 +254,7 @@ case the label values will also be normalized and returned.</p>
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015-2016, Marshall Farrier.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
     </div>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

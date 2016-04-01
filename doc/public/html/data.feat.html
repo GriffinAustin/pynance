@@ -71,9 +71,6 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -90,7 +87,7 @@
 with <cite>functools.partial</cite> and other function decorators
 to pass to <cite>data.labeledfeatures()</cite>.
 For example,</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">featfunc</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">decorate</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">feat</span><span class="o">.</span><span class="n">fromfuncs</span><span class="p">,</span> <span class="p">[</span><span class="n">fn1</span><span class="p">,</span> <span class="n">fn2</span><span class="p">,</span> <span class="n">fn3</span><span class="p">],</span> <span class="n">skipatstart</span><span class="o">=</span><span class="n">averaging_window</span><span class="p">),</span> 
 <span class="go">        averaging_window + n_feature_sessions - 1)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">labeledfeatures</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="n">featfunc</span><span class="p">,</span> <span class="n">labelfunc</span><span class="p">)</span> 
@@ -225,7 +222,7 @@ Defaults to 0.</p>
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015-2016, Marshall Farrier.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
     </div>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
