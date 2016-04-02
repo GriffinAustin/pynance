@@ -7,7 +7,7 @@ import unittest
 
 import pynance as pn
 
-class TestData(unittest.TestCase):
+class TestCovCall(unittest.TestCase):
 
     def setUp(self):
         # from McMillan, pp. 44f.

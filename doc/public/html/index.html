@@ -75,9 +75,6 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -96,7 +93,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">0.5.0</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">February 18, 2016</td>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">April 02, 2016</td>
 </tr>
 </tbody>
 </table>
@@ -108,17 +105,17 @@ data from stock and derivatives markets.</p>
 <a class="reference external" href="http://www.numpy.org/">NumPy</a>, <a class="reference external" href="http://pandas.pydata.org/">Pandas</a>, and <a class="reference external" href="http://matplotlib.org/index.html">matplotlib</a>. Unless you have already installed these libraries,
 it is recommended to install the following individually using <cite>pip</cite>, as you will likely need to
 debug one or more of these installations:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>pip install matplotlib
-pip install numpy
-pip install pandas
-pip install pandas-datareader
-pip install pynance
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">matplotlib</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">numpy</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">pandas</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">pandas</span><span class="o">-</span><span class="n">datareader</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">pynance</span>
 </pre></div>
 </div>
 <p>Or for Python 3.x.x use <cite>pip3</cite> instead of <cite>pip</cite>.</p>
 <p>If you already have at least NumPy, Pandas and matplotlib installed or just prefer
 installing in one big step:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>pip install pynance
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pynance</span>
 </pre></div>
 </div>
 </div>
@@ -126,12 +123,12 @@ installing in one big step:</p>
 <h2>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h2>
 <p>Stock quotes maintained by <a class="reference external" href="http://finance.yahoo.com/">Yahoo! Finance</a>
 can be retrieved with the simple command:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pynance</span> <span class="kn">as</span> <span class="nn">pn</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pynance</span> <span class="k">as</span> <span class="nn">pn</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ge</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ge&#39;</span><span class="p">,</span> <span class="s1">&#39;1962&#39;</span><span class="p">,</span> <span class="s1">&#39;2015&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Current options quotes can be retrieved using:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">geopt</span><span class="p">,</span> <span class="n">geexp</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ge&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">geopt</span><span class="p">,</span> <span class="n">geexp</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ge&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The options data retrieved can then be analysed using functions from <a class="reference internal" href="opt.html#module-pynance.opt" title="pynance.opt"><code class="xref py py-mod docutils literal"><span class="pre">pynance.opt</span></code></a>.</p>
@@ -162,6 +159,7 @@ the <a class="reference external" href="http://scipy.org/bug-report.html#guideli
 <li class="toctree-l1"><a class="reference internal" href="data.lab.html">Data - building labels (<code class="docutils literal"><span class="pre">pynance.data.lab</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.prep.html">Data - preprocessing functions (<code class="docutils literal"><span class="pre">pynance.data.prep</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data.retrieve.html">Data - remote retrieval (<code class="docutils literal"><span class="pre">pynance.data.retrieve</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dateutils.html">Dateutils (<code class="docutils literal"><span class="pre">pynance.dateutils</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interest.html">Interest rates (<code class="docutils literal"><span class="pre">pynance.interest</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="learn.html">Machine learning (<code class="docutils literal"><span class="pre">pynance.learn</span></code>)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="learn.linreg.html">Linear regression (<code class="docutils literal"><span class="pre">pynance.learn.linreg</span></code>)</a></li>
@@ -185,9 +183,9 @@ the <a class="reference external" href="http://scipy.org/bug-report.html#guideli
 <div class="section" id="index">
 <h2>Index<a class="headerlink" href="#index" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div>
 <div class="section" id="prior-versions">
@@ -225,7 +223,7 @@ the <a class="reference external" href="http://scipy.org/bug-report.html#guideli
 
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015-2016, Marshall Farrier.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
     </div>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

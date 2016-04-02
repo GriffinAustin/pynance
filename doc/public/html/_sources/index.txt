@@ -77,6 +77,7 @@ Reference
    chart
    common
    data
+   dateutils
    interest
    learn
    opt

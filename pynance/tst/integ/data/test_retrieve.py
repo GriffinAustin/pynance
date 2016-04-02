@@ -16,7 +16,7 @@ import pandas as pd
 import pynance as pn
 
 
-class TestData(unittest.TestCase):
+class TestRetrieve(unittest.TestCase):
     def setUp(self):
         self.columns = ['Open', 'High', 'Low', 'Close', 'Volume', 'Adj Close']
         self.index = pd.date_range('2014-03-03', periods=5)

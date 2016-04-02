@@ -11,7 +11,7 @@ import numpy as np
 
 import pynance as pn
 
-class TestData(unittest.TestCase):
+class TestPf(unittest.TestCase):
 
     def test_optimize(self):
         # Capinski, Zastawniak, pp. 76f.
