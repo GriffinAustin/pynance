@@ -85,8 +85,11 @@
 <h1>Options - remote retrieval (<a class="reference internal" href="#module-pynance.opt.retrieve" title="pynance.opt.retrieve"><code class="xref py py-mod docutils literal"><span class="pre">pynance.opt.retrieve</span></code></a>)<a class="headerlink" href="#options-remote-retrieval-pynance-opt-retrieve" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pynance.opt.retrieve.get">
-<code class="descclassname">pynance.opt.retrieve.</code><code class="descname">get</code><span class="sig-paren">(</span><em>equity</em>, <em>showinfo=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/retrieve.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.retrieve.get" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pynance.opt.retrieve.</code><code class="descname">get</code><span class="sig-paren">(</span><em>equity</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/opt/retrieve.html#get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.opt.retrieve.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve all current options chains for given equity.</p>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.5.0: </span>Eliminate special exception handling.</p>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -98,17 +101,9 @@
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>optdata</strong> : <a class="reference internal" href="opt.core.html#pynance.opt.core.Options" title="pynance.opt.core.Options"><code class="xref py py-class docutils literal"><span class="pre">Options</span></code></a></p>
-<blockquote>
+<blockquote class="last">
 <div><p>All options data for given equity currently available
 from Yahoo! Finance.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>pandas.io.data.RemoteDataError</strong></p>
-<blockquote class="last">
-<div><p>If remote data is not available, as is often the case at night
-when Yahoo! is resetting its servers in preparation for the
-next session.</p>
 </div></blockquote>
 </td>
 </tr>
