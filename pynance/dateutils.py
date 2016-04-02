@@ -42,5 +42,5 @@ def is_bday(date, bday=None):
     _date = Timestamp(date)
     if bday is None:
         bday = CustomBusinessDay(calendar=USFederalHolidayCalendar())
-    return _date == ((_date + bday) - bday)
+    return _date == (_date + bday) - bday
 
