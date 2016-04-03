@@ -14,8 +14,9 @@ PyNance
 :Release: |release|
 :Date:  |today|
 
-PyNance is open-source software with tools for retrieving, analysing and visualizing
-data from stock and derivatives markets.
+PyNance is open-source software for retrieving, analysing and visualizing
+data from stock and derivatives markets. It includes tools for generating
+features and labels for machine learning algorithms.
 
 Installation
 ------------

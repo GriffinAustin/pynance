@@ -9,6 +9,8 @@ Data (:mod:`pynance.data`)
 
 :mod:`pynance.data.combine`
 
+:mod:`pynance.data.compare`
+
 :mod:`pynance.data.feat`
 
 :mod:`pynance.data.lab`
@@ -20,11 +22,13 @@ Data (:mod:`pynance.data`)
 
 from __future__ import absolute_import
 
-__all__ = ["combine", "feat", "lab", "prep", "retrieve"]
+__all__ = ["combine", "compare", "feat", "lab", "prep", "retrieve"]
 
 # imported directly into data module
 from . import combine
 from .combine import *
+from . import compare
+from .compare import *
 from . import prep
 from .prep import *
 from . import retrieve
