@@ -15,6 +15,7 @@ from ftplib import FTP
 from functools import partial
 import io
 
+import pandas as pd
 import pandas_datareader.data as web
 
 def get(equity, *args, **kwargs):
@@ -34,12 +35,12 @@ def get(equity, *args, **kwargs):
 
 def equities(country='US'):
     """
-    Return a dictionary of equities and the exchange where
-    they are traded.
-
-    Currently only US markets are supported
+    Return a DataFrame of current US equities.
 
     .. versionadded:: 0.4.0
+
+    .. versionchanged:: 0.5.0
+       Return a DataFrame
 
     Parameters
     ----------
@@ -48,42 +49,47 @@ def equities(country='US'):
 
     Returns
     -------
-    eq : dict of str
-        Dictionary mapping equities to a string representing the exchange
-        on which they are traded.
+    eqs : :class:`pandas.DataFrame`
+        DataFrame whose index is a list of all current ticker symbols.
+        Columns are 'Security Name' (e.g. 'Zynerba Pharmaceuticals, Inc. - Common Stock')
+        and 'Exchange' ('NASDAQ', 'NYSE', 'NYSE MKT', etc.)
 
     Examples
     --------
-    >>> equities = pn.data.equities('US')
+    >>> eqs = pn.data.equities('US')
+
+    Notes
+    -----
+    Currently only US markets are supported.
     """
-    _nasdaqblob, _otherblob = _getrawdata()
-    return _fromblobs(_nasdaqblob, _otherblob)
+    nasdaqblob, otherblob = _getrawdata()
+    eq_triples = []
+    eq_triples.extend(_get_nas_triples(nasdaqblob))
+    eq_triples.extend(_get_other_triples(otherblob))
+    eq_triples.sort()
+    index = [triple[0] for triple in eq_triples]
+    data = [triple[1:] for triple in eq_triples]
+    return pd.DataFrame(data, index, columns=['Security Name', 'Exchange'], dtype=str)
 
-def _fromblobs(nasdaqblob, otherblob):
-    _nasdaq = nasdaqblob.splitlines()
-    _other = otherblob.splitlines()
-    _nasdaqequities = [line.partition('|')[0] for line in _nasdaq[1:]]
-    # last line may contain file info
-    while not _nasdaqequities[-1].isalpha():
-        _nasdaqequities.pop()
-    _equities = {key: 'NASDAQ' for key in _nasdaqequities}
-    _equities.update(_linestodict(_other[1:]))
-    return _equities
+def _get_nas_triples(blob):
+    return _get_triples(blob, {}, 'NASDAQ')
 
-def _linestodict(lines):
-    _rows = [line.split('|', 3) for line in lines]
-    # last line may contain file info
-    while not _rows[-1][0].isalpha():
-        _rows.pop()
+def _get_other_triples(blob):
     # http://www.nasdaqtrader.com/trader.aspx?id=symboldirdefs
-    _exchanges = {
+    exchanges = {
             'A': 'NYSE MKT',
             'N': 'NYSE',
             'P': 'NYSE ARCA',
-            'Z': 'BATS'
-            }
-    _equities = {_row[0]: _exchanges.get(_row[2], 'unknown') for _row in _rows}
-    return _equities
+            'Z': 'BATS'}
+    return _get_triples(blob, exchanges, 'unknown')
+
+def _get_triples(blob, exchanges, default):
+    lines = blob.splitlines()
+    fields = [line.split('|') for line in lines[1:]] 
+    # last line is generally file info
+    if not fields[-1][1].isalpha() or not fields[-1][2].isalpha():
+        return [(field[0], field[1], exchanges.get(field[2], default)) for field in fields[:-1]]
+    return [(field[0], field[1], exchanges.get(field[2], default)) for field in fields]
 
 def _getrawdata():
     # http://quant.stackexchange.com/questions/1640/where-to-download-list-of-all-common-stocks-traded-on-nyse-nasdaq-and-amex
