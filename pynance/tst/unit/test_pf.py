@@ -1,5 +1,5 @@
 """
-Tests for portfolio optimization.
+Tests for portfolio optimization functions.
 
 Copyright (c) 2015 Marshall Farrier
 license http://opensource.org/licenses/MIT

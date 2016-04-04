@@ -1,9 +1,9 @@
 """
-.. Copyright (c) 2014, 2015 Marshall Farrier
+.. Copyright (c) 2014-2016 Marshall Farrier
    license http://opensource.org/licenses/MIT
 
 Portfolio optimization (:mod:`pynance.pf`)
-==================================================
+==========================================
 
 .. currentmodule:: pynance.pf
 """
