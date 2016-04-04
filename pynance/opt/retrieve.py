@@ -1,5 +1,5 @@
 """
-.. Copyright (c) 2015 Marshall Farrier
+.. Copyright (c) 2015-2016 Marshall Farrier
    license http://opensource.org/licenses/MIT
 
 Options - remote retrieval (:mod:`pynance.opt.retrieve`)
@@ -14,9 +14,12 @@ import pandas_datareader as pdr
 
 from .core import Options
 
-def get(equity, showinfo=True):
+def get(equity):
     """
     Retrieve all current options chains for given equity.
+
+    .. versionchanged:: 0.5.0
+       Eliminate special exception handling.
 
     Parameters
     -------------
@@ -28,13 +31,6 @@ def get(equity, showinfo=True):
     optdata : :class:`~pynance.opt.core.Options`
         All options data for given equity currently available
         from Yahoo! Finance.
-        
-    Raises
-    ------
-    pandas.io.data.RemoteDataError
-        If remote data is not available, as is often the case at night
-        when Yahoo! is resetting its servers in preparation for the
-        next session.
         
     Examples
     -------------
@@ -53,10 +49,5 @@ def get(equity, showinfo=True):
         Quote time: 2015-03-07 16:00
     """
     _optmeta = pdr.data.Options(equity, 'yahoo')
-    _optdata = None
-    try:
-        _optdata = _optmeta.get_all_data()
-    except (AttributeError, ValueError, pdr.data.RemoteDataError):
-        raise pdr.data.RemoteDataError(
-                "No options data available for '{}'".format(equity))
+    _optdata = _optmeta.get_all_data()
     return Options(_optdata)

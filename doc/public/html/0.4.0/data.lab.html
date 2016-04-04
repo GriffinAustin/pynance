@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data - building labels (pynance.data.lab) &mdash; PyNance 0.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.4.0 documentation" href="index.html" />
+    <link rel="up" title="Data (pynance.data)" href="data.html" />
+    <link rel="next" title="Data - preprocessing functions (pynance.data.prep)" href="data.prep.html" />
+    <link rel="prev" title="Data - building features (pynance.data.feat)" href="data.feat.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.prep.html" title="Data - preprocessing functions (pynance.data.prep)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data.feat.html" title="Data - building features (pynance.data.feat)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="data.html" accesskey="U">Data (<code class="docutils literal"><span class="pre">pynance.data</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data.feat.html"
+                        title="previous chapter">Data - building features (<code class="docutils literal"><span class="pre">pynance.data.feat</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data.prep.html"
+                        title="next chapter">Data - preprocessing functions (<code class="docutils literal"><span class="pre">pynance.data.prep</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/data.lab.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.data.lab"></span><div class="section" id="data-building-labels-pynance-data-lab">
+<h1>Data - building labels (<a class="reference internal" href="#module-pynance.data.lab" title="pynance.data.lab"><code class="xref py py-mod docutils literal"><span class="pre">pynance.data.lab</span></code></a>)<a class="headerlink" href="#data-building-labels-pynance-data-lab" title="Permalink to this headline">¶</a></h1>
+<p>These functions are intended to be used in conjunction
+with <a class="reference external" href="http://docs.python.org/library/functools.html#functools.partial" title="(in Python v2.7)"><code class="xref py py-func docutils literal"><span class="pre">functools.partial()</span></code></a> to pass to 
+<a class="reference internal" href="data.combine.html#pynance.data.combine.labeledfeatures" title="pynance.data.combine.labeledfeatures"><code class="xref py py-func docutils literal"><span class="pre">pynance.data.combine.labeledfeatures()</span></code></a>.
+For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">labeledfeatures</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span>
+<span class="gp">... </span>       <span class="n">partial</span><span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">growth</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="function">
+<dt id="pynance.data.lab.growth">
+<code class="descclassname">pynance.data.lab.</code><code class="descname">growth</code><span class="sig-paren">(</span><em>interval</em>, <em>pricecol</em>, <em>eqdata</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/data/lab.html#growth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.data.lab.growth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve growth labels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>interval</strong> : int</p>
+<blockquote>
+<div><p>Number of sessions over which growth is measured. For example, if
+the value of 32 is passed for <cite>interval</cite>, the data returned will 
+show the growth 32 sessions ahead for each data point.</p>
+</div></blockquote>
+<p><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Data for evaluating growth.</p>
+</div></blockquote>
+<p><strong>pricecol</strong> : str</p>
+<blockquote>
+<div><p>Column of <cite>eqdata</cite> to be used for prices (Normally &#8216;Adj Close&#8217;).</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>labels</strong> : DataFrame</p>
+<blockquote>
+<div><p>Growth labels for the specified period</p>
+</div></blockquote>
+<p><strong>skipatend</strong> : int</p>
+<blockquote class="last">
+<div><p>Number of rows skipped at the end of <cite>eqdata</cite> for the given labels.
+Used to synchronize labels and features.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">labeledfeatures</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> 
+<span class="gp">... </span>       <span class="n">partial</span><span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">lab</span><span class="o">.</span><span class="n">growth</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="s">&#39;Adj Close&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.prep.html" title="Data - preprocessing functions (pynance.data.prep)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data.feat.html" title="Data - building features (pynance.data.feat)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="data.html" >Data (<code class="docutils literal"><span class="pre">pynance.data</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

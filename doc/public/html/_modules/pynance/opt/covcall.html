@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>pynance.opt.covcall &mdash; PyNance 0.4.0 documentation</title>
+    <title>pynance.opt.covcall &mdash; PyNance 0.5.0 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '0.4.0',
+        VERSION:     '0.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="PyNance 0.4.0 documentation" href="../../../index.html" />
+    <link rel="top" title="PyNance 0.5.0 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" /> 
   </head>
   <body role="document">
@@ -36,7 +36,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>
@@ -50,9 +50,6 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -64,7 +61,7 @@
           <div class="body" role="main">
             
   <h1>Source code for pynance.opt.covcall</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">.. Copyright (c) 2014, 2015 Marshall Farrier</span>
 <span class="sd">   license http://opensource.org/licenses/MIT</span>
 
@@ -110,27 +107,27 @@
 <span class="sd">    -----</span>
 <span class="sd">    Cf. Lawrence McMillan, Options as a Strategic Investment, 5th ed., p. 43</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Eq Cost&#39;</span><span class="p">,</span> <span class="s">&#39;Option Premium&#39;</span><span class="p">,</span> <span class="s">&#39;Commission&#39;</span><span class="p">,</span> <span class="s">&#39;Total Invested&#39;</span><span class="p">,</span> <span class="s">&#39;Dividends&#39;</span><span class="p">,</span> <span class="s">&#39;Eq if Ex&#39;</span><span class="p">,</span> 
-            <span class="s">&#39;Comm if Ex&#39;</span><span class="p">,</span> <span class="s">&#39;Profit if Ex&#39;</span><span class="p">,</span> <span class="s">&#39;Ret if Ex&#39;</span><span class="p">,</span> <span class="s">&#39;Profit if Unch&#39;</span><span class="p">,</span> <span class="s">&#39;Ret if Unch&#39;</span><span class="p">,</span> <span class="s">&#39;Break_Even Price&#39;</span><span class="p">,</span>
-            <span class="s">&#39;Protection Pts&#39;</span><span class="p">,</span> <span class="s">&#39;Protection Pct&#39;</span><span class="p">]</span>
-    <span class="n">_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Value&#39;</span><span class="p">])</span>
+    <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Eq Cost&#39;</span><span class="p">,</span> <span class="s1">&#39;Option Premium&#39;</span><span class="p">,</span> <span class="s1">&#39;Commission&#39;</span><span class="p">,</span> <span class="s1">&#39;Total Invested&#39;</span><span class="p">,</span> <span class="s1">&#39;Dividends&#39;</span><span class="p">,</span> <span class="s1">&#39;Eq if Ex&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;Comm if Ex&#39;</span><span class="p">,</span> <span class="s1">&#39;Profit if Ex&#39;</span><span class="p">,</span> <span class="s1">&#39;Ret if Ex&#39;</span><span class="p">,</span> <span class="s1">&#39;Profit if Unch&#39;</span><span class="p">,</span> <span class="s1">&#39;Ret if Unch&#39;</span><span class="p">,</span> <span class="s1">&#39;Break_Even Price&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;Protection Pts&#39;</span><span class="p">,</span> <span class="s1">&#39;Protection Pct&#39;</span><span class="p">]</span>
+    <span class="n">_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">])</span>
     <span class="n">_shares</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span>
     <span class="n">_dividends</span> <span class="o">=</span> <span class="n">_shares</span> <span class="o">*</span> <span class="n">dividend</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Eq Cost&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_eqcost</span> <span class="o">=</span> <span class="n">_shares</span> <span class="o">*</span> <span class="n">eqprice</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Option Premium&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_optprem</span> <span class="o">=</span> <span class="n">_shares</span> <span class="o">*</span> <span class="n">callprice</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Commission&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">buycomm</span><span class="p">)</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Total Invested&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_invested</span> <span class="o">=</span> <span class="n">_eqcost</span> <span class="o">-</span> <span class="n">_optprem</span> <span class="o">+</span> <span class="n">buycomm</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Dividends&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dividends</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Eq if Ex&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_eqsale</span> <span class="o">=</span> <span class="n">strike</span> <span class="o">*</span> <span class="n">_shares</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Comm if Ex&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">excomm</span><span class="p">)</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Profit if Ex&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_profitex</span> <span class="o">=</span> <span class="n">_eqsale</span> <span class="o">+</span> <span class="n">_dividends</span> <span class="o">-</span> <span class="n">_invested</span> <span class="o">-</span> <span class="n">excomm</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Ret if Ex&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_profitex</span> <span class="o">/</span> <span class="n">_invested</span><span class="p">,</span> <span class="n">_constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Profit if Unch&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_profitunch</span> <span class="o">=</span> <span class="n">_eqcost</span> <span class="o">+</span> <span class="n">_dividends</span> <span class="o">-</span> <span class="n">_invested</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Ret if Unch&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_profitunch</span> <span class="o">/</span> <span class="n">_invested</span><span class="p">,</span> <span class="n">_constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Break_Even Price&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_breakeven</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">_invested</span> <span class="o">-</span> <span class="n">_dividends</span><span class="p">)</span> <span class="o">/</span> <span class="n">_shares</span><span class="p">,</span> 
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Eq Cost&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_eqcost</span> <span class="o">=</span> <span class="n">_shares</span> <span class="o">*</span> <span class="n">eqprice</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Option Premium&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_optprem</span> <span class="o">=</span> <span class="n">_shares</span> <span class="o">*</span> <span class="n">callprice</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Commission&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">buycomm</span><span class="p">)</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Total Invested&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_invested</span> <span class="o">=</span> <span class="n">_eqcost</span> <span class="o">-</span> <span class="n">_optprem</span> <span class="o">+</span> <span class="n">buycomm</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Dividends&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_dividends</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Eq if Ex&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_eqsale</span> <span class="o">=</span> <span class="n">strike</span> <span class="o">*</span> <span class="n">_shares</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Comm if Ex&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">excomm</span><span class="p">)</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Profit if Ex&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_profitex</span> <span class="o">=</span> <span class="n">_eqsale</span> <span class="o">+</span> <span class="n">_dividends</span> <span class="o">-</span> <span class="n">_invested</span> <span class="o">-</span> <span class="n">excomm</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Ret if Ex&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_profitex</span> <span class="o">/</span> <span class="n">_invested</span><span class="p">,</span> <span class="n">_constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Profit if Unch&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_profitunch</span> <span class="o">=</span> <span class="n">_eqcost</span> <span class="o">+</span> <span class="n">_dividends</span> <span class="o">-</span> <span class="n">_invested</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Ret if Unch&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_profitunch</span> <span class="o">/</span> <span class="n">_invested</span><span class="p">,</span> <span class="n">_constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Break_Even Price&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_breakeven</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">_invested</span> <span class="o">-</span> <span class="n">_dividends</span><span class="p">)</span> <span class="o">/</span> <span class="n">_shares</span><span class="p">,</span> 
             <span class="n">_constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Protection Pts&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_protpts</span> <span class="o">=</span> <span class="n">eqprice</span> <span class="o">-</span> <span class="n">_breakeven</span>
-    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s">&#39;Protection Pct&#39;</span><span class="p">,</span> <span class="s">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_protpts</span> <span class="o">/</span> <span class="n">eqprice</span><span class="p">,</span> <span class="n">_constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Protection Pts&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_protpts</span> <span class="o">=</span> <span class="n">eqprice</span> <span class="o">-</span> <span class="n">_breakeven</span>
+    <span class="n">_metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Protection Pct&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_protpts</span> <span class="o">/</span> <span class="n">eqprice</span><span class="p">,</span> <span class="n">_constants</span><span class="o">.</span><span class="n">NDIGITS_SIG</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">_metrics</span></div>
 </pre></div>
 
@@ -148,14 +145,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2015, Marshall Farrier.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
     </div>
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

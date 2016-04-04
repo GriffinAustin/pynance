@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.pf &mdash; PyNance 0.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.4.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.pf</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2014, 2015 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Portfolio optimization (:mod:`pynance.pf`)</span>
+<span class="sd">==================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.pf</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="optimize"><a class="viewcode-back" href="../../pf.html#pynance.pf.optimize">[docs]</a><span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="n">exp_rets</span><span class="p">,</span> <span class="n">covs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return parameters for portfolio optimization.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    exp_rets : ndarray</span>
+<span class="sd">        Vector of expected returns for each investment..</span>
+<span class="sd">    covs : ndarray</span>
+<span class="sd">        Covariance matrix for the given investments.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ---------</span>
+<span class="sd">    a : ndarray</span>
+<span class="sd">        The first vector (to be combined with target return as scalar)</span>
+<span class="sd">        in the linear equation for optimal weights.</span>
+<span class="sd">    b : ndarray</span>
+<span class="sd">        The second (constant) vector in the linear equation for</span>
+<span class="sd">        optimal weights.</span>
+<span class="sd">    least_risk_ret : int</span>
+<span class="sd">        The return achieved on the portfolio that combines the given</span>
+<span class="sd">        equities so as to achieve the lowest possible risk.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ---------</span>
+<span class="sd">    *   The length of `exp_rets` must match the number of rows</span>
+<span class="sd">        and columns in the `covs` matrix.</span>
+<span class="sd">    *   The weights for an optimal portfolio with expected return</span>
+<span class="sd">        `ret` is given by the formula `w = ret * a + b` where `a`</span>
+<span class="sd">        and `b` are the vectors returned here. The weights `w` for</span>
+<span class="sd">        the portfolio with lowest risk are given by `w = least_risk_ret * a + b`.</span>
+<span class="sd">    *   An exception will be raised if the covariance matrix</span>
+<span class="sd">        is singular or if each prospective investment has the</span>
+<span class="sd">        same expected return.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_cov_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">covs</span><span class="p">)</span>        
+
+    <span class="c"># unit vector</span>
+    <span class="n">_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">exp_rets</span><span class="p">)))</span>
+
+    <span class="c"># compute some dot products one time only</span>
+    <span class="n">_u_cov_inv</span> <span class="o">=</span> <span class="n">_u</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_cov_inv</span><span class="p">)</span>
+    <span class="n">_rets_cov_inv</span> <span class="o">=</span> <span class="n">exp_rets</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_cov_inv</span><span class="p">)</span>
+
+    <span class="c"># helper matrix for deriving Lagrange multipliers</span>
+    <span class="n">_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">_m</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_rets_cov_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">exp_rets</span><span class="p">)</span>
+    <span class="n">_m</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_u_cov_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">exp_rets</span><span class="p">)</span>
+    <span class="n">_m</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_rets_cov_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_u</span><span class="p">)</span>
+    <span class="n">_m</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_u_cov_inv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_u</span><span class="p">)</span>
+
+    <span class="c"># compute values to return</span>
+    <span class="n">_m_inv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">_m</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">_m_inv</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">_rets_cov_inv</span> <span class="o">+</span> <span class="n">_m_inv</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">_u_cov_inv</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">_m_inv</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">_rets_cov_inv</span> <span class="o">+</span> <span class="n">_m_inv</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">_u_cov_inv</span>
+    <span class="n">least_risk_ret</span> <span class="o">=</span> <span class="n">_m</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">_m</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">least_risk_ret</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyNance 0.4.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

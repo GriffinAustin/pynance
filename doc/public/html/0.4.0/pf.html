@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Portfolio optimization (pynance.pf) &mdash; PyNance 0.4.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.4.0 documentation" href="index.html" />
+    <link rel="next" title="Technical analysis (pynance.tech)" href="tech.html" />
+    <link rel="prev" title="Options - vertical spreads (pynance.opt.spread.vert)" href="opt.spread.vert.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tech.html" title="Technical analysis (pynance.tech)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.vert.html" title="Options - vertical spreads (pynance.opt.spread.vert)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.4.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="opt.spread.vert.html"
+                        title="previous chapter">Options - vertical spreads (<code class="docutils literal"><span class="pre">pynance.opt.spread.vert</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tech.html"
+                        title="next chapter">Technical analysis (<code class="docutils literal"><span class="pre">pynance.tech</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pf.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.pf"></span><div class="section" id="portfolio-optimization-pynance-pf">
+<h1>Portfolio optimization (<a class="reference internal" href="#module-pynance.pf" title="pynance.pf"><code class="xref py py-mod docutils literal"><span class="pre">pynance.pf</span></code></a>)<a class="headerlink" href="#portfolio-optimization-pynance-pf" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.pf.optimize">
+<code class="descclassname">pynance.pf.</code><code class="descname">optimize</code><span class="sig-paren">(</span><em>exp_rets</em>, <em>covs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/pf.html#optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.pf.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return parameters for portfolio optimization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>exp_rets</strong> : ndarray</p>
+<blockquote>
+<div><p>Vector of expected returns for each investment..</p>
+</div></blockquote>
+<p><strong>covs</strong> : ndarray</p>
+<blockquote>
+<div><p>Covariance matrix for the given investments.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>a</strong> : ndarray</p>
+<blockquote>
+<div><p>The first vector (to be combined with target return as scalar)
+in the linear equation for optimal weights.</p>
+</div></blockquote>
+<p><strong>b</strong> : ndarray</p>
+<blockquote>
+<div><p>The second (constant) vector in the linear equation for
+optimal weights.</p>
+</div></blockquote>
+<p><strong>least_risk_ret</strong> : int</p>
+<blockquote class="last">
+<div><p>The return achieved on the portfolio that combines the given
+equities so as to achieve the lowest possible risk.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li>The length of <cite>exp_rets</cite> must match the number of rows
+and columns in the <cite>covs</cite> matrix.</li>
+<li>The weights for an optimal portfolio with expected return
+<cite>ret</cite> is given by the formula <cite>w = ret * a + b</cite> where <cite>a</cite>
+and <cite>b</cite> are the vectors returned here. The weights <cite>w</cite> for
+the portfolio with lowest risk are given by <cite>w = least_risk_ret * a + b</cite>.</li>
+<li>An exception will be raised if the covariance matrix
+is singular or if each prospective investment has the
+same expected return.</li>
+</ul>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tech.html" title="Technical analysis (pynance.tech)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="opt.spread.vert.html" title="Options - vertical spreads (pynance.opt.spread.vert)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.4.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

@@ -12,7 +12,7 @@ from pytz import timezone
 
 import pynance as pn
 
-class TestData(unittest.TestCase):
+class TestPrice(unittest.TestCase):
 
     def setUp(self):
         # We need at least 3 dates, 3 strikes, both calls and puts

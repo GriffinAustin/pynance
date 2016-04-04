@@ -32,7 +32,7 @@ VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers
 CLASSIFIERS = [
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Financial and Insurance Industry",
         "Intended Audience :: Developers",
         "License :: OSI Approved",

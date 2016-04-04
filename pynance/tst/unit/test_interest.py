@@ -10,7 +10,7 @@ import unittest
 
 import pynance as pn
 
-class TestData(unittest.TestCase):
+class TestInterest(unittest.TestCase):
 
     def test_yrlygrowth(self):
         # growth of 8 over 3 years means annual growth of 2

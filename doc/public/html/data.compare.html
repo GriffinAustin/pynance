@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data - compare (pynance.data.compare) &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="index.html" />
+    <link rel="up" title="Data (pynance.data)" href="data.html" />
+    <link rel="next" title="Data - building features (pynance.data.feat)" href="data.feat.html" />
+    <link rel="prev" title="Data - combine features and labels (pynance.data.combine)" href="data.combine.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.feat.html" title="Data - building features (pynance.data.feat)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data.combine.html" title="Data - combine features and labels (pynance.data.combine)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="data.html" accesskey="U">Data (<code class="docutils literal"><span class="pre">pynance.data</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data.combine.html"
+                        title="previous chapter">Data - combine features and labels (<code class="docutils literal"><span class="pre">pynance.data.combine</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="data.feat.html"
+                        title="next chapter">Data - building features (<code class="docutils literal"><span class="pre">pynance.data.feat</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/data.compare.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.data.compare"></span><div class="section" id="data-compare-pynance-data-compare">
+<h1>Data - compare (<a class="reference internal" href="#module-pynance.data.compare" title="pynance.data.compare"><code class="xref py py-mod docutils literal"><span class="pre">pynance.data.compare</span></code></a>)<a class="headerlink" href="#data-compare-pynance-data-compare" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.data.compare.compare">
+<code class="descclassname">pynance.data.compare.</code><code class="descname">compare</code><span class="sig-paren">(</span><em>eq_dfs</em>, <em>columns=None</em>, <em>selection='Adj Close'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/data/compare.html#compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.data.compare.compare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the relative performance of multiple equities.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.5.0.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eq_dfs</strong> : list or tuple of DataFrame</p>
+<blockquote>
+<div><p>Performance data for multiple equities over
+a consistent time frame.</p>
+</div></blockquote>
+<p><strong>columns</strong> : iterable of str, default None</p>
+<blockquote>
+<div><p>Labels to use for the columns of the output DataFrame.
+The labels, if provided, should normally be the names
+of the equities whose performance is being compared.</p>
+</div></blockquote>
+<p><strong>selection</strong> : str, default &#8216;Adj Close&#8217;</p>
+<blockquote>
+<div><p>Column containing prices to be compared. Defaults
+to &#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rel_perf</strong> : DataFrame</p>
+<blockquote class="last">
+<div><p>A DataFrame whose columns contain normalized data
+for each equity represented in <cite>eq_dfs</cite>. The initial
+price for each equity will be normalized to 1.0.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Each set of data passed in <cite>eq_dfs</cite> is assumed to have
+the same start and end dates as the other data sets.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pynance</span> <span class="kn">as</span> <span class="nn">pn</span>
+
+<span class="n">eqs</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;FSLR&#39;</span><span class="p">,</span> <span class="s1">&#39;SCTY&#39;</span><span class="p">,</span> <span class="s1">&#39;SPWR&#39;</span><span class="p">)</span>
+<span class="n">eq_dfs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="n">eqs</span><span class="p">:</span>
+    <span class="n">eq_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">eq</span><span class="p">,</span> <span class="s1">&#39;2016&#39;</span><span class="p">))</span>
+<span class="n">rel_perf</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="n">eq_dfs</span><span class="p">,</span> <span class="n">eqs</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data.feat.html" title="Data - building features (pynance.data.feat)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data.combine.html" title="Data - combine features and labels (pynance.data.combine)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="data.html" >Data (<code class="docutils literal"><span class="pre">pynance.data</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

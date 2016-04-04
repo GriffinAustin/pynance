@@ -16,7 +16,7 @@ import pandas as pd
 
 import pynance as pn
 
-class TestData(unittest.TestCase):
+class TestLinReg(unittest.TestCase):
 
     def ndarr_almost_eq(self, a, b, msg=None):
         if not np.allclose(a, b):
