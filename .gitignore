@@ -1,7 +1,6 @@
 *.swp
 *.pyc
 *.pdf
-*.png
 
 # auto-generated for package distribution
 MANIFEST
