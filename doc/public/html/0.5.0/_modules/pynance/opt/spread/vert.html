@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.opt.spread.vert &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="../../../../index.html" />
+    <link rel="up" title="Module code" href="../../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.opt.spread.vert</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2015 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Options - vertical spreads (:mod:`pynance.opt.spread.vert`)</span>
+<span class="sd">===========================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.opt.spread.vert</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.._common</span> <span class="kn">import</span> <span class="n">_relevant_rows</span>
+<span class="kn">from</span> <span class="nn">.._common</span> <span class="kn">import</span> <span class="n">_getprice</span>
+<span class="kn">from</span> <span class="nn">..</span> <span class="kn">import</span> <span class="n">_constants</span>
+
+
+<div class="viewcode-block" id="Vert"><a class="viewcode-back" href="../../../../opt.spread.vert.html#pynance.opt.spread.vert.Vert">[docs]</a><span class="k">class</span> <span class="nc">Vert</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wrapper class for :class:`pandas.DataFrame` for retrieving</span>
+<span class="sd">    metrics on vertical options spreads</span>
+
+<span class="sd">    Objects of this class are not intended for direct instantiation</span>
+<span class="sd">    but are created as attributes of objects of type </span>
+<span class="sd">    :class:`~pynance.opt.spread.core.Spread`.</span>
+
+<span class="sd">    .. versionadded:: 0.3.0</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df : :class:`pandas.DataFrame`</span>
+<span class="sd">        Options data.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : :class:`pandas.DataFrame`</span>
+
+<span class="sd">    Methods</span>
+<span class="sd">    -------</span>
+<span class="sd">    .. automethod:: call</span>
+
+<span class="sd">    .. automethod:: put</span>
+
+<span class="sd">    .. automethod:: straddle</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">df</span>
+
+<div class="viewcode-block" id="Vert.call"><a class="viewcode-back" href="../../../../opt.spread.vert.html#pynance.opt.spread.vert.Vert.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lowstrike</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Metrics for evaluating a bull call spread.</span>
+<span class="sd">        </span>
+<span class="sd">        The metrics returned can easily be translated into bear</span>
+<span class="sd">        spread metrics. The difference is only whether one buys</span>
+<span class="sd">        the call at the lower strike and sells at the higher</span>
+<span class="sd">        (bull call spread) or sells at the lower while buying</span>
+<span class="sd">        at the higher (bear call spread). The metrics</span>
+<span class="sd">        dataframe shows values for a bull call spread, where</span>
+<span class="sd">        the transaction is a debit. A bear call spread</span>
+<span class="sd">        is created by *selling* a bull call spread, so the transaction</span>
+<span class="sd">        amount is the same, but it</span>
+<span class="sd">        is a credit rather than a debit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ------------</span>
+<span class="sd">        lowstrike : numeric</span>
+<span class="sd">            Lower strike price.</span>
+<span class="sd">        highstrike : numeric</span>
+<span class="sd">            Higher strike sprice.</span>
+<span class="sd">        expiry : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">            Expiration date.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------------</span>
+<span class="sd">        metrics : DataFrame</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Cf. Lawrence McMillan, Options as a Strategic Investment, 5th ed., pp. 157ff.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :meth:`put`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">lowstrike</span> <span class="o">&lt;</span> <span class="n">highstrike</span>
+        <span class="n">_rows</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_prices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_opttype</span> <span class="o">=</span> <span class="s1">&#39;call&#39;</span>
+        <span class="k">for</span> <span class="n">_strike</span> <span class="ow">in</span> <span class="p">(</span><span class="n">lowstrike</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">):</span>
+            <span class="n">_rows</span><span class="p">[</span><span class="n">_strike</span><span class="p">]</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">_strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">,</span> <span class="n">_opttype</span><span class="p">,),</span>
+                    <span class="s2">&quot;No key for {} strike {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">expiry</span><span class="p">,</span> <span class="n">_strike</span><span class="p">,</span> <span class="n">_opttype</span><span class="p">))</span>
+            <span class="n">_prices</span><span class="p">[</span><span class="n">_strike</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getprice</span><span class="p">(</span><span class="n">_rows</span><span class="p">[</span><span class="n">_strike</span><span class="p">])</span>
+        <span class="n">_eq</span> <span class="o">=</span> <span class="n">_rows</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Underlying_Price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">_qt</span> <span class="o">=</span> <span class="n">_rows</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">_debit</span> <span class="o">=</span> <span class="n">_prices</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">]</span> <span class="o">-</span> <span class="n">_prices</span><span class="p">[</span><span class="n">highstrike</span><span class="p">]</span>
+        <span class="n">_breakeven</span> <span class="o">=</span> <span class="n">lowstrike</span> <span class="o">+</span> <span class="n">_debit</span>
+        <span class="k">if</span> <span class="n">_breakeven</span> <span class="o">&gt;</span> <span class="n">highstrike</span><span class="p">:</span>
+            <span class="n">_breakeven</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">_maxprof</span> <span class="o">=</span> <span class="n">highstrike</span> <span class="o">-</span> <span class="n">lowstrike</span> <span class="o">-</span><span class="n">_debit</span>
+        <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Low Strike Call&#39;</span><span class="p">,</span> <span class="s1">&#39;High Strike Call&#39;</span><span class="p">,</span> <span class="s1">&#39;Debit&#39;</span><span class="p">,</span>  <span class="s1">&#39;Break_Even&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Max Profit&#39;</span><span class="p">,</span> <span class="s1">&#39;Underlying_Price&#39;</span><span class="p">,</span> <span class="s1">&#39;Quote_Time&#39;</span><span class="p">]</span>
+        <span class="n">_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_prices</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">],</span> <span class="n">_prices</span><span class="p">[</span><span class="n">highstrike</span><span class="p">],</span> <span class="n">_debit</span><span class="p">,</span>
+                <span class="n">_breakeven</span><span class="p">,</span> <span class="n">_maxprof</span><span class="p">,</span> <span class="n">_eq</span><span class="p">,</span> <span class="n">_qt</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Vert.put"><a class="viewcode-back" href="../../../../opt.spread.vert.html#pynance.opt.spread.vert.Vert.put">[docs]</a>    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lowstrike</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Metrics for evaluating a bear put spread.</span>
+<span class="sd">        </span>
+<span class="sd">        The metrics returned can easily be translated into bull</span>
+<span class="sd">        spread metrics. The difference is only whether one buys</span>
+<span class="sd">        the put at the lower strike and sells at the higher</span>
+<span class="sd">        (bear put spread) or sells at the lower while buying</span>
+<span class="sd">        at the higher (bull put spread). The metrics</span>
+<span class="sd">        dataframe shows values for a bear put spread, where</span>
+<span class="sd">        the transaction is a debit. A bull put spread</span>
+<span class="sd">        is created by *selling* a bear put spread, so the transaction</span>
+<span class="sd">        amount is the same, but it</span>
+<span class="sd">        is a credit rather than a debit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ------------</span>
+<span class="sd">        lowstrike : numeric</span>
+<span class="sd">            Lower strike price.</span>
+<span class="sd">        highstrike : numeric</span>
+<span class="sd">            Higher strike sprice.</span>
+<span class="sd">        expiry : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">            Expiration date.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------------</span>
+<span class="sd">        metrics : DataFrame</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Cf. Lawrence McMillan, Options as a Strategic Investment, 5th ed., pp. 316ff.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :meth:`call`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">lowstrike</span> <span class="o">&lt;</span> <span class="n">highstrike</span>
+        <span class="n">_rows</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_prices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_opttype</span> <span class="o">=</span> <span class="s1">&#39;put&#39;</span>
+        <span class="k">for</span> <span class="n">_strike</span> <span class="ow">in</span> <span class="p">(</span><span class="n">lowstrike</span><span class="p">,</span> <span class="n">highstrike</span><span class="p">):</span>
+            <span class="n">_rows</span><span class="p">[</span><span class="n">_strike</span><span class="p">]</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">_strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">,</span> <span class="n">_opttype</span><span class="p">,),</span>
+                    <span class="s2">&quot;No key for {} strike {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">expiry</span><span class="p">,</span> <span class="n">_strike</span><span class="p">,</span> <span class="n">_opttype</span><span class="p">))</span>
+            <span class="n">_prices</span><span class="p">[</span><span class="n">_strike</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getprice</span><span class="p">(</span><span class="n">_rows</span><span class="p">[</span><span class="n">_strike</span><span class="p">])</span>
+        <span class="n">_eq</span> <span class="o">=</span> <span class="n">_rows</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Underlying_Price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">_qt</span> <span class="o">=</span> <span class="n">_rows</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">_debit</span> <span class="o">=</span> <span class="n">_prices</span><span class="p">[</span><span class="n">highstrike</span><span class="p">]</span> <span class="o">-</span> <span class="n">_prices</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">]</span>
+        <span class="n">_breakeven</span> <span class="o">=</span> <span class="n">highstrike</span> <span class="o">-</span> <span class="n">_debit</span>
+        <span class="n">_maxprof</span> <span class="o">=</span> <span class="n">highstrike</span> <span class="o">-</span> <span class="n">lowstrike</span> <span class="o">-</span><span class="n">_debit</span>
+        <span class="k">if</span> <span class="n">_breakeven</span> <span class="o">&lt;</span> <span class="n">lowstrike</span><span class="p">:</span>
+            <span class="n">_breakeven</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Low Strike Put&#39;</span><span class="p">,</span> <span class="s1">&#39;High Strike Put&#39;</span><span class="p">,</span> <span class="s1">&#39;Debit&#39;</span><span class="p">,</span>  <span class="s1">&#39;Break_Even&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Max Profit&#39;</span><span class="p">,</span> <span class="s1">&#39;Underlying_Price&#39;</span><span class="p">,</span> <span class="s1">&#39;Quote_Time&#39;</span><span class="p">]</span>
+        <span class="n">_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_prices</span><span class="p">[</span><span class="n">lowstrike</span><span class="p">],</span> <span class="n">_prices</span><span class="p">[</span><span class="n">highstrike</span><span class="p">],</span> <span class="n">_debit</span><span class="p">,</span>
+                <span class="n">_breakeven</span><span class="p">,</span> <span class="n">_maxprof</span><span class="p">,</span> <span class="n">_eq</span><span class="p">,</span> <span class="n">_qt</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Vert.straddle"><a class="viewcode-back" href="../../../../opt.spread.vert.html#pynance.opt.spread.vert.Vert.straddle">[docs]</a>    <span class="k">def</span> <span class="nf">straddle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Metrics for evaluating a straddle.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ------------</span>
+<span class="sd">        strike : numeric</span>
+<span class="sd">            Strike price.</span>
+<span class="sd">        expiry : date or date str (e.g. &#39;2015-01-01&#39;)</span>
+<span class="sd">            Expiration date.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------------</span>
+<span class="sd">        metrics : DataFrame</span>
+<span class="sd">            Metrics for evaluating straddle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_rows</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_prices</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">_opttype</span> <span class="ow">in</span> <span class="n">_constants</span><span class="o">.</span><span class="n">OPTTYPES</span><span class="p">:</span>
+            <span class="n">_rows</span><span class="p">[</span><span class="n">_opttype</span><span class="p">]</span> <span class="o">=</span> <span class="n">_relevant_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">strike</span><span class="p">,</span> <span class="n">expiry</span><span class="p">,</span> <span class="n">_opttype</span><span class="p">,),</span>
+                    <span class="s2">&quot;No key for {} strike {} {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">expiry</span><span class="p">,</span> <span class="n">strike</span><span class="p">,</span> <span class="n">_opttype</span><span class="p">))</span>
+            <span class="n">_prices</span><span class="p">[</span><span class="n">_opttype</span><span class="p">]</span> <span class="o">=</span> <span class="n">_getprice</span><span class="p">(</span><span class="n">_rows</span><span class="p">[</span><span class="n">_opttype</span><span class="p">])</span>
+        <span class="n">_eq</span> <span class="o">=</span> <span class="n">_rows</span><span class="p">[</span><span class="n">_constants</span><span class="o">.</span><span class="n">OPTTYPES</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Underlying_Price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">_qt</span> <span class="o">=</span> <span class="n">_rows</span><span class="p">[</span><span class="n">_constants</span><span class="o">.</span><span class="n">OPTTYPES</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;Quote_Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">_index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Call&#39;</span><span class="p">,</span> <span class="s1">&#39;Put&#39;</span><span class="p">,</span> <span class="s1">&#39;Credit&#39;</span><span class="p">,</span> <span class="s1">&#39;Underlying_Price&#39;</span><span class="p">,</span> <span class="s1">&#39;Quote_Time&#39;</span><span class="p">]</span>
+        <span class="n">_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_prices</span><span class="p">[</span><span class="s1">&#39;call&#39;</span><span class="p">],</span> <span class="n">_prices</span><span class="p">[</span><span class="s1">&#39;put&#39;</span><span class="p">],</span> <span class="n">_prices</span><span class="p">[</span><span class="s1">&#39;call&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_prices</span><span class="p">[</span><span class="s1">&#39;put&#39;</span><span class="p">],</span> <span class="n">_eq</span><span class="p">,</span> <span class="n">_qt</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">_vals</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">_index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Value&#39;</span><span class="p">])</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

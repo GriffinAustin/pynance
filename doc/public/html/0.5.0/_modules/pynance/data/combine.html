@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.data.combine &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.data.combine</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2014 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Data - combine features and labels (:mod:`pynance.data.combine`)</span>
+<span class="sd">==================================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.data.combine</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">feat</span>
+
+<div class="viewcode-block" id="labeledfeatures"><a class="viewcode-back" href="../../../data.combine.html#pynance.data.combine.labeledfeatures">[docs]</a><span class="k">def</span> <span class="nf">labeledfeatures</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="n">featurefunc</span><span class="p">,</span> <span class="n">labelfunc</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return features and labels for the given equity data.</span>
+
+<span class="sd">    Each row of the features returned contains `2 * n_sessions + 1` columns</span>
+<span class="sd">    (or 1 less if the constant feature is excluded). After the constant feature,</span>
+<span class="sd">    if present, there will be `n_sessions` columns derived from daily growth</span>
+<span class="sd">    of the given price column, which defaults to &#39;Adj Close&#39;. There will then</span>
+<span class="sd">    follow another `n_sessions` columns representing current volume as</span>
+<span class="sd">    a multiple of average volume over the previous 252 (or other value determined</span>
+<span class="sd">    by the user) sessions. </span>
+<span class="sd">    </span>
+<span class="sd">    The returned features are not centered or normalized because these</span>
+<span class="sd">    adjustments need to be made after test or cross-validation data has</span>
+<span class="sd">    been removed.</span>
+
+<span class="sd">    The constant feature is prepended by default.</span>
+
+<span class="sd">    The labels are derived from `eqdata` using `labelfunc`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">        Expected is a dataframe as return by the `get()` function. A column</span>
+<span class="sd">        labeled &#39;Volume&#39; must be present.</span>
+
+<span class="sd">    featurefunc : function</span>
+<span class="sd">        Function taking a dataframe of simple equity data as argument</span>
+<span class="sd">        and returning a dataframe of features and an integer representing</span>
+<span class="sd">        the number of rows that had to be skipped at the beginning of</span>
+<span class="sd">        the index of the input dataframe. The rows skipped are used</span>
+<span class="sd">        to synchronize the indices of features and labels. For example,</span>
+<span class="sd">        if the features are composed of 4 successive daily returns, then</span>
+<span class="sd">        the date of row 0 of features would be the same as the date of row 3</span>
+<span class="sd">        (counting from 0) of input data. So the corresponding `featurefunc`</span>
+<span class="sd">        would return a dataframe and the value 3.</span>
+
+<span class="sd">    labelfunc : function</span>
+<span class="sd">        function for deriving labels from `eqdata`. `labelfunc` must</span>
+<span class="sd">        take a single argument: `df`, a dataframe to which `labelfunc` will be applied.</span>
+<span class="sd">        `labelfunc` should return a dataframe of labels followed by an int</span>
+<span class="sd">        specifying the number of feature rows to skip at the end of the feature</span>
+<span class="sd">        dataframe. For example, if features are relative prices 64 days out,</span>
+<span class="sd">        these features will only be known up until 64 days before the data</span>
+<span class="sd">        runs out. In order to properly align features and labels, the features</span>
+<span class="sd">        should not include the last 64 rows that would otherwise be possible.</span>
+
+<span class="sd">        Usage:</span>
+<span class="sd">        `labels, skipatend = labelfunc(eqdata)`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    features : DataFrame</span>
+<span class="sd">        The features derived from the given parameters.</span>
+
+<span class="sd">    labels : DataFrame</span>
+<span class="sd">        The labels derived from the given parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">_labels</span><span class="p">,</span> <span class="n">_skipatend</span> <span class="o">=</span> <span class="n">labelfunc</span><span class="p">(</span><span class="n">eqdata</span><span class="p">)</span>
+    <span class="n">_features</span><span class="p">,</span> <span class="n">_skipatstart</span> <span class="o">=</span> <span class="n">featurefunc</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:(</span><span class="n">_size</span> <span class="o">-</span> <span class="n">_skipatend</span><span class="p">),</span> <span class="p">:])</span>
+    <span class="k">return</span> <span class="n">_features</span><span class="p">,</span> <span class="n">_labels</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">_skipatstart</span><span class="p">:,</span> <span class="p">:]</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

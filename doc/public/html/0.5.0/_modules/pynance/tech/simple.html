@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.tech.simple &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.tech.simple</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2014- Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Technical analysis - basic metrics (:mod:`pynance.tech.simple`)</span>
+<span class="sd">==================================================================</span>
+
+<span class="sd">.. currentmodule:: pynance.tech.simple</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="growth"><a class="viewcode-back" href="../../../tech.simple.html#pynance.tech.simple.growth">[docs]</a><span class="k">def</span> <span class="nf">growth</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a DataFrame where the sole column, &#39;Growth&#39;,</span>
+<span class="sd">    is the growth for the equity over the given number of sessions.</span>
+<span class="sd">    </span>
+<span class="sd">    For example, if &#39;XYZ&#39; has &#39;Adj Close&#39; of `100.0` on 2014-12-15 and </span>
+<span class="sd">    `90.0` 4 *sessions* later on 2014-12-19, then the &#39;Growth&#39; value</span>
+<span class="sd">    for 2014-12-19 will be `0.9`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">        Data such as that returned by :func:`pynance.data.retrieve.get`</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column from which to determine growth values. Defaults to</span>
+<span class="sd">        &#39;Adj Close&#39;.</span>
+<span class="sd">    n_sessions : int</span>
+<span class="sd">        Number of sessions to count back for calculating today&#39;s</span>
+<span class="sd">        growth. For example, if `n_sessions` is set to 4, growth is</span>
+<span class="sd">        calculated relative to the price 4 sessions ago. Defaults</span>
+<span class="sd">        to 1 (price of previous session).</span>
+<span class="sd">    skipstartrows : int</span>
+<span class="sd">        Rows to skip at beginning of `eqdata` in addition to the 1 row that must</span>
+<span class="sd">        be skipped because the calculation relies on a prior data point.</span>
+<span class="sd">        Defaults to 0.</span>
+<span class="sd">    skipendrows : int</span>
+<span class="sd">        Rows to skip at end of `eqdata`. Defaults to 0.</span>
+<span class="sd">    outputcol : str, optional</span>
+<span class="sd">        Name to use for output column. Defaults to &#39;Growth&#39;</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    out : DataFrame</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    The interval is the number of *sessions* between the 2 values</span>
+<span class="sd">    whose ratio is being measured, *not* the number of days (which</span>
+<span class="sd">    includes days on which the market is closed).</span>
+
+<span class="sd">    Growth is measured relative to the earlier</span>
+<span class="sd">    date, but the index date is the later date. This index is chosen because</span>
+<span class="sd">    it is the date on which the value is known.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;selection&#39;</span><span class="p">,</span> <span class="s1">&#39;Adj Close&#39;</span><span class="p">)</span>
+    <span class="n">n_sessions</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;n_sessions&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">skipstartrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;skipstartrows&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">skipendrows</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;skipendrows&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">outputcol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;outputcol&#39;</span><span class="p">,</span> <span class="s1">&#39;Growth&#39;</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">growthdata</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">selection</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[(</span><span class="n">skipstartrows</span> <span class="o">+</span> <span class="n">n_sessions</span><span class="p">):(</span><span class="n">size</span> <span class="o">-</span> <span class="n">skipendrows</span><span class="p">)]</span> <span class="o">/</span> \
+            <span class="n">eqdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">selection</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">skipstartrows</span><span class="p">:(</span><span class="o">-</span><span class="n">n_sessions</span> <span class="o">-</span> <span class="n">skipendrows</span><span class="p">)]</span>
+    <span class="n">growthindex</span> <span class="o">=</span> <span class="n">eqdata</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">skipstartrows</span> <span class="o">+</span> <span class="n">n_sessions</span><span class="p">):(</span><span class="n">size</span> <span class="o">-</span> <span class="n">skipendrows</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">growthdata</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">growthindex</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">outputcol</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ln_growth"><a class="viewcode-back" href="../../../tech.simple.html#pynance.tech.simple.ln_growth">[docs]</a><span class="k">def</span> <span class="nf">ln_growth</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the natural log of growth.</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`growth`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;outputcol&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;outputcol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;LnGrowth&#39;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">growth</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ret"><a class="viewcode-back" href="../../../tech.simple.html#pynance.tech.simple.ret">[docs]</a><span class="k">def</span> <span class="nf">ret</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a DataFrame where the sole column, &#39;Return&#39;,</span>
+<span class="sd">    is the return for the equity over the given number of sessions.</span>
+<span class="sd">    </span>
+<span class="sd">    For example, if &#39;XYZ&#39; has &#39;Adj Close&#39; of `100.0` on 2014-12-15 and </span>
+<span class="sd">    `90.0` 4 *sessions* later on 2014-12-19, then the &#39;Return&#39; value</span>
+<span class="sd">    for 2014-12-19 will be `-0.1`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqdata : DataFrame</span>
+<span class="sd">        Data such as that returned by `get()`</span>
+<span class="sd">    selection : str, optional</span>
+<span class="sd">        Column from which to determine growth values. Defaults to</span>
+<span class="sd">        &#39;Adj Close&#39;.</span>
+<span class="sd">    n_sessions : int</span>
+<span class="sd">        Number of sessions to count back for calculating today&#39;s</span>
+<span class="sd">        return. For example, if `n_sessions` is set to 4, return is</span>
+<span class="sd">        calculated relative to the price 4 sessions ago. Defaults</span>
+<span class="sd">        to 1 (price of previous session).</span>
+<span class="sd">    skipstartrows : int</span>
+<span class="sd">        Rows to skip at beginning of `eqdata` in addition to the 1 row that must</span>
+<span class="sd">        be skipped because the calculation relies on a prior data point.</span>
+<span class="sd">        Defaults to 0.</span>
+<span class="sd">    skipendrows : int</span>
+<span class="sd">        Rows to skip at end of `eqdata`. Defaults to 0.</span>
+<span class="sd">    outputcol : str, optional</span>
+<span class="sd">        Name for column of output dataframe. Defaults to &#39;Return&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    out : DataFrame</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`growth`</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    The interval is the number of *sessions* between the 2 values</span>
+<span class="sd">    whose ratio is being measured, *not* the number of days (which</span>
+<span class="sd">    includes days on which the market is closed).</span>
+
+<span class="sd">    The percentage gain or loss is measured relative to the earlier</span>
+<span class="sd">    date, but the index date is the later date. The index is chose because</span>
+<span class="sd">    that is the date on which the value is known. The percentage measure is because</span>
+<span class="sd">    that is the way for calculating percent profit and loss.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;outputcol&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;outputcol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Return&#39;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">growth</span><span class="p">(</span><span class="n">eqdata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span> <span class="p">:]</span> <span class="o">-=</span> <span class="mf">1.</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

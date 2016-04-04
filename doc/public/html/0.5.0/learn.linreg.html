@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Linear regression (pynance.learn.linreg) &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="index.html" />
+    <link rel="up" title="Machine learning (pynance.learn)" href="learn.html" />
+    <link rel="next" title="Metrics (pynance.learn.metrics)" href="learn.metrics.html" />
+    <link rel="prev" title="Machine learning (pynance.learn)" href="learn.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="learn.metrics.html" title="Metrics (pynance.learn.metrics)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="learn.html" title="Machine learning (pynance.learn)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="learn.html" accesskey="U">Machine learning (<code class="docutils literal"><span class="pre">pynance.learn</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="learn.html"
+                        title="previous chapter">Machine learning (<code class="docutils literal"><span class="pre">pynance.learn</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="learn.metrics.html"
+                        title="next chapter">Metrics (<code class="docutils literal"><span class="pre">pynance.learn.metrics</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/learn.linreg.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.learn.linreg"></span><div class="section" id="linear-regression-pynance-learn-linreg">
+<h1>Linear regression (<a class="reference internal" href="#module-pynance.learn.linreg" title="pynance.learn.linreg"><code class="xref py py-mod docutils literal"><span class="pre">pynance.learn.linreg</span></code></a>)<a class="headerlink" href="#linear-regression-pynance-learn-linreg" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.learn.linreg.predict">
+<code class="descclassname">pynance.learn.linreg.</code><code class="descname">predict</code><span class="sig-paren">(</span><em>features</em>, <em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/learn/linreg.html#predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.learn.linreg.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate predictions from features and model.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.5.0.</span></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>features</strong> : ndarray</p>
+<blockquote>
+<div><p>Features from which to generate predictions</p>
+</div></blockquote>
+<p><strong>model</strong> : ndarray</p>
+<blockquote>
+<div><p>Regression model.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>predicted</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>Predictions generated from features using model.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.learn.linreg.run">
+<code class="descclassname">pynance.learn.linreg.</code><code class="descname">run</code><span class="sig-paren">(</span><em>features</em>, <em>labels</em>, <em>regularization=0.0</em>, <em>constfeat=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/learn/linreg.html#run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.learn.linreg.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run linear regression on the given data.</p>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.5.0.</span></p>
+</div>
+<p>If a regularization parameter is provided, this function
+is a simplification and specialization of ridge
+regression, as implemented in <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge">scikit-learn</a>.
+Setting <cite>solver</cite> to <cite>&#8216;svd&#8217;</cite> in <code class="xref py py-class docutils literal"><span class="pre">sklearn.linear_model.Ridge</span></code> and equating
+our <cite>regularization</cite> with their <cite>alpha</cite> will yield the same results.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>features</strong> : ndarray</p>
+<blockquote>
+<div><p>Features on which to run linear regression.</p>
+</div></blockquote>
+<p><strong>labels</strong> : ndarray</p>
+<blockquote>
+<div><p>Labels for the given features. Multiple columns
+of labels are allowed.</p>
+</div></blockquote>
+<p><strong>regularization</strong> : float, optional</p>
+<blockquote>
+<div><p>Regularization parameter. Defaults to 0.</p>
+</div></blockquote>
+<p><strong>constfeat</strong> : bool, optional</p>
+<blockquote>
+<div><p>Whether or not the first column of features is
+the constant feature 1. If True, the first column
+will be excluded from regularization. Defaults to True.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>model</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>Regression model for the given data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="learn.metrics.html" title="Metrics (pynance.learn.metrics)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="learn.html" title="Machine learning (pynance.learn)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="learn.html" >Machine learning (<code class="docutils literal"><span class="pre">pynance.learn</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

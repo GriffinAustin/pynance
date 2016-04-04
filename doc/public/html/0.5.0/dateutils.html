@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Dateutils (pynance.dateutils) &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="index.html" />
+    <link rel="next" title="Interest rates (pynance.interest)" href="interest.html" />
+    <link rel="prev" title="Data - remote retrieval (pynance.data.retrieve)" href="data.retrieve.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="interest.html" title="Interest rates (pynance.interest)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="data.retrieve.html" title="Data - remote retrieval (pynance.data.retrieve)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data.retrieve.html"
+                        title="previous chapter">Data - remote retrieval (<code class="docutils literal"><span class="pre">pynance.data.retrieve</span></code>)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interest.html"
+                        title="next chapter">Interest rates (<code class="docutils literal"><span class="pre">pynance.interest</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/dateutils.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.dateutils"></span><div class="section" id="dateutils-pynance-dateutils">
+<h1>Dateutils (<a class="reference internal" href="#module-pynance.dateutils" title="pynance.dateutils"><code class="xref py py-mod docutils literal"><span class="pre">pynance.dateutils</span></code></a>)<a class="headerlink" href="#dateutils-pynance-dateutils" title="Permalink to this headline">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">New in version 0.5.0.</span></p>
+</div>
+<p>Utility functions for working with dates.</p>
+<dl class="function">
+<dt id="pynance.dateutils.is_bday">
+<code class="descclassname">pynance.dateutils.</code><code class="descname">is_bday</code><span class="sig-paren">(</span><em>date</em>, <em>bday=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/dateutils.html#is_bday"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.dateutils.is_bday" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true iff the given date is a business day.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>date</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.Timestamp</span></code></p>
+<blockquote>
+<div><p>Any value that can be converted to a pandas Timestamp&#8211;e.g.,
+&#8216;2012-05-01&#8217;, dt.datetime(2012, 5, 1, 3)</p>
+</div></blockquote>
+<p><strong>bday</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.tseries.offsets.CustomBusinessDay</span></code></p>
+<blockquote>
+<div><p>Defaults to <cite>CustomBusinessDay(calendar=USFederalHolidayCalendar())</cite>.
+Pass this parameter in performance-sensitive contexts, such
+as when calling this function in a loop. The creation of the <cite>CustomBusinessDay</cite>
+object is the performance bottleneck of this function.
+Cf. <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/timeseries.html#custom-business-days-experimental">pandas.tseries.offsets.CustomBusinessDay</a>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>val</strong> : bool</p>
+<blockquote class="last">
+<div><p>True iff <cite>date</cite> is a business day</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="interest.html" title="Interest rates (pynance.interest)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="data.retrieve.html" title="Data - remote retrieval (pynance.data.retrieve)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

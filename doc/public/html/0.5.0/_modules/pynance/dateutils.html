@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pynance.dateutils &mdash; PyNance 0.5.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.5.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pynance.dateutils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. Copyright (c) 2016 Marshall Farrier</span>
+<span class="sd">   license http://opensource.org/licenses/MIT</span>
+
+<span class="sd">Dateutils (:mod:`pynance.dateutils`)</span>
+<span class="sd">========================================</span>
+
+<span class="sd">.. versionadded:: 0.5.0</span>
+
+<span class="sd">.. currentmodule:: pynance.dateutils</span>
+
+<span class="sd">Utility functions for working with dates.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">Timestamp</span>
+<span class="kn">from</span> <span class="nn">pandas.tseries.holiday</span> <span class="kn">import</span> <span class="n">USFederalHolidayCalendar</span>
+<span class="kn">from</span> <span class="nn">pandas.tseries.offsets</span> <span class="kn">import</span> <span class="n">CustomBusinessDay</span>
+
+<div class="viewcode-block" id="is_bday"><a class="viewcode-back" href="../../dateutils.html#pynance.dateutils.is_bday">[docs]</a><span class="k">def</span> <span class="nf">is_bday</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">bday</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return true iff the given date is a business day.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    date : :class:`pandas.Timestamp`</span>
+<span class="sd">        Any value that can be converted to a pandas Timestamp--e.g.,</span>
+<span class="sd">        &#39;2012-05-01&#39;, dt.datetime(2012, 5, 1, 3)</span>
+
+<span class="sd">    bday : :class:`pandas.tseries.offsets.CustomBusinessDay`</span>
+<span class="sd">        Defaults to `CustomBusinessDay(calendar=USFederalHolidayCalendar())`.</span>
+<span class="sd">        Pass this parameter in performance-sensitive contexts, such</span>
+<span class="sd">        as when calling this function in a loop. The creation of the `CustomBusinessDay`</span>
+<span class="sd">        object is the performance bottleneck of this function.</span>
+<span class="sd">        Cf. `pandas.tseries.offsets.CustomBusinessDay</span>
+<span class="sd">        &lt;http://pandas.pydata.org/pandas-docs/stable/timeseries.html#custom-business-days-experimental&gt;`_.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    val : bool</span>
+<span class="sd">        True iff `date` is a business day</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_date</span> <span class="o">=</span> <span class="n">Timestamp</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bday</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">bday</span> <span class="o">=</span> <span class="n">CustomBusinessDay</span><span class="p">(</span><span class="n">calendar</span><span class="o">=</span><span class="n">USFederalHolidayCalendar</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">_date</span> <span class="o">==</span> <span class="p">(</span><span class="n">_date</span> <span class="o">+</span> <span class="n">bday</span><span class="p">)</span> <span class="o">-</span> <span class="n">bday</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">PyNance 0.5.0 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>
