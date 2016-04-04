@@ -40,7 +40,7 @@ def sma(eqdata, **kwargs):
     _window = kwargs.get('window', 20)
     _outputcol = kwargs.get('outputcol', 'SMA')
     ret = pd.DataFrame(index=_eqdata.index, columns=[_outputcol], dtype=np.float64)
-    ret.loc[:, _outputcol] = pd.rolling_mean(_eqdata, window=_window).values.flatten()
+    ret.loc[:, _outputcol] = _eqdata.rolling(window=_window, center=False).mean().values.flatten()
     return ret
 
 def ema(eqdata, **kwargs):
@@ -76,9 +76,8 @@ def ema(eqdata, **kwargs):
         _eqdata = eqdata
     _span = kwargs.get('span', 20)
     _col = kwargs.get('outputcol', 'EMA')
-    # necessary because pd.ewma() outputs Series rather than DataFrame
     _emadf = pd.DataFrame(index=_eqdata.index, columns=[_col], dtype=np.float64)
-    _emadf.loc[:, _col] = pd.ewma(_eqdata, span=_span).values.flatten()
+    _emadf.loc[:, _col] = _eqdata.ewm(span=_span, min_periods=0, adjust=True, ignore_na=False).mean().values.flatten()
     return _emadf
 
 def ema_growth(eqdata, **kwargs):
@@ -253,7 +252,7 @@ def ratio_to_ave(window, eqdata, **kwargs):
     _size = len(eqdata.index)
     _eqdata = eqdata.loc[:, _selection]
 
-    _sma = pd.rolling_mean(_eqdata.iloc[:-1 - _skipendrows], window=window).values
+    _sma = _eqdata.iloc[:-1 - _skipendrows].rolling(window=window, center=False).mean().values
     _outdata = _eqdata.values[window + _skipstartrows:_size - _skipendrows] /\
             _sma[window + _skipstartrows - 1:]
     _index = eqdata.index[window + _skipstartrows:_size - _skipendrows]
