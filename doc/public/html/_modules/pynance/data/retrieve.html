@@ -78,6 +78,7 @@
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span> <span class="nn">io</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pandas_datareader.data</span> <span class="kn">as</span> <span class="nn">web</span>
 
 <div class="viewcode-block" id="get"><a class="viewcode-back" href="../../../data.retrieve.html#pynance.data.retrieve.get">[docs]</a><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">equity</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -97,12 +98,12 @@
 
 <div class="viewcode-block" id="equities"><a class="viewcode-back" href="../../../data.retrieve.html#pynance.data.retrieve.equities">[docs]</a><span class="k">def</span> <span class="nf">equities</span><span class="p">(</span><span class="n">country</span><span class="o">=</span><span class="s1">&#39;US&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return a dictionary of equities and the exchange where</span>
-<span class="sd">    they are traded.</span>
-
-<span class="sd">    Currently only US markets are supported</span>
+<span class="sd">    Return a DataFrame of current US equities.</span>
 
 <span class="sd">    .. versionadded:: 0.4.0</span>
+
+<span class="sd">    .. versionchanged:: 0.5.0</span>
+<span class="sd">       Return a DataFrame</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -111,42 +112,47 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    eq : dict of str</span>
-<span class="sd">        Dictionary mapping equities to a string representing the exchange</span>
-<span class="sd">        on which they are traded.</span>
+<span class="sd">    eqs : :class:`pandas.DataFrame`</span>
+<span class="sd">        DataFrame whose index is a list of all current ticker symbols.</span>
+<span class="sd">        Columns are &#39;Security Name&#39; (e.g. &#39;Zynerba Pharmaceuticals, Inc. - Common Stock&#39;)</span>
+<span class="sd">        and &#39;Exchange&#39; (&#39;NASDAQ&#39;, &#39;NYSE&#39;, &#39;NYSE MKT&#39;, etc.)</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; equities = pn.data.equities(&#39;US&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; eqs = pn.data.equities(&#39;US&#39;)</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Currently only US markets are supported.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_nasdaqblob</span><span class="p">,</span> <span class="n">_otherblob</span> <span class="o">=</span> <span class="n">_getrawdata</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">_fromblobs</span><span class="p">(</span><span class="n">_nasdaqblob</span><span class="p">,</span> <span class="n">_otherblob</span><span class="p">)</span></div>
+    <span class="n">nasdaqblob</span><span class="p">,</span> <span class="n">otherblob</span> <span class="o">=</span> <span class="n">_getrawdata</span><span class="p">()</span>
+    <span class="n">eq_triples</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">eq_triples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_get_nas_triples</span><span class="p">(</span><span class="n">nasdaqblob</span><span class="p">))</span>
+    <span class="n">eq_triples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_get_other_triples</span><span class="p">(</span><span class="n">otherblob</span><span class="p">))</span>
+    <span class="n">eq_triples</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">triple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">eq_triples</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">triple</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">triple</span> <span class="ow">in</span> <span class="n">eq_triples</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Security Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Exchange&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span></div>
 
-<span class="k">def</span> <span class="nf">_fromblobs</span><span class="p">(</span><span class="n">nasdaqblob</span><span class="p">,</span> <span class="n">otherblob</span><span class="p">):</span>
-    <span class="n">_nasdaq</span> <span class="o">=</span> <span class="n">nasdaqblob</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-    <span class="n">_other</span> <span class="o">=</span> <span class="n">otherblob</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-    <span class="n">_nasdaqequities</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">_nasdaq</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
-    <span class="c1"># last line may contain file info</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">_nasdaqequities</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
-        <span class="n">_nasdaqequities</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-    <span class="n">_equities</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="s1">&#39;NASDAQ&#39;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_nasdaqequities</span><span class="p">}</span>
-    <span class="n">_equities</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_linestodict</span><span class="p">(</span><span class="n">_other</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
-    <span class="k">return</span> <span class="n">_equities</span>
+<span class="k">def</span> <span class="nf">_get_nas_triples</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_get_triples</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="p">{},</span> <span class="s1">&#39;NASDAQ&#39;</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_linestodict</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
-    <span class="n">_rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">]</span>
-    <span class="c1"># last line may contain file info</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">_rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
-        <span class="n">_rows</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">_get_other_triples</span><span class="p">(</span><span class="n">blob</span><span class="p">):</span>
     <span class="c1"># http://www.nasdaqtrader.com/trader.aspx?id=symboldirdefs</span>
-    <span class="n">_exchanges</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">exchanges</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="s1">&#39;NYSE MKT&#39;</span><span class="p">,</span>
             <span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="s1">&#39;NYSE&#39;</span><span class="p">,</span>
             <span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="s1">&#39;NYSE ARCA&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="s1">&#39;BATS&#39;</span>
-            <span class="p">}</span>
-    <span class="n">_equities</span> <span class="o">=</span> <span class="p">{</span><span class="n">_row</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">_exchanges</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">_row</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;unknown&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">_row</span> <span class="ow">in</span> <span class="n">_rows</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">_equities</span>
+            <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="s1">&#39;BATS&#39;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">_get_triples</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">exchanges</span><span class="p">,</span> <span class="s1">&#39;unknown&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_get_triples</span><span class="p">(</span><span class="n">blob</span><span class="p">,</span> <span class="n">exchanges</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">blob</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span> 
+    <span class="c1"># last line is generally file info</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fields</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">fields</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">exchanges</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">default</span><span class="p">))</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">exchanges</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">default</span><span class="p">))</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
 
 <span class="k">def</span> <span class="nf">_getrawdata</span><span class="p">():</span>
     <span class="c1"># http://quant.stackexchange.com/questions/1640/where-to-download-list-of-all-common-stocks-traded-on-nyse-nasdaq-and-amex</span>

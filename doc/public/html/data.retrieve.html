@@ -87,11 +87,12 @@
 <dl class="function">
 <dt id="pynance.data.retrieve.equities">
 <code class="descclassname">pynance.data.retrieve.</code><code class="descname">equities</code><span class="sig-paren">(</span><em>country='US'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/data/retrieve.html#equities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.data.retrieve.equities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dictionary of equities and the exchange where
-they are traded.</p>
-<p>Currently only US markets are supported</p>
+<dd><p>Return a DataFrame of current US equities.</p>
 <div class="versionadded">
 <p><span class="versionmodified">New in version 0.4.0.</span></p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified">Changed in version 0.5.0: </span>Return a DataFrame</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -103,17 +104,20 @@ they are traded.</p>
 </div></blockquote>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>eq</strong> : dict of str</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>eqs</strong> : <code class="xref py py-class docutils literal"><span class="pre">pandas.DataFrame</span></code></p>
 <blockquote class="last">
-<div><p>Dictionary mapping equities to a string representing the exchange
-on which they are traded.</p>
+<div><p>DataFrame whose index is a list of all current ticker symbols.
+Columns are &#8216;Security Name&#8217; (e.g. &#8216;Zynerba Pharmaceuticals, Inc. - Common Stock&#8217;)
+and &#8216;Exchange&#8217; (&#8216;NASDAQ&#8217;, &#8216;NYSE&#8217;, &#8216;NYSE MKT&#8217;, etc.)</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Notes</p>
+<p>Currently only US markets are supported.</p>
 <p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">equities</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">equities</span><span class="p">(</span><span class="s1">&#39;US&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">eqs</span> <span class="o">=</span> <span class="n">pn</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">equities</span><span class="p">(</span><span class="s1">&#39;US&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
