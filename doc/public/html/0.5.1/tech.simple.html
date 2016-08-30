@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Technical analysis - basic metrics (pynance.tech.simple) &mdash; PyNance 0.5.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.5.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyNance 0.5.1 documentation" href="index.html" />
+    <link rel="up" title="Technical analysis (pynance.tech)" href="tech.html" />
+    <link rel="prev" title="Technical analysis - moving averages (pynance.tech.movave)" href="tech.movave.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tech.movave.html" title="Technical analysis - moving averages (pynance.tech.movave)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="tech.html" accesskey="U">Technical analysis (<code class="docutils literal"><span class="pre">pynance.tech</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tech.movave.html"
+                        title="previous chapter">Technical analysis - moving averages (<code class="docutils literal"><span class="pre">pynance.tech.movave</span></code>)</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tech.simple.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pynance.tech.simple"></span><div class="section" id="technical-analysis-basic-metrics-pynance-tech-simple">
+<h1>Technical analysis - basic metrics (<a class="reference internal" href="#module-pynance.tech.simple" title="pynance.tech.simple"><code class="xref py py-mod docutils literal"><span class="pre">pynance.tech.simple</span></code></a>)<a class="headerlink" href="#technical-analysis-basic-metrics-pynance-tech-simple" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pynance.tech.simple.growth">
+<code class="descclassname">pynance.tech.simple.</code><code class="descname">growth</code><span class="sig-paren">(</span><em>eqdata</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/tech/simple.html#growth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.simple.growth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a DataFrame where the sole column, &#8216;Growth&#8217;,
+is the growth for the equity over the given number of sessions.</p>
+<p>For example, if &#8216;XYZ&#8217; has &#8216;Adj Close&#8217; of <cite>100.0</cite> on 2014-12-15 and 
+<cite>90.0</cite> 4 <em>sessions</em> later on 2014-12-19, then the &#8216;Growth&#8217; value
+for 2014-12-19 will be <cite>0.9</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Data such as that returned by <a class="reference internal" href="data.retrieve.html#pynance.data.retrieve.get" title="pynance.data.retrieve.get"><code class="xref py py-func docutils literal"><span class="pre">pynance.data.retrieve.get()</span></code></a></p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column from which to determine growth values. Defaults to
+&#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+<p><strong>n_sessions</strong> : int</p>
+<blockquote>
+<div><p>Number of sessions to count back for calculating today&#8217;s
+growth. For example, if <cite>n_sessions</cite> is set to 4, growth is
+calculated relative to the price 4 sessions ago. Defaults
+to 1 (price of previous session).</p>
+</div></blockquote>
+<p><strong>skipstartrows</strong> : int</p>
+<blockquote>
+<div><p>Rows to skip at beginning of <cite>eqdata</cite> in addition to the 1 row that must
+be skipped because the calculation relies on a prior data point.
+Defaults to 0.</p>
+</div></blockquote>
+<p><strong>skipendrows</strong> : int</p>
+<blockquote>
+<div><p>Rows to skip at end of <cite>eqdata</cite>. Defaults to 0.</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional</p>
+<blockquote>
+<div><p>Name to use for output column. Defaults to &#8216;Growth&#8217;</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>out</strong> : DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The interval is the number of <em>sessions</em> between the 2 values
+whose ratio is being measured, <em>not</em> the number of days (which
+includes days on which the market is closed).</p>
+<p>Growth is measured relative to the earlier
+date, but the index date is the later date. This index is chosen because
+it is the date on which the value is known.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.simple.ln_growth">
+<code class="descclassname">pynance.tech.simple.</code><code class="descname">ln_growth</code><span class="sig-paren">(</span><em>eqdata</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/tech/simple.html#ln_growth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.simple.ln_growth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the natural log of growth.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pynance.tech.simple.growth" title="pynance.tech.simple.growth"><code class="xref py py-func docutils literal"><span class="pre">growth()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="pynance.tech.simple.ret">
+<code class="descclassname">pynance.tech.simple.</code><code class="descname">ret</code><span class="sig-paren">(</span><em>eqdata</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pynance/tech/simple.html#ret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pynance.tech.simple.ret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a DataFrame where the sole column, &#8216;Return&#8217;,
+is the return for the equity over the given number of sessions.</p>
+<p>For example, if &#8216;XYZ&#8217; has &#8216;Adj Close&#8217; of <cite>100.0</cite> on 2014-12-15 and 
+<cite>90.0</cite> 4 <em>sessions</em> later on 2014-12-19, then the &#8216;Return&#8217; value
+for 2014-12-19 will be <cite>-0.1</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>eqdata</strong> : DataFrame</p>
+<blockquote>
+<div><p>Data such as that returned by <cite>get()</cite></p>
+</div></blockquote>
+<p><strong>selection</strong> : str, optional</p>
+<blockquote>
+<div><p>Column from which to determine growth values. Defaults to
+&#8216;Adj Close&#8217;.</p>
+</div></blockquote>
+<p><strong>n_sessions</strong> : int</p>
+<blockquote>
+<div><p>Number of sessions to count back for calculating today&#8217;s
+return. For example, if <cite>n_sessions</cite> is set to 4, return is
+calculated relative to the price 4 sessions ago. Defaults
+to 1 (price of previous session).</p>
+</div></blockquote>
+<p><strong>skipstartrows</strong> : int</p>
+<blockquote>
+<div><p>Rows to skip at beginning of <cite>eqdata</cite> in addition to the 1 row that must
+be skipped because the calculation relies on a prior data point.
+Defaults to 0.</p>
+</div></blockquote>
+<p><strong>skipendrows</strong> : int</p>
+<blockquote>
+<div><p>Rows to skip at end of <cite>eqdata</cite>. Defaults to 0.</p>
+</div></blockquote>
+<p><strong>outputcol</strong> : str, optional</p>
+<blockquote>
+<div><p>Name for column of output dataframe. Defaults to &#8216;Return&#8217;.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>out</strong> : DataFrame</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#pynance.tech.simple.growth" title="pynance.tech.simple.growth"><code class="xref py py-func docutils literal"><span class="pre">growth()</span></code></a></p>
+</div>
+<p class="rubric">Notes</p>
+<p>The interval is the number of <em>sessions</em> between the 2 values
+whose ratio is being measured, <em>not</em> the number of days (which
+includes days on which the market is closed).</p>
+<p>The percentage gain or loss is measured relative to the earlier
+date, but the index date is the later date. The index is chose because
+that is the date on which the value is known. The percentage measure is because
+that is the way for calculating percent profit and loss.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tech.movave.html" title="Technical analysis - moving averages (pynance.tech.movave)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyNance 0.5.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="tech.html" >Technical analysis (<code class="docutils literal"><span class="pre">pynance.tech</span></code>)</a> &raquo;</li> 
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015-2016, Marshall Farrier.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.
+    </div>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-60405568-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+  </body>
+</html>

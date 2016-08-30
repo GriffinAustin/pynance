@@ -99,3 +99,4 @@ Prior Versions
 * `0.3.1 <0.3.1/index.html>`_
 * `0.4.0 <0.4.0/index.html>`_
 * `0.5.0 <0.5.0/index.html>`_
+* `0.5.1 <0.5.1/index.html>`_
