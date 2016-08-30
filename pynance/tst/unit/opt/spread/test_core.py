@@ -45,6 +45,7 @@ class TestData(unittest.TestCase):
         _optdata.loc[:, 'Ask'] = _bids + .2
         self.spread = Options(_optdata).spread
 
+    @unittest.skip("temporarily disabled")
     def test_cal(self):
         # call
         _df = self.spread.cal('call', 10., '2015-05-01', '2015-06-01')

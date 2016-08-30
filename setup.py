@@ -27,7 +27,7 @@ from setuptools import setup, find_packages
 
 MAJOR   = 0
 MINOR   = 5
-MICRO   = 0
+MICRO   = 1
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers

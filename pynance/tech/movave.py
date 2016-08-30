@@ -138,7 +138,7 @@ def volatility(eqdata, **kwargs):
     _window = kwargs.get('window', 20)
     _colname = kwargs.get('outputcol', 'Risk')
     _risk = pd.DataFrame(index=_eqdata.index, columns=[_colname], dtype=np.float64)
-    _risk.loc[:, _colname] = pd.rolling_std(_eqdata, window=_window).values.flatten()
+    _risk.loc[:, _colname] = _eqdata.rolling(center=False, window=_window).std().values.flatten()
     return _risk
 
 def growth_volatility(eqdata, **kwargs):
@@ -212,7 +212,7 @@ def bollinger(eqdata, **kwargs):
     # ensures correct name for output column of sma()
     kwargs['outputcol'] = 'SMA'
     _smadf = sma(eqdata, **kwargs)
-    _sigmas = pd.rolling_std(eqdata.loc[:, _selection], window=_window).values.flatten()
+    _sigmas = eqdata.loc[:, _selection].rolling(center=False, window=_window).std().values.flatten()
     _diff = _multiple * _sigmas
     _bolldf = pd.DataFrame(index=eqdata.index, columns=['Upper', 'Lower'], dtype=np.float64)
     _bolldf.loc[:, 'Upper'] = _smadf.iloc[:, 0].values + _diff

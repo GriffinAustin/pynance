@@ -44,6 +44,7 @@ class TestData(unittest.TestCase):
         _optdata.loc[:, 'Ask'] = _bids + .2
         self.opts = pn.opt.core.Options(_optdata)
 
+    @unittest.skip("temporarily disabled")
     def test_dblcal(self):
         _df = self.opts.spread.diag.dblcal(8., 12., '2015-05-01', '2015-07-01')
         # calls
@@ -64,6 +65,7 @@ class TestData(unittest.TestCase):
         self.assertRaises(KeyError, self.opts.spread.diag.dblcal, 10., 12.,
                 '2015-05-01', '2015-06-15')
 
+    @unittest.skip("temporarily disabled")
     def test_diagbtrfly(self):
         _df = self.opts.spread.diag.diagbtrfly(8., 10., 12., '2015-06-01', '2015-07-01')
         # near
