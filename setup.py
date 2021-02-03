@@ -3,7 +3,7 @@ For instructions on how to put a package on PyPI:
 http://peterdowns.com/posts/first-time-with-pypi.html
 
 To upload a new version to PyPI:
-1. Udate `VERSION` below. 
+1. Update `VERSION` below.
 2. Update version and release in `pynance/doc/source/conf.py`
 3. Build documentation. Cf. instructions in `pynance/doc/Makefile`
 4. Commit all changes. 
@@ -25,9 +25,9 @@ To upload a new version to PyPI:
 
 from setuptools import setup, find_packages
 
-MAJOR   = 0
-MINOR   = 5
-MICRO   = 1
+MAJOR   = 1
+MINOR   = 0
+MICRO   = 0
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -61,7 +61,7 @@ KEYWORDS = [
 DEPENDENCIES = [
         "numpy",
         "pandas",
-        "pandas-datareader>=0.1.1",
+        "pandas-datareader>=0.9.0",
         "matplotlib",
         "mplfinance"
         ]
@@ -74,11 +74,11 @@ setup(
         name='pynance',
         packages=find_packages(),
         version=VERSION,
-        description='Retrieve and analyse financial market data',
-        author='Marshall Farrier',
-        author_email='marshalldfarrier@gmail.com',
-        url='http://pynance.net',
-        download_url=('https://github.com/aisthesis/pynance/tarball/' + VERSION),
+        description='Retrieve and analyze financial market data',
+        author='Griffin Austin',
+        author_email='griffinaustin@protonmail.com',
+        url='https://github.com/GriffinAustin/pynance',
+        download_url=('https://github.com/GriffinAustin/pynance/tarball/' + VERSION),
         keywords=' '.join(KEYWORDS),
         classifiers=CLASSIFIERS,
         install_requires=DEPENDENCIES,
