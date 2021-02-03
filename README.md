@@ -5,18 +5,15 @@ financial data. Wraps `pandas` and `matplotlib` for maximum
 ease of use. Included are tools for generating features
 and labels for machine learning algorithms.
 
-Documentation
----
-Detailed documentation at [PyNance website](http://pynance.net/).
-
 Dependencies
 ---
 Tested on:
-* [Python](https://www.python.org/) 2.7.8, 2.7.11, 3.4.2, 3.5.1
-* [matplotlib](http://matplotlib.org/index.html) 1.4.2, 1.4.3, 1.5.1
-* [NumPy](http://www.numpy.org/) 1.9.0, 1.9.2, 1.10.4
-* [Pandas](http://pandas.pydata.org/) 0.14.1, 0.15.1, 0.16.0, 0.17.1
-* [pandas-datareader](https://github.com/pydata/pandas-datareader) 0.1.1, 0.2.1
+* [Python](https://www.python.org/) 3.9.1
+* [matplotlib](http://matplotlib.org/index.html) 3.3.3
+* [NumPy](http://www.numpy.org/) 1.19.5
+* [Pandas](http://pandas.pydata.org/) 1.2.1
+* [pandas-datareader](https://github.com/pydata/pandas-datareader) 0.9.0
+* [mplfinance](https://github.com/matplotlib/mplfinance) 0.12.7a5
 
 PyNance will also work with other versions of Python
 and Python packages. To verify that it works with yours,
