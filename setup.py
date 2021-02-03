@@ -62,7 +62,8 @@ DEPENDENCIES = [
         "numpy",
         "pandas",
         "pandas-datareader>=0.1.1",
-        "matplotlib"
+        "matplotlib",
+        "mplfinance"
         ]
 
 TEST_DEPENDENCIES = [

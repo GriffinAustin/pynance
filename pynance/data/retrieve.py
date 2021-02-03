@@ -10,7 +10,7 @@ Data - remote retrieval (:mod:`pynance.data.retrieve`)
 Wraps `Pandas Remote Data Access 
 <http://pandas.pydata.org/pandas-docs/stable/remote_data.html>`_.
 """
-
+import os
 from ftplib import FTP
 from functools import partial
 import io
@@ -18,12 +18,14 @@ import io
 import pandas as pd
 import pandas_datareader.data as web
 
+import pynance as pn
+
 def get(equity, *args, **kwargs):
     """get(equity, start=None, end=None)
     Get DataFrame for an individual equity from Yahoo!  
 
     .. versionchanged:: 0.5.0
-       Default `start` (2010-01-01) and `end` (current date).
+       Default `start` (2001-01-31) and `end` (current date).
     
     Examples
     --------
@@ -31,7 +33,10 @@ def get(equity, *args, **kwargs):
     >>> aapl = pn.data.get('aapl', '2014-03-01', '2015-03-01')
     >>> goog = pn.data.get('goog', '2014')
     """
-    return web.DataReader(equity, 'yahoo', *args, **kwargs)
+    df = web.DataReader(equity, 'stooq', *args, **kwargs)
+    df.index = pd.to_datetime(df.index)
+    return df
+
 
 def equities(country='US'):
     """

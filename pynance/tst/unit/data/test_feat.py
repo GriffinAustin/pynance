@@ -31,7 +31,7 @@ class TestFeat(unittest.TestCase):
                 '2014-01-16',
                 '2014-01-17']
         self.equity_data = pd.DataFrame(np.arange(1., 21.).reshape((10, 2)), index=session_dates,
-                columns=['Volume', 'Adj Close'])
+                columns=['Volume', 'Close'])
         self.equity_data.index.name = 'Date'
 
     def test_add_const_df(self):
@@ -61,7 +61,7 @@ class TestFeat(unittest.TestCase):
                 self.assertAlmostEqual(x[i, j + 1], features[i, j])
 
     def test_fromcols(self):
-        _selection = ['Adj Close', 'Volume']
+        _selection = ['Close', 'Volume']
         _n_sess = 2
         # with constant feature (default)
         _features = pn.data.feat.fromcols(_selection, _n_sess, self.equity_data)
@@ -87,7 +87,7 @@ class TestFeat(unittest.TestCase):
         _sma_window = 4
         _skipatstart = _sma_window - 1
         _n_sess = 3
-        _smafunc = pn.expand(pn.tech.sma, 'Adj Close')
+        _smafunc = pn.expand(pn.tech.sma, 'Close')
         _funcs = [
                 pn.decorate(partial(pn.tech.ratio_to_ave, _vol_ave_int),
                     title='MyRelVol'),

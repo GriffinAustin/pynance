@@ -31,7 +31,7 @@ class TestPreprocess(unittest.TestCase):
                 '2014-01-16',
                 '2014-01-17']
         self.equity_data = pd.DataFrame(np.arange(1., 21.).reshape((10, 2)), index=session_dates,
-                columns=['Volume', 'Adj Close'])
+                columns=['Volume', 'Close'])
         self.equity_data.index.name = 'Date'
 
     def test_center_df(self):

@@ -38,9 +38,10 @@ Examples
 import datetime as dt
 
 import matplotlib.dates as mdates
-import matplotlib.finance as fplt
+import mplfinance as fplt
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
+import pandas as pd
 
 def candlestick(df, **kwargs):
     """
@@ -78,7 +79,11 @@ def candlestick(df, **kwargs):
     >>> pn.chart.candlestick(df, title='GE', fname='foo.png', events=evdf, eventcolors=['r', 'g'], 
             bollinger=bolldf, sma=smadf)
     """
-    _make_chart(df, _candlestick_ax, **kwargs)
+    #_make_chart(df, _candlestick_ax, **kwargs)
+    fplt.plot(df, type='candle', volume=True)
+
+def line(df, **kwargs):
+    _make_chart(df, _line_ax, **kwargs)
 
 def adj_close(df, **kwargs):
     """
@@ -125,7 +130,7 @@ def _make_chart(df, chartfn, **kwargs):
         _plot_events(kwargs['events'])
 
     ax2 = plt.subplot2grid((5, 4), (4, 0), sharex=ax1, rowspan=1, colspan=4)
-    ax2.bar(df.index, df.loc[:, 'Volume'])
+    ax2.bar(df.index, df.loc[:, 'volume'])
     ax2.xaxis.set_major_locator(mticker.MaxNLocator(12))
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
     if len(df.index) <= 128:
@@ -148,12 +153,15 @@ def _candlestick_ax(df, ax):
     """
     # Alternatively: (but hard to get dates set up properly)
     plt.xticks(range(len(df.index)), df.index, rotation=45)
-    fplt.candlestick2_ohlc(ax, df.loc[:, 'Open'].values, df.loc[:, 'High'].values, 
+    fplt.candlestick2_ohlc(ax, df.loc[:, 'Open'].values, df.loc[:, 'High'].values,
             df.loc[:, 'Low'].values, df.loc[:, 'Close'].values, width=0.2)
     """
     quotes = df.reset_index()
-    quotes.loc[:, 'Date'] = mdates.date2num(quotes.loc[:, 'Date'].astype(dt.date))
-    fplt.candlestick_ohlc(ax, quotes.values)
+    #quotes.loc[:, 'Date'] = mdates.date2num(quotes.loc[:, 'Date'].astype(dt.date))
+    fplt.plot(df, type='candle', volume=True)
+
+def _line_ax(df):
+    fplt.plot(df, type='line')
 
 def _adj_close_ax(df, ax):
     ax.plot(df.index, df.loc[:, 'Adj Close'])

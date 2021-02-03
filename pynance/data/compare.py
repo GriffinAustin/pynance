@@ -11,7 +11,7 @@ Data - compare (:mod:`pynance.data.compare`)
 import numpy as np
 import pandas as pd
 
-def compare(eq_dfs, columns=None, selection='Adj Close'):
+def compare(eq_dfs, columns=None, selection='Close'):
     """
     Get the relative performance of multiple equities.
 
@@ -26,9 +26,9 @@ def compare(eq_dfs, columns=None, selection='Adj Close'):
         Labels to use for the columns of the output DataFrame.
         The labels, if provided, should normally be the names
         of the equities whose performance is being compared.
-    selection : str, default 'Adj Close'
+    selection : str, default 'Close'
         Column containing prices to be compared. Defaults
-        to 'Adj Close'.
+        to 'Close'.
 
     Returns
     -------

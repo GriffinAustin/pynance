@@ -32,7 +32,7 @@ class TestCommon(unittest.TestCase):
                 '2014-01-16',
                 '2014-01-17']
         self.equity_data = pd.DataFrame(np.arange(1., 21.).reshape((10, 2)), index=session_dates,
-                columns=['Volume', 'Adj Close'])
+                columns=['Volume', 'Close'])
         self.equity_data.index.name = 'Date'
 
     def test_featurize_defaults(self):
@@ -48,7 +48,7 @@ class TestCommon(unittest.TestCase):
         self.assertEqual(len(features.columns), n_sessions)
 
     def test_featurize_columns(self):
-        cols = ['one', 'two', 'three']
+        cols = [0, 1, 2, 3, 4]
         n_sessions = len(cols)
         features = pn.featurize(self.equity_data, n_sessions, columns=cols)
         self.assertEqual(len(features.index), len(self.equity_data.index) - n_sessions + 1)
@@ -71,7 +71,7 @@ class TestCommon(unittest.TestCase):
     def test_expand(self):
         def _f(eqdata):
             return 2. * eqdata
-        _expanded_ret = pn.expand(_f, 'Adj Close')(self.equity_data)
+        _expanded_ret = pn.expand(_f, 'Close')(self.equity_data)
         self.assertEqual(len(_expanded_ret.values.flatten()), len(self.equity_data.index))
         for i in range(len(_expanded_ret.index)):
             self.assertEqual(_expanded_ret.index[i], self.equity_data.index[i])

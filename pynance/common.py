@@ -24,7 +24,7 @@ def featurize(equity_data, n_sessions, **kwargs):
     n_sessions : int
         number of sessions to use as features
 
-    selection : str, default: 'Adj Close'
+    selection : str, default: 'Close'
         column of `equity_data` from which to generate features.
 
     columns : list, default: ``map(str, range((-n_sessions + 1), 1))``
@@ -47,15 +47,15 @@ def featurize(equity_data, n_sessions, **kwargs):
     #>>> timeit.timeit('data.featurize(data.get("ge", dt.date(1960, 1, 1), 
     #        dt.date(2014, 12, 31)), 256)', setup=s, number=1)
     #1.6771750450134277
-    columns = kwargs.get('columns', map(str, range(-n_sessions + 1, 1)))
-    selection = kwargs.get('selection', 'Adj Close')
+    columns = kwargs.get('columns', map(str, range((-n_sessions + 1), 1)))
+    selection = kwargs.get('selection', 'Close')
     # empty DataFrame with desired index and column labels
     features = pd.DataFrame(index=equity_data.index[(n_sessions - 1):],
             columns=columns, dtype='float64')
     values = equity_data[selection].values
     for i in range(n_sessions - 1):
-        features.iloc[:, i] = values[i:(-n_sessions + i + 1)]
-    features.iloc[:, n_sessions - 1] = values[(n_sessions - 1):]
+        features.loc[:, i] = values[i:(-n_sessions + i + 1)]
+    features.loc[:, n_sessions - 1] = values[(n_sessions - 1):]
     return features
 
 def decorate(fn, *args, **kwargs):
