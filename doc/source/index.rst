@@ -31,6 +31,7 @@ debug one or more of these installations::
     pip install pandas
     pip install pandas-datareader
     pip install pynance
+    pip install mplfinance
 
 Or for Python 3.x.x use `pip3` instead of `pip`.
 
@@ -48,12 +49,6 @@ can be retrieved with the simple command::
     >>> import pynance as pn
     >>> ge = pn.data.get('ge', '1962', '2015')
 
-Current options quotes can be retrieved using::
-
-    >>> geopt, geexp = pn.opt.get('ge').info()
-
-The options data retrieved can then be analysed using functions from :mod:`pynance.opt`.
-
 Many of the functions in the submodules of :mod:`pynance.data` have been designed
 for easy creation of features and labels for machine learning applications. You can
 pass metrics from :mod:`pynance.tech` along with numeric parameters to create highly
@@ -67,7 +62,7 @@ Please help us by reporting any problems you find and sharing your ideas for new
 If you find a bug or think of a feature
 you would like to see included in the next release,
 please report the issue on 
-`GitHub <https://github.com/aisthesis/pynance/issues>`_ in accordance with
+`GitHub <https://github.com/GriffinAustin/pynance/issues>`_ in accordance with
 the `Scipy guidelines <http://scipy.org/bug-report.html#guidelines-for-submitting-bugs>`_.
 
 Reference
@@ -81,7 +76,6 @@ Reference
    dateutils
    interest
    learn
-   opt
    pf
    tech
 
